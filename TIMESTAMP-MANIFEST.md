@@ -32,32 +32,22 @@ This is the hash of ALL kernel files concatenated. Timestamp this single hash to
 
 ---
 
-## How to Timestamp (Free Options)
+## Timestamp Status: SUBMITTED ✅
 
-### Option 1: OriginStamp (Recommended — Bitcoin blockchain, free for single timestamps)
+**Method:** OpenTimestamps (Bitcoin blockchain)
+**Date submitted:** July 14, 2026, 13:38 UTC
+**Calendar servers:** 4 (opentimestamps × 2, eternitywall, catallaxy)
+**Proof file:** `kernel_hash.txt.ots` (665 bytes)
+**Status:** Pending Bitcoin block confirmation (~10 min to 24 hours)
 
-1. Go to https://www.originstamp.com/
-2. Paste the combined hash:
-   `63bdd859c7c60b63bd3ccb83fb1b2a62d40e0020c3c3fc71ffd0b49baa823bbb`
-3. Add comment: "ICore.Gate Minimal Constitutional Kernel v1.0 — Sir Collins"
-4. Submit. The hash will be anchored to the Bitcoin blockchain within 24 hours.
-5. Download the `.ots` proof file for your records.
+### Verify Anytime
 
-### Option 2: OpenTimestamps (Bitcoin blockchain, free)
-
-1. Install: `pip install opentimestamps-client`
-2. Create a timestamp file:
-   ```
-   echo -n "63bdd859c7c60b63bd3ccb83fb1b2a62d40e0020c3c3fc71ffd0b49baa823bbb" | ots stamp -
-   ```
-3. Wait for Bitcoin confirmation (usually within 1-2 hours).
-4. Verify: `ots verify <timestamp-file>.ots`
-
-### Option 3: Ethereum (if you have a wallet)
-
-1. Use Etherscan's contract interaction or a simple ETH transaction
-2. Embed the hash as calldata in a zero-value transaction to your own address
-3. The transaction hash + block number serve as proof
+```bash
+cd /root/workspace/ICore-Gate-Kernel-v1
+source .venv/bin/activate
+ots verify kernel_hash.txt.ots
+# When confirmed: "Valid Bitcoin blockchain timestamp"
+```
 
 ---
 
