@@ -1,5 +1,7 @@
 # ICore — Constitutional Atlas
 
+**ICore** = InitialCore. The abbreviated form used across all InitialCore-related initiatives.
+
 **Originator:** Sir Collins (access1@tutamail.com)
 **Version:** 1.0
 **Status:** Living Document — grows with the constitution

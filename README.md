@@ -1,6 +1,8 @@
 # ICore.Gate — Minimal Constitutional Kernel v1.0
 
-**Originator:** access1@tutamail.com
+**ICore** = InitialCore. The abbreviated form used across all InitialCore-related initiatives.
+
+**Originator:** Sir Collins — Creator and Concept Pioneer of ICore (access1@tutamail.com)
 **Date:** July 14, 2026
 
 ---
