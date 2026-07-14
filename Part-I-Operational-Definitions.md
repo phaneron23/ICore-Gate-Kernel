@@ -9,35 +9,44 @@ Definitions follow derivation order: each builds on the one before it.
 
 ### USCP — Universal Sovereign Core Primitives
 
-**What is it?** The set of minimal, indivisible constitutional primitives — the irreducible atoms of constitutional truth from which all higher abstractions are derived.
+**What is it?** The smallest complete set of constitutional primitives — six irreducible atoms from which every constitutional system is derived:
 
-**Why does it exist?** To anchor every constitutional claim in something that cannot be further decomposed, ensuring no abstraction floats free of foundation.
+| # | Primitive | Question It Answers |
+|---|-----------|-------------------|
+| 1 | **Existence** | What is? |
+| 2 | **Identity** | What distinguishes it? |
+| 3 | **Relationship** | How is it connected? |
+| 4 | **Constraint** | What governs or limits it? |
+| 5 | **Transformation** | How does it change? |
+| 6 | **Verification** | How do we know it is valid? |
+
+**Why does it exist?** To anchor every constitutional claim in something that cannot be further decomposed. These six are sufficient because every constitutional system must answer all six questions — nothing more is needed, nothing is missing.
 
 **What does it depend on?** Reality and Principles — the two pre-constitutional layers that USCP translates into constitutional form.
 
-**What depends on it?** USC — the sovereign core cannot organize what has not first been reduced to primitives.
+**What depends on it?** USC — the Constitution cannot be organized from what has not first been reduced to primitives.
 
 ---
 
-### USC — Universal Sovereign Core
+### USC — Universal Sovereign Core (The Constitution)
 
-**What is it?** The sovereign constitutional nucleus that organizes USCP into a coherent, self-governing identity — the constitutional center of gravity.
+**What is it?** The complete Constitution — the sovereign constitutional nucleus that organizes USCP into a coherent, self-governing, authoritative foundation. USC is not *part of* the Constitution; USC *is* the Constitution.
 
-**Why does it exist?** To provide a single, indivisible constitutional authority from which all derivative systems inherit legitimacy.
+**Why does it exist?** To provide a single, indivisible constitutional authority from which all derivative systems inherit legitimacy. Everything below USC is pre-constitutional (Reality, Principles, USCP). Everything above USC is constitutionally derived (UCE through Implementations).
 
-**What does it depend on?** USCP — a core without primitives is opinion; primitives without a core are noise.
+**What does it depend on?** USCP — a Constitution without primitives is opinion; primitives without a Constitution are noise.
 
-**What depends on it?** UCE, and transitively everything above — every epistemological, logical, and structural claim flows from sovereign identity.
+**What depends on it?** UCE, UCC, UCM, UCL, UCRS, and transitively everything above — every epistemological, logical, mathematical, linguistic, and structural claim flows from the Constitution.
 
 ---
 
 ### UCE — Universal Constitutional Epistemology
 
-**What is it?** The constitutional framework for what can be known, how truth is verified, and how knowledge is derived within the system.
+**What is it?** The constitutional science of knowledge — the discipline within USC that governs what can be known, how truth is verified, and how knowledge is derived.
 
 **Why does it exist?** To ensure that all knowledge claims made in the name of ICore are constitutionally grounded, verifiable, and non-contradictory.
 
-**What does it depend on?** USC — epistemology without sovereign identity has no authority to declare what is true.
+**What does it depend on?** USC — epistemology without the Constitution has no authority to declare what is true.
 
 **What depends on it?** UCC — the calculus cannot reason about what epistemology has not first classified as knowable.
 
@@ -45,7 +54,7 @@ Definitions follow derivation order: each builds on the one before it.
 
 ### UCC — Universal Constitutional Calculus
 
-**What is it?** The constitutional logic and reasoning system that governs how constitutional truths are derived, combined, and validated.
+**What is it?** The constitutional science of reasoning — the discipline within USC that governs how constitutional truths are derived, combined, and validated through formal logic.
 
 **Why does it exist?** To provide formal, verifiable reasoning over constitutional knowledge — ensuring every derivation is traceable to its source.
 
@@ -57,7 +66,7 @@ Definitions follow derivation order: each builds on the one before it.
 
 ### UCM — Universal Constitutional Mathematics
 
-**What is it?** The constitutional mathematical framework that provides formal structures for representation, transformation, and computation over constitutional objects.
+**What is it?** The constitutional science of structure — the discipline within USC that provides formal mathematical structures for representation, transformation, and computation over constitutional objects.
 
 **Why does it exist?** To ground constitutional operations in mathematical rigor, enabling precise representation without ambiguity.
 
@@ -69,7 +78,7 @@ Definitions follow derivation order: each builds on the one before it.
 
 ### UCL — Universal Constitutional Language
 
-**What is it?** The canonical language for expressing constitutional meaning — the single semantic substrate from which all representations are derived.
+**What is it?** The constitutional science of expression — the canonical language for expressing constitutional meaning. The single semantic substrate from which all representations are derived.
 
 **Why does it exist?** To separate meaning from serialization: meaning is constitutional; JSON-LD, CBOR-LD, and every other format are replaceable implementations.
 
@@ -81,9 +90,9 @@ Definitions follow derivation order: each builds on the one before it.
 
 ### UCRS — Universal Constitutional Reference System
 
-**What is it?** The system that provides canonical reference points and spatial orientation within constitutional space — where things are and how they relate.
+**What is it?** The canonical reference that represents the Constitution — the system that provides reference points and spatial orientation within constitutional space.
 
-**Why does it exist?** To ensure every constitutional entity can be uniquely located, related, and navigated without ambiguity.
+**Why does it exist?** To ensure every constitutional entity can be uniquely located, related, and navigated without ambiguity. UCRS is the Constitution's self-representation.
 
 **What does it depend on?** UCL — references must be expressed in the canonical language to remain meaningful across implementations.
 
@@ -186,5 +195,18 @@ Definitions follow derivation order: each builds on the one before it.
 **What depends on it?** Nothing within the kernel — Studio is the outermost layer. External users and systems interact with ICore through Studio.
 
 ---
+
+### Architecture Summary
+
+```
+Pre-constitutional:    Reality → Principles
+Constitutional base:   USCP (6 primitives) → USC (the Constitution)
+Constitutional sciences: UCE → UCC → UCM → UCL
+Constitutional reference: UCRS → UCModels
+Constitutional expression: URS → UVS
+Constitutional execution: USR/CoreFab → UCA
+Constitutional derivatives: UCD → Implementations
+Interface layer:       CodeLabs → Studio
+```
 
 *Every definition above is constitutional. The derivation graph (Part II) makes the dependency order explicit.*
