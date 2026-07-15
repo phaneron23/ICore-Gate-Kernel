@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studyo v0.1.0 — ICore Constitutional Workspace</title>
+<style>
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e8;--dim:#6b7280;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6}
+.app{display:flex;height:100vh}
+.sidebar{width:280px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--border)}
+.sidebar-header h1{font-size:18px;color:var(--accent)}
+.sidebar-header .subtitle{font-size:11px;color:var(--dim);margin-top:4px}
+.sidebar-header .version{font-size:10px;color:var(--green);margin-top:2px}
+.nav-section{padding:12px 20px;border-bottom:1px solid var(--border)}
+.nav-section h3{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:8px}
+.nav-item{display:block;padding:6px 12px;margin:2px 0;border-radius:6px;cursor:pointer;font-size:13px;color:var(--text);text-decoration:none;transition:all 0.15s}
+.nav-item:hover{background:var(--border)}
+.nav-item.active{background:var(--accent);color:#fff}
+.main{flex:1;overflow-y:auto;padding:30px}
+.main h1{font-size:24px;margin-bottom:8px}
+.main h2{font-size:18px;margin:24px 0 12px;color:var(--accent)}
+.main h3{font-size:15px;margin:16px 0 8px;color:var(--purple)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.badge-pass{background:#052e16;color:var(--green)}
+.badge-frozen{background:#1e1e2e;color:var(--yellow)}
+.badge-const{background:#1a1a2e;color:var(--purple)}
+.badge-arch{background:#1a1a2e;color:var(--accent)}
+.entry-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin:12px 0}
+.entry-card h3{margin-top:0;color:var(--accent)}
+.field{margin:12px 0;padding:12px;background:rgba(255,255,255,0.02);border-radius:6px;border-left:3px solid var(--border)}
+.field-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:4px}
+.field-value{font-size:13px}
+.graph-container{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin:12px 0;overflow-x:auto}
+.graph-node{display:inline-block;padding:8px 16px;margin:4px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.graph-node:hover{transform:scale(1.05)}
+.graph-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0;flex-wrap:wrap}
+.graph-arrow{color:var(--dim);font-size:18px}
+.table{width:100%;border-collapse:collapse;margin:12px 0}
+.table th{text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);border-bottom:2px solid var(--border)}
+.table td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border)}
+.table tr:hover{background:rgba(255,255,255,0.02)}
+.pipeline{display:flex;gap:4px;margin:12px 0;flex-wrap:wrap}
+.pipeline-stage{flex:1;min-width:120px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;text-align:center}
+.pipeline-stage .num{font-size:20px;font-weight:700;color:var(--accent)}
+.pipeline-stage .label{font-size:11px;color:var(--dim);margin-top:4px}
+.primitive-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:12px 0}
+.primitive-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:all 0.15s}
+.primitive-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.primitive-card .num{font-size:24px;font-weight:700;color:var(--accent)}
+.primitive-card .name{font-size:14px;font-weight:600;margin:4px 0}
+.primitive-card .question{font-size:11px;color:var(--dim)}
+.detail-panel{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin:12px 0}
+.detail-panel.active{display:block}
+.back-btn{background:none;border:1px solid var(--border);color:var(--accent);padding:6px 16px;border-radius:6px;cursor:pointer;font-size:12px;margin-bottom:12px}
+.back-btn:hover{background:var(--border)}
+.filter-bar{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:20px;cursor:pointer;font-size:12px;transition:all 0.15s}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.search-box{width:100%;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;margin:12px 0}
+.search-box:focus{outline:none;border-color:var(--accent)}
+@media(max-width:768px){.app{flex-direction:column}.sidebar{width:100%;max-height:40vh}.main{padding:16px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<div class="sidebar-header">
+<h1>ICore Studyo</h1>
+<div class="subtitle">The Unified Constitutional Workspace</div>
+<div class="version">v0.1.0 · Frozen Foundation</div>
+</div>
+<nav>
+<div class="nav-section">
+<h3>Workspace</h3>
+<a class="nav-item active" onclick="showPage('overview')">Overview</a>
+<a class="nav-item" onclick="showPage('primitives')">USCP Primitives</a>
+<a class="nav-item" onclick="showPage('atlas')">Atlas Explorer</a>
+<a class="nav-item" onclick="showPage('graph')">Derivation Graph</a>
+<a class="nav-item" onclick="showPage('verification')">Verification</a>
+<a class="nav-item" onclick="showPage('governance')">Governance</a>
+</div>
+<div class="nav-section">
+<h3>Kernel</h3>
+<a class="nav-item" onclick="showPage('part1')">Part I — Definitions</a>
+<a class="nav-item" onclick="showPage('part2')">Part II — Derivation</a>
+<a class="nav-item" onclick="showPage('part3')">Part III — Verification</a>
+<a class="nav-item" onclick="showPage('part4')">Part IV — Governance</a>
+<a class="nav-item" onclick="showPage('part5')">Part V — Standards</a>
+</div>
+<div class="nav-section">
+<h3>Status</h3>
+<a class="nav-item" onclick="showPage('freeze')">Constitutional Freeze</a>
+<a class="nav-item" onclick="showPage('timestamp')">Timestamp Record</a>
+</div>
+</nav>
+</aside>
+
+<main class="main" id="main-content">
+</main>
+</div>
+
+<script>
+const PAGES={};
+PAGES.overview=`
+<h1>Studyo v0.1.0</h1>
+<p style="color:var(--dim);margin-bottom:20px">The Unified Constitutional Workspace — Making the constitutional science usable, explorable, and verifiable.</p>
+
+<div class="primitive-grid">
+<div class="primitive-card" onclick="showPage('primitives')">
+<div class="num">6</div>
+<div class="name">Primitives</div>
+<div class="question">Irreducible constitutional atoms</div>
+</div>
+<div class="primitive-card" onclick="showPage('atlas')">
+<div class="num">20</div>
+<div class="name">Atlas Entries</div>
+<div class="question">10-field canonical references</div>
+</div>
+<div class="primitive-card" onclick="showPage('verification')">
+<div class="num">120</div>
+<div class="name">Checks Passed</div>
+<div class="question">20/20 components verified</div>
+</div>
+<div class="primitive-card" onclick="showPage('graph')">
+<div class="num">5</div>
+<div class="name">Derivation Rules</div>
+<div class="question">D1–D5 structural backbone</div>
+</div>
+</div>
+
+<h2>The Constitutional Hierarchy</h2>
+<div class="graph-container" style="text-align:center;font-size:13px;line-height:2.2">
+<div style="color:var(--dim)">Reality → Principles</div>
+<div>↓</div>
+<div style="color:var(--green)">USCP (6 Primitives)</div>
+<div>↓</div>
+<div style="color:var(--purple)">USC (The Constitution)</div>
+<div>↓</div>
+<div>UCE → UCC → UCM → UCL</div>
+<div>↓</div>
+<div>UCRS → UCModels → URS → UVS</div>
+<div>↓</div>
+<div style="color:var(--accent)">USR/CoreFab → UCA → UCD</div>
+<div>↓</div>
+<div style="color:var(--yellow)">CodeLabs → Studyo</div>
+</div>
+
+<h2>What Is Frozen</h2>
+<table class="table">
+<tr><th>Component</th><th>Status</th></tr>
+<tr><td>Minimal Constitutional Kernel (Parts I–V)</td><td><span class="badge badge-frozen">FROZEN</span></td></tr>
+<tr><td>Constitutional Atlas v1.0</td><td><span class="badge badge-frozen">FROZEN</span></td></tr>
+<tr><td>Verification Framework (10 tests)</td><td><span class="badge badge-frozen">FROZEN</span></td></tr>
+<tr><td>Governance Framework (6-stage)</td><td><span class="badge badge-frozen">FROZEN</span></td></tr>
+<tr><td>Derivation Rules (D1–D5)</td><td><span class="badge badge-frozen">FROZEN</span></td></tr>
+<tr><td>Standards Alignment</td><td><span class="badge badge-frozen">FROZEN</span></td></tr>
+</table>
+
+<h2>Originator</h2>
+<p style="font-size:13px">Sir Collins — Creator and Concept Pioneer of ICore (InitialCore)</p>
+<p style="font-size:12px;color:var(--dim)">July 2026 · CC BY-NC-SA 4.0 · GPG Signed · Bitcoin Timestamped</p>
+`;
+
+PAGES.primitives=`
+<h1>USCP — The Six Constitutional Primitives</h1>
+<p style="color:var(--dim);margin-bottom:20px">The smallest complete constitutional foundation. Nothing can be removed; nothing needs to be added.</p>
+
+<div id="primitives-list">
+<div class="entry-card" onclick="showDetail('exist')">
+<h3>1. Existence</h3>
+<div style="font-size:13px;color:var(--dim)">"What is?" — The declaration that something exists within the constitutional boundary.</div>
+</div>
+<div class="entry-card" onclick="showDetail('identity')">
+<h3>2. Identity</h3>
+<div style="font-size:13px;color:var(--dim)">"Who/what is it?" — The assignment of unique, verifiable character to each entity.</div>
+</div>
+<div class="entry-card" onclick="showDetail('relationship')">
+<h3>3. Relationship</h3>
+<div style="font-size:13px;color:var(--dim)">"How is it connected?" — The capture of connections between constitutional entities.</div>
+</div>
+<div class="entry-card" onclick="showDetail('constraint')">
+<h3>4. Constraint</h3>
+<div style="font-size:13px;color:var(--dim)">"What governs or limits it?" — The rules that define what is permissible.</div>
+</div>
+<div class="entry-card" onclick="showDetail('transformation')">
+<h3>5. Transformation</h3>
+<div style="font-size:13px;color:var(--dim)">"How does it change?" — The governed mechanism for constitutional evolution.</div>
+</div>
+<div class="entry-card" onclick="showDetail('verification')">
+<h3>6. Verification</h3>
+<div style="font-size:13px;color:var(--dim)">"How do we know it is valid?" — The mechanisms for checking constitutional claims.</div>
+</div>
+</div>
+
+<div id="detail-exist" class="detail-panel">
+<button class="back-btn" onclick="showList()">← Back to Primitives</button>
+<h2>Existence</h2>
+<div class="field"><div class="field-label">1. Canonical Definition</div><div class="field-value">The constitutional primitive that answers "What is?" — the declaration that something exists within the constitutional boundary.</div></div>
+<div class="field"><div class="field-label">2. Constitutional Origin</div><div class="field-value">Derived from Principles. Existence is the first constitutional translation of Reality.</div></div>
+<div class="field"><div class="field-label">3. Operational Meaning</div><div class="field-value">Defines the constitutional boundary — what is inside the system and what is outside. When ICore boots, it first asserts: "I exist. Here is my boundary."</div></div>
+<div class="field"><div class="field-label">4. Derivation Path</div><div class="field-value">Reality → Principles → Existence (USCP primitive #1)</div></div>
+<div class="field"><div class="field-label">5. Dependencies</div><div class="field-value">Principles (grounded in the philosophical foundations)</div></div>
+<div class="field"><div class="field-label">6. Constraints</div><div class="field-value">Cannot be further decomposed. Requires a boundary. Presupposes nothing within the constitution.</div></div>
+<div class="field"><div class="field-label">7. Verification Criteria</div><div class="field-value">System can declare its boundary. Boundary is operationally enforced. No claim exists without a defined subject.</div></div>
+<div class="field"><div class="field-label">8. Governance Status</div><div class="field-value"><span class="badge badge-const">CONSTITUTIONAL</span> Changes require full6-stage pipeline.</div></div>
+<div class="field"><div class="field-label">9. Reference Implementations</div><div class="field-value">Kernel initialization, UCA adapter configuration.</div></div>
+<div class="field"><div class="field-label">10. Cross-References</div><div class="field-value">Identity (depends on Existence), Reality (pre-constitutional ground).</div></div>
+</div>
+
+<div id="detail-identity" class="detail-panel">
+<button class="back-btn" onclick="showList()">← Back to Primitives</button>
+<h2>Identity</h2>
+<div class="field"><div class="field-label">1. Canonical Definition</div><div class="field-value">The constitutional primitive that answers "Who/what is it?" — the assignment of unique, verifiable character to each entity.</div></div>
+<div class="field"><div class="field-label">2. Constitutional Origin</div><div class="field-value">Derived from Existence. Identity arises from the need to differentiate.</div></div>
+<div class="field"><div class="field-label">3. Operational Meaning</div><div class="field-value">The constitutional fingerprint that cannot be forged, copied, or confused. When an entity claims authority, the first question is: "Who are you?"</div></div>
+<div class="field"><div class="field-label">4. Derivation Path</div><div class="field-value">Existence → Identity (USCP primitive #2)</div></div>
+<div class="field"><div class="field-label">5. Dependencies</div><div class="field-value">Existence (entities must exist before identified)</div></div>
+<div class="field"><div class="field-label">6. Constraints</div><div class="field-value">Two entities cannot share Identity. Requires Self and Other. Must include Provenance.</div></div>
+<div class="field"><div class="field-label">7. Verification Criteria</div><div class="field-value">Each entity has unique identifier. Identity independently verifiable. Provenance traceable.</div></div>
+<div class="field"><div class="field-label">8. Governance Status</div><div class="field-value"><span class="badge badge-const">CONSTITUTIONAL</span> Changes affect all downstream layers.</div></div>
+<div class="field"><div class="field-label">9. Reference Implementations</div><div class="field-value">DID (Decentralized Identifiers), DNS/ENS, GPG signatures.</div></div>
+<div class="field"><div class="field-label">10. Cross-References</div><div class="field-value">Existence (prerequisite), Relationship (depends on Identity), UCRS.</div></div>
+</div>
+
+<div id="detail-relationship" class="detail-panel">
+<button class="back-btn" onclick="showList()">← Back to Primitives</button>
+<h2>Relationship</h2>
+<div class="field"><div class="field-label">1. Canonical Definition</div><div class="field-value">The constitutional primitive that answers "How is it connected?" — the capture of connections between entities.</div></div>
+<div class="field"><div class="field-label">2. Constitutional Origin</div><div class="field-value">Derived from Identity. Distinct entities do not exist in isolation.</div></div>
+<div class="field"><div class="field-label">3. Operational Meaning</div><div class="field-value">The structural backbone of ICore. The derivation graph IS a Relationship graph.</div></div>
+<div class="field"><div class="field-label">4. Derivation Path</div><div class="field-value">Existence → Identity → Relationship (USCP primitive #3)</div></div>
+<div class="field"><div class="field-label">5. Dependencies</div><div class="field-value">Identity (entities must be identified before related)</div></div>
+<div class="field"><div class="field-label">6. Constraints</div><div class="field-value">Every Relationship has source and target. Four types: Dependency, Composition, Influence, Identity. No upward Relationships.</div></div>
+<div class="field"><div class="field-label">7. Verification Criteria</div><div class="field-value">Every Relationship has explicit source/target. Type classified. No circular Dependencies.</div></div>
+<div class="field"><div class="field-label">8. Governance Status</div><div class="field-value"><span class="badge badge-const">CONSTITUTIONAL</span> New types require full pipeline.</div></div>
+<div class="field"><div class="field-label">9. Reference Implementations</div><div class="field-value">Derivation graph, RDF/JSON-LD relationships, graph databases.</div></div>
+<div class="field"><div class="field-label">10. Cross-References</div><div class="field-value">Identity (prerequisite), Constraint (depends on Relationship), Part II.</div></div>
+</div>
+
+<div id="detail-constraint" class="detail-panel">
+<button class="back-btn" onclick="showList()">← Back to Primitives</button>
+<h2>Constraint</h2>
+<div class="field"><div class="field-label">1. Canonical Definition</div><div class="field-value">The constitutional primitive that answers "What governs or limits it?" — the rules of permissibility.</div></div>
+<div class="field"><div class="field-label">2. Constitutional Origin</div><div class="field-value">Derived from Relationship. Constraint arises from the need for order.</div></div>
+<div class="field"><div class="field-label">3. Operational Meaning</div><div class="field-value">The constitutional immune system. Prevents invalid states. A Constraint that cannot be checked is not a Constraint — it is a suggestion.</div></div>
+<div class="field"><div class="field-label">4. Derivation Path</div><div class="field-value">Existence → Identity → Relationship → Constraint (USCP #4)</div></div>
+<div class="field"><div class="field-label">5. Dependencies</div><div class="field-value">Relationship (constraints govern connections)</div></div>
+<div class="field"><div class="field-label">6. Constraints</div><div class="field-value">Self-referential. Every Constraint must be verifiable. Four types: Structural, Behavioral, Temporal, Protective.</div></div>
+<div class="field"><div class="field-label">7. Verification Criteria</div><div class="field-value">Every Constraint checkable programmatically. Violations detectable. No contradictions.</div></div>
+<div class="field"><div class="field-label">8. Governance Status</div><div class="field-value"><span class="badge badge-const">CONSTITUTIONAL</span> Full pipeline + mandatory impact analysis.</div></div>
+<div class="field"><div class="field-label">9. Reference Implementations</div><div class="field-value">Part III (10 tests), Part IV (governance), formal validation rules.</div></div>
+<div class="field"><div class="field-label">10. Cross-References</div><div class="field-value">Relationship (prerequisite), Transformation (depends on Constraint).</div></div>
+</div>
+
+<div id="detail-transformation" class="detail-panel">
+<button class="back-btn" onclick="showList()">← Back to Primitives</button>
+<h2>Transformation</h2>
+<div class="field"><div class="field-label">1. Canonical Definition</div><div class="field-value">The constitutional primitive that answers "How does it change?" — the governed mechanism for evolution.</div></div>
+<div class="field"><div class="field-label">2. Constitutional Origin</div><div class="field-value">Derived from Constraint. Transformation is the need for controlled, governed change.</div></div>
+<div class="field"><div class="field-label">3. Operational Meaning</div><div class="field-value">Makes ICore a living constitution. Every change is governed, verified, and traceable.</div></div>
+<div class="field"><div class="field-label">4. Derivation Path</div><div class="field-value">...→ Constraint → Transformation (USCP #5)</div></div>
+<div class="field"><div class="field-label">5. Dependencies</div><div class="field-value">Constraint (transformations must operate within established rules)</div></div>
+<div class="field"><div class="field-label">6. Constraints</div><div class="field-value">Self-referential. Every Transformation must leave a trace. Cannot violate existing Constraints.</div></div>
+<div class="field"><div class="field-label">7. Verification Criteria</div><div class="field-value">Every Transformation logged. Reversible or irreversibility justified. No Constraint violated.</div></div>
+<div class="field"><div class="field-label">8. Governance Status</div><div class="field-value"><span class="badge badge-const">CONSTITUTIONAL</span> Constitutional Changes require full pipeline.</div></div>
+<div class="field"><div class="field-label">9. Reference Implementations</div><div class="field-value">Part IV (Governance Pipeline), state machines, Git/Fossil.</div></div>
+<div class="field"><div class="field-label">10. Cross-References</div><div class="field-value">Constraint (prerequisite), Verification (depends on Transformation).</div></div>
+</div>
+
+<div id="detail-verification" class="detail-panel">
+<button class="back-btn" onclick="showList()">← Back to Primitives</button>
+<h2>Verification</h2>
+<div class="field"><div class="field-label">1. Canonical Definition</div><div class="field-value">The constitutional primitive that answers "How do we know it is valid?" — mechanisms for checking claims.</div></div>
+<div class="field"><div class="field-label">2. Constitutional Origin</div><div class="field-value">Derived from Transformation. Verification arises from the need for certainty — proof, not assertion.</div></div>
+<div class="field"><div class="field-label">3. Operational Meaning</div><div class="field-value">What makes ICore trustworthy. Without it, all other primitives are assertions without proof. Verification transforms claims into facts.</div></div>
+<div class="field"><div class="field-label">4. Derivation Path</div><div class="field-value">...→ Transformation → Verification (USCP #6)</div></div>
+<div class="field"><div class="field-label">5. Dependencies</div><div class="field-value">Transformation (verification checks that transformations are valid)</div></div>
+<div class="field"><div class="field-label">6. Constraints</div><div class="field-value">Self-referential. Decidable: pass or fail. Four types: Structural, Behavioral, Provenance, Consistency.</div></div>
+<div class="field"><div class="field-label">7. Verification Criteria</div><div class="field-value">Self-verifies through 10-test framework. Independent reproduction possible. Results are permanent artifacts.</div></div>
+<div class="field"><div class="field-label">8. Governance Status</div><div class="field-value"><span class="badge badge-const">CONSTITUTIONAL</span> New methods through Extension.</div></div>
+<div class="field"><div class="field-label">9. Reference Implementations</div><div class="field-value">Part III (10 tests), SHA-256, Bitcoin timestamping, GPG signatures.</div></div>
+<div class="field"><div class="field-label">10. Cross-References</div><div class="field-value">Transformation (prerequisite), Verification Framework, Self-Verification Report.</div></div>
+</div>
+`;
+
+PAGES.atlas=`
+<h1>Constitutional Atlas Explorer</h1>
+<p style="color:var(--dim);margin-bottom:12px">The canonical reference system — every concept with 10 fields.</p>
+<input type="text" class="search-box" placeholder="Search Atlas entries..." oninput="filterAtlas(this.value)">
+<div class="filter-bar">
+<button class="filter-btn active" onclick="filterByLayer('all',this)">All</button>
+<button class="filter-btn" onclick="filterByLayer('pre',this)">Pre-Constitutional</button>
+<button class="filter-btn" onclick="filterByLayer('found',this)">Foundation</button>
+<button class="filter-btn" onclick="filterByLayer('science',this)">Sciences</button>
+<button class="filter-btn" onclick="filterByLayer('exec',this)">Execution</button>
+<button class="filter-btn" onclick="filterByLayer('framework',this)">Frameworks</button>
+</div>
+<div id="atlas-entries"></div>
+`;
+
+const ATLAS_DATA=[
+{name:"Reality",layer:"pre",origin:"Pre-constitutional",desc:"The raw, uninterpreted fact that something exists.",verification:"Can be checked against observed, empirical fact.",governance:"Not governable."},
+{name:"Principles",layer:"pre",origin:"Pre-constitutional",desc:"Fundamental truths that bridge raw existence and governed structure.",verification:"Consistency with Reality. Sufficiency for USCP derivation.",governance:"Not governable."},
+{name:"Existence",layer:"found",origin:"USCP #1",desc:"What is? — The declaration that something exists within the boundary.",verification:"System can declare its boundary. Boundary operationally enforced.",governance:"Constitutional — full pipeline."},
+{name:"Identity",layer:"found",origin:"USCP #2",desc:"Who/what is it? — Unique, verifiable character assignment.",verification:"Each entity has unique identifier. Provenance traceable.",governance:"Constitutional — full pipeline."},
+{name:"Relationship",layer:"found",origin:"USCP #3",desc:"How is it connected? — Connections between entities.",verification:"Every Relationship has explicit source/target. No circular Dependencies.",governance:"Constitutional — full pipeline."},
+{name:"Constraint",layer:"found",origin:"USCP #4",desc:"What governs or limits it? — Rules of permissibility.",verification:"Every Constraint checkable. Violations detectable.",governance:"Constitutional — full pipeline + impact analysis."},
+{name:"Transformation",layer:"found",origin:"USCP #5",desc:"How does it change? — Governed mechanism for evolution.",verification:"Every Transformation logged. No Constraint violated.",governance:"Constitutional — full pipeline."},
+{name:"Verification",layer:"found",origin:"USCP #6",desc:"How do we know it is valid? — Mechanisms for checking claims.",verification:"Self-verifies through 10-test framework.",governance:"Constitutional — full pipeline."},
+{name:"USC",layer:"found",origin:"USCP → USC",desc:"The Constitution itself — sovereign constitutional nucleus.",verification:"Fully derived from USCP. Every downstream layer traces through USC.",governance:"Constitutional — full pipeline."},
+{name:"UCE",layer:"science",origin:"USC → UCE",desc:"The constitutional science of knowledge.",verification:"Fully derived from USC. Scope sufficient for reasoning.",governance:"Constitutional — full pipeline."},
+{name:"UCC",layer:"science",origin:"USC → UCC",desc:"The constitutional science of reasoning.",verification:"Derived from USC + UCE. Rules internally consistent.",governance:"Constitutional — full pipeline."},
+{name:"UCM",layer:"science",origin:"USC → UCM",desc:"The constitutional science of structure.",verification:"Derived from USC + UCC. Structures internally consistent.",governance:"Constitutional — full pipeline."},
+{name:"UCL",layer:"science",origin:"UCE+UCC+UCM → UCL",desc:"The constitutional science of expression.",verification:"Derived from all four sciences. Semantic precision.",governance:"Constitutional — full pipeline + impact analysis."},
+{name:"UCRS",layer:"exec",origin:"UCL → UCRS",desc:"The Constitution's self-representation.",verification:"Every entity has a UCRS position. Positions unique.",governance:"Constitutional — full pipeline."},
+{name:"UCModels",layer:"exec",origin:"UCL+UCRS → UCModels",desc:"Canonical models of constitutional entities.",verification:"Every model expressed in UCL. Internally consistent.",governance:"Constitutional — full pipeline."},
+{name:"USR/CoreFab",layer:"exec",origin:"UVS → USR",desc:"The constitutional execution engine.",verification:"Every execution has verified provenance. Sovereignty maintained.",governance:"Constitutional — full pipeline."},
+{name:"UCA",layer:"exec",origin:"USR → UCA",desc:"The adapter boundary — constitution meets the world.",verification:"Every adapter interface-bounded. No external dependency in kernel.",governance:"Architectural — Extension/Removal."},
+{name:"UCD",layer:"exec",origin:"UCA → UCD",desc:"Constitutionally-derived building blocks.",verification:"Composed from UCA. No re-derivation of kernel.",governance:"Architectural — Extension/Removal."},
+{name:"CodeLabs",layer:"exec",origin:"Full stack → CodeLabs",desc:"Sandboxed experimentation environment.",verification:"Sandbox isolation. Verification gates operational.",governance:"Implementation — CodeLabs-specific rules."},
+{name:"Studyo",layer:"exec",origin:"CodeLabs → Studyo",desc:"The unified constitutional workspace.",verification:"Accessibility requirements met. Sovereignty maintained.",governance:"Implementation — Studyo-specific rules."},
+{name:"Verification Framework",layer:"framework",origin:"Verification → Part III",desc:"10 tests — one failure = rejection.",verification:"Self-referential: framework verifies itself.",governance:"Constitutional — adding test requires full pipeline."},
+{name:"Governance Framework",layer:"framework",origin:"Transformation+Constraint → Part IV",desc:"6-stage pipeline, 4-role separation.",verification:"Pipeline stages enforced. Role separation maintained.",governance:"Constitutional — governs itself."},
+{name:"Derivation Rules",layer:"framework",origin:"Relationship+Constraint → Part II",desc:"D1–D5 structural backbone.",verification:"Every derivation follows D1–D5. Graph acyclic.",governance:"Constitutional — changing rule requires full pipeline."},
+{name:"Standards Alignment",layer:"framework",origin:"UCA → Part V",desc:"W3C advisory mapping.",verification:"Every alignment advisory. No external dependency.",governance:"Architectural — Extension/Removal."},
+];
+
+PAGES.verification=`
+<h1>Verification Dashboard</h1>
+<p style="color:var(--dim);margin-bottom:12px">The Constitution proves its own validity. 20 components × 6 questions = 120 checks.</p>
+
+<div class="primitive-grid">
+<div class="primitive-card"><div class="num" style="color:var(--green)">20/20</div><div class="name">Components</div><div class="question">All PASS</div></div>
+<div class="primitive-card"><div class="num" style="color:var(--green)">120/120</div><div class="name">Total Checks</div><div class="question">All PASS</div></div>
+<div class="primitive-card"><div class="num" style="color:var(--green)">0</div><div class="name">Failures</div><div class="question">No critical issues</div></div>
+<div class="primitive-card"><div class="num" style="color:var(--yellow)">2/4</div><div class="name">BTC Timestamp</div><div class="question">Bob + Alice confirmed</div></div>
+</div>
+
+<h2>The6 Verification Questions</h2>
+<table class="table">
+<tr><th>#</th><th>Question</th><th>What It Proves</th></tr>
+<tr><td>1</td><td>Does it exist?</td><td>Ontological status — the component is real</td></tr>
+<tr><td>2</td><td>Can it be uniquely identified?</td><td>Identity — distinguishable from all others</td></tr>
+<tr><td>3</td><td>What relationships define it?</td><td>Structural position — dependencies explicit</td></tr>
+<tr><td>4</td><td>What constraints govern it?</td><td>Governance — limiting rules defined</td></tr>
+<tr><td>5</td><td>What transformations are permitted?</td><td>Evolution — how it can change</td></tr>
+<tr><td>6</td><td>How can its correctness be verified?</td><td>Proof — independent verification possible</td></tr>
+</table>
+
+<h2>Component Results</h2>
+<table class="table">
+<tr><th>Component</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Q6</th><th>Verdict</th></tr>
+<tr><td>USCP (6 primitives)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>USC (Constitution)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>UCE</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>UCC</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>UCM</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>UCL</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>UCRS</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>UCModels</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>URS</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>UVS</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>USR/CoreFab</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>UCA</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>UCD</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>CodeLabs</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>Studyo</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>Derivation Graph</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>Verification Framework</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>Governance Framework</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>Standards Alignment</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+<tr><td>Constitutional Atlas</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td><span class="badge badge-pass">6/6</span></td></tr>
+</table>
+`;
+
+PAGES.governance=`
+<h1>Governance Framework</h1>
+<p style="color:var(--dim);margin-bottom:20px">The constitutional immune system —6-stage pipeline, 4-role separation, one failure = rejection.</p>
+
+<h2>The6-Stage Pipeline</h2>
+<div class="pipeline">
+<div class="pipeline-stage"><div class="num">1</div><div class="label">Proposal</div><div style="font-size:10px;color:var(--dim)">State change, classify, cite source</div></div>
+<div class="pipeline-stage"><div class="num">2</div><div class="label">Review</div><div style="font-size:10px;color:var(--dim)">Second party validates derivation</div></div>
+<div class="pipeline-stage"><div class="num">3</div><div class="label">Verification</div><div style="font-size:10px;color:var(--dim)">Independent Part III audit</div></div>
+<div class="pipeline-stage"><div class="num">4</div><div class="label">Ratification</div><div style="font-size:10px;color:var(--dim)">Constitutional authority approves</div></div>
+<div class="pipeline-stage"><div class="num">5</div><div class="label">Publication</div><div style="font-size:10px;color:var(--dim)">Immutable record with timestamp</div></div>
+<div class="pipeline-stage"><div class="num">6</div><div class="label">Derivation</div><div style="font-size:10px;color:var(--dim)">Downstream layers update</div></div>
+</div>
+
+<h2>Amendment Types</h2>
+<table class="table">
+<tr><th>Type</th><th>Scope</th><th>Speed</th></tr>
+<tr><td>Clarification</td><td>Rephrase without changing meaning</td><td>Fast-track</td></tr>
+<tr><td>Extension</td><td>Add new element to existing layer</td><td>Standard</td></tr>
+<tr><td>Modification</td><td>Change meaning or behavior</td><td>Standard + impact analysis</td></tr>
+<tr><td>Deprecation</td><td>Mark for eventual removal</td><td>Standard</td></tr>
+<tr><td>Removal</td><td>Delete from kernel</td><td>Standard + proof of no dependencies</td></tr>
+</table>
+
+<h2>Four-Role Separation</h2>
+<div class="primitive-grid">
+<div class="primitive-card"><div class="num">P</div><div class="name">Proposer</div><div class="question">Defines the change</div></div>
+<div class="primitive-card"><div class="num">R</div><div class="name">Reviewer</div><div class="question">Validates derivation</div></div>
+<div class="primitive-card"><div class="num">V</div><div class="name">Verifier</div><div class="question">Independent audit</div></div>
+<div class="primitive-card"><div class="num">A</div><div class="name">Ratifier</div><div class="question">Authority approves</div></div>
+</div>
+<p style="font-size:12px;color:var(--dim);margin-top:8px">No individual or AI holds more than one role per cycle. Prevents both authoritarian capture and committee paralysis.</p>
+
+<h2>Core Principles</h2>
+<div class="entry-card">
+<div class="field"><div class="field-label">Constitutional Supremacy</div><div class="field-value">Governance governs the constitution, not implementations.</div></div>
+<div class="field"><div class="field-label">One Failure = Rejection</div><div class="field-value">No exceptions. Every verification must pass.</div></div>
+<div class="field"><div class="field-label">Backward Compatibility</div><div class="field-value">Changes cannot break existing derivations.</div></div>
+<div class="field"><div class="field-label">Human Review</div><div class="field-value">All constitutional changes require human oversight.</div></div>
+<div class="field"><div class="field-label">Traceability</div><div class="field-value">Every change has author, date, derivation chain, and test results.</div></div>
+</div>
+`;
+
+PAGES.graph=`
+<h1>Derivation Graph</h1>
+<p style="color:var(--dim);margin-bottom:20px">D1–D5 structural backbone. Downward only. No upward mutation.</p>
+
+<div class="graph-container">
+<div class="graph-row"><span class="graph-node" style="background:#1a1a2e;border:2px solid var(--dim)">Reality</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#1a1a2e;border:2px solid var(--dim)">Principles</span></div>
+<div style="text-align:center;color:var(--dim)">↓</div>
+<div class="graph-row"><span class="graph-node" style="background:#052e16;border:2px solid var(--green)">Existence</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#052e16;border:2px solid var(--green)">Identity</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#052e16;border:2px solid var(--green)">Relationship</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#052e16;border:2px solid var(--green)">Constraint</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#052e16;border:2px solid var(--green)">Transformation</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#052e16;border:2px solid var(--green)">Verification</span></div>
+<div style="text-align:center;color:var(--dim)">↓ (six primitives organized into authority)</div>
+<div class="graph-row"><span class="graph-node" style="background:#1a1a2e;border:2px solid var(--purple);font-size:14px;padding:12px 24px">USC — The Constitution</span></div>
+<div style="text-align:center;color:var(--dim)">↓ (constitutional sciences)</div>
+<div class="graph-row"><span class="graph-node" style="background:#1a0a2e;border:2px solid var(--purple)">UCE</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#1a0a2e;border:2px solid var(--purple)">UCC</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#1a0a2e;border:2px solid var(--purple)">UCM</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#1a0a2e;border:2px solid var(--purple);font-weight:700">UCL</span></div>
+<div style="text-align:center;color:var(--dim)">↓ (convergence at UCL)</div>
+<div class="graph-row"><span class="graph-node" style="background:#0a1a2e;border:2px solid var(--accent)">UCRS</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#0a1a2e;border:2px solid var(--accent)">UCModels</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#0a1a2e;border:2px solid var(--accent)">URS</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#0a1a2e;border:2px solid var(--accent)">UVS</span></div>
+<div style="text-align:center;color:var(--dim)">↓ (execution)</div>
+<div class="graph-row"><span class="graph-node" style="background:#0a2e1a;border:2px solid var(--green)">USR/CoreFab</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#2e2a0a;border:2px solid var(--yellow)">UCA</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#0a2e1a;border:2px solid var(--green)">UCD</span></div>
+<div style="text-align:center;color:var(--dim)">↓ (implementation)</div>
+<div class="graph-row"><span class="graph-node" style="background:#2e1a0a;border:2px solid #f97316">CodeLabs</span><span class="graph-arrow">→</span><span class="graph-node" style="background:#2e1a0a;border:2px solid #f97316">Studyo</span></div>
+</div>
+
+<h2>Derivation Rules</h2>
+<table class="table">
+<tr><th>Rule</th><th>Name</th><th>Description</th></tr>
+<tr><td><strong>D1</strong></td><td>Downward Only</td><td>Every new element derives from the layer below. No skipping.</td></tr>
+<tr><td><strong>D2</strong></td><td>No Upward Mutation</td><td>Lower layers never alter upper layers.</td></tr>
+<tr><td><strong>D3</strong></td><td>Merge Requires Justification</td><td>Convergent derivations must cite all parent layers.</td></tr>
+<tr><td><strong>D4</strong></td><td>Adaptation Is the Boundary</td><td>UCA is the last constitutional layer. Everything beyond is external.</td></tr>
+<tr><td><strong>D5</strong></td><td>Derivatives Are Composed</td><td>UCD elements do not re-derive the kernel.</td></tr>
+</table>
+`;
+
+PAGES.part1=`<h1>Part I — Operational Definitions</h1><p style="color:var(--dim)">Defines every constitutional concept in precise, derivable, verifiable terms. 15 entries across pre-constitutional, foundational, science, expression, execution, and implementation layers.</p><div class="entry-card"><h3>Kernel Component</h3><p style="font-size:13px">Part I establishes the vocabulary of ICore — from Reality and Principles through USCP, USC, the four sciences, UCRS, UCModels, URS, UVS, USR/CoreFab, UCA, UCD, CodeLabs, and Studyo.</p><div class="field"><div class="field-label">Status</div><div class="field-value"><span class="badge badge-frozen">FROZEN</span> — v1.0, July 2026</div></div></div>`;
+PAGES.part2=`<h1>Part II — Derivation Graph</h1><p style="color:var(--dim)">Defines the structural backbone of ICore — five derivation rules (D1–D5) that govern how constitutional elements relate to each other.</p><div class="entry-card"><h3>D1: Downward Only</h3><p style="font-size:13px">Every new element derives from the layer below. No skipping.</p></div><div class="entry-card"><h3>D2: No Upward Mutation</h3><p style="font-size:13px">Lower layers never alter upper layers.</p></div><div class="entry-card"><h3>D3: Merge Requires Justification</h3><p style="font-size:13px">Convergent derivations must cite all parent layers.</p></div><div class="entry-card"><h3>D4: Adaptation Is the Boundary</h3><p style="font-size:13px">UCA is the last constitutional layer. Everything beyond is external.</p></div><div class="entry-card"><h3>D5: Derivatives Are Composed</h3><p style="font-size:13px">UCD elements do not re-derive the kernel.</p></div>`;
+PAGES.part3=`<h1>Part III — Verification Framework</h1><p style="color:var(--dim)">10 constitutional tests. One failure = rejection. No exceptions.</p><div class="entry-card"><h3>The 10 Tests</h3><table class="table"><tr><th>#</th><th>Test</th><th>Question</th></tr><tr><td>1</td><td>Reality</td><td>Does this correspond to something real?</td></tr><tr><td>2</td><td>Origin</td><td>Can its source be traced?</td></tr><tr><td>3</td><td>Constitutional Necessity</td><td>Must this exist at the constitutional level?</td></tr><tr><td>4</td><td>Derivation</td><td>Is it derived from the layer below?</td></tr><tr><td>5</td><td>Consistency</td><td>Does it contradict existing knowledge?</td></tr><tr><td>6</td><td>Verification</td><td>Can its truth be independently confirmed?</td></tr><tr><td>7</td><td>Simplicity</td><td>Can it be stated more simply?</td></tr><tr><td>8</td><td>Sovereignty</td><td>Does it preserve constitutional independence?</td></tr><tr><td>9</td><td>Replaceability</td><td>Can any part be swapped without breaking?</td></tr><tr><td>10</td><td>Evolution</td><td>Can it be amended without destroying dependents?</td></tr></table></div>`;
+PAGES.part4=PAGES.governance;
+PAGES.part5=`<h1>Part V — Standards Alignment</h1><p style="color:var(--dim)">Advisory mapping between constitutional concepts and W3C standards. All alignments are replaceable through UCA.</p><table class="table"><tr><th>ICore Concept</th><th>W3C Standard</th><th>Relationship</th></tr><tr><td>UCL semantic precision</td><td>RDF 1.1</td><td>Compatible, not dependent</td></tr><tr><td>JSON-LD serialization</td><td>JSON-LD 1.1</td><td>Direct alignment</td></tr><tr><td>Provenance</td><td>PROV-DM</td><td>Maps to entities, activities, agents</td></tr><tr><td>Verifiable claims</td><td>VC Data Model 2.0</td><td>Can be expressed as VCs</td></tr><tr><td>Decentralized identifiers</td><td>DID Core</td><td>UCA adapters can use DID resolution</td></tr></table>`;
+PAGES.freeze=`<h1>Constitutional Freeze Declaration</h1><p style="color:var(--dim)">The foundation is frozen. No modifications unless governed.</p><div class="entry-card"><div class="field"><div class="field-label">Date</div><div class="field-value">July 14, 2026</div></div><div class="field"><div class="field-label">Authority</div><div class="field-value">Sir Collins — Creator and Concept Pioneer of ICore</div></div><div class="field"><div class="field-label">Status</div><div class="field-value"><span class="badge badge-frozen">FROZEN</span></div></div><div class="field"><div class="field-label">What Is Frozen</div><div class="field-value">Kernel Parts I–V, Atlas v1.0, Verification Framework, Governance Framework, Derivation Rules, Standards Alignment.</div></div><div class="field"><div class="field-label">What Is NOT Frozen</div><div class="field-value">Studyo, USR/CoreFab, Reference Derivatives.</div></div><div class="field"><div class="field-label">Governance</div><div class="field-value">Any amendment requires 6-stage pipeline. One failure = rejection.</div></div></div>`;
+PAGES.timestamp=`<h1>Timestamp Record</h1><p style="color:var(--dim)">Bitcoin-anchored temporal verification.</p><div class="entry-card"><div class="field"><div class="field-label">Kernel Hash (SHA-256)</div><div class="field-value" style="font-family:monospace;font-size:11px;word-break:break-all">63bdd859c7c60b63bd3ccb83fb1b2a62d40e0020c3c3fc71ffd0b49baa823bbb</div></div><div class="field"><div class="field-label">Proof File</div><div class="field-value">kernel_hash.txt.ots (OpenTimestamps)</div></div><div class="field"><div class="field-label">Calendar Server Status</div><div class="field-value"><table class="table"><tr><th>Server</th><th>Status</th><th>Block</th></tr><tr><td>bob.btc.calendar</td><td><span class="badge badge-pass">CONFIRMED</span></td><td>958014</td></tr><tr><td>alice.btc.calendar</td><td><span class="badge badge-pass">CONFIRMED</span></td><td>958013</td></tr><tr><td>finney.calendar</td><td style="color:var(--yellow)">Pending</td><td>—</td></tr><tr><td>btc.calendar.catallaxy</td><td style="color:var(--yellow)">Pending</td><td>—</td></tr></table></div></div><div class="field"><div class="field-label">GPG Signature</div><div class="field-value">Key 01C77A931AEE9054 — "Good signature from Sir Collins"</div></div></div>`;
+
+function showPage(id){
+document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+document.querySelector(`.nav-item[onclick="showPage('${id}')"]`)?.classList.add('active');
+const main=document.getElementById('main-content');
+if(id==='atlas'){main.innerHTML=PAGES.atlas;renderAtlas(ATLAS_DATA)}
+else{main.innerHTML=PAGES[id]||`<p>Page not found: ${id}</p>`}
+}
+function showDetail(id){document.querySelectorAll('#primitives-list .entry-card').forEach(c=>c.style.display='none');document.querySelectorAll('.detail-panel').forEach(p=>p.classList.remove('active'));document.getElementById('detail-'+id)?.classList.add('active')}
+function showList(){document.querySelectorAll('.detail-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('#primitives-list .entry-card').forEach(c=>c.style.display='block')}
+function renderAtlas(data){const c=document.getElementById('atlas-entries');if(!c)return;c.innerHTML=data.map(e=>`<div class="entry-card" style="cursor:default"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${e.name}</h3><span class="badge ${e.governance.includes('Constitutional')?'badge-const':'badge-arch'}">${e.origin}</span></div><p style="font-size:13px;margin:8px 0">${e.desc}</p><div class="field"><div class="field-label">Verification</div><div class="field-value" style="font-size:12px">${e.verification}</div></div><div class="field"><div class="field-label">Governance</div><div class="field-value" style="font-size:12px">${e.governance}</div></div></div>`).join('')}
+function filterAtlas(q){const f=ATLAS_DATA.filter(e=>e.name.toLowerCase().includes(q.toLowerCase())||e.desc.toLowerCase().includes(q.toLowerCase()));renderAtlas(f)}
+function filterByLayer(layer,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const f=layer==='all'?ATLAS_DATA:ATLAS_DATA.filter(e=>e.layer===layer);renderAtlas(f)}
+showPage('overview');
+</script>
+</body>
+</html>
