@@ -1,0 +1,9 @@
+{
+    "name": "Sample Constitutional Component",
+    "layer": "impl",
+    "version": "0.1.0",
+    "parents": [],
+    "question": "What does this component do?",
+    "operation": "compute-hash",
+    "input": "{\"data\": \"Hello, Constitutional World!\"}"
+}

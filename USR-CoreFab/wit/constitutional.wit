@@ -1,0 +1,179 @@
+// ICore Constitutional ABI (WIT)
+// USR/CoreFab v0.1.0
+//
+// This is the stable interface between CoreFab and WASM components.
+// Every constitutional component must implement these interfaces.
+// The Constitution defines semantics; WIT defines the execution contract.
+
+package icore:constitutional@1.0.0;
+
+/// The constitutional identity of a component.
+/// Every component must declare who it is and what it governs.
+interface identity {
+    record component-id {
+        /// Unique constitutional identifier (SHA-256 of WIT + metadata)
+        id: string,
+        /// Human-readable name
+        name: string,
+        /// Constitutional layer (pre, uscp, usc, science, expression, execution, impl)
+        layer: string,
+        /// Version (semver)
+        version: string,
+        /// Parent component IDs (derivation chain)
+        parents: list<string>,
+        /// Constitutional question this component answers
+        question: string,
+    }
+
+    /// Declare the component's constitutional identity
+    declare: func() -> result<component-id, error>;
+
+    /// Verify this component's identity against constitutional rules
+    verify: func() -> result<bool, error>;
+}
+
+/// The execution contract for constitutional components.
+/// Every component must define how it executes deterministically.
+interface execution {
+    /// Execute a constitutional operation
+    /// Inputs and outputs are JSON-encoded constitutional data
+    execute: func(operation: string, input: string) -> result<string, error>;
+
+    /// Check if an operation is constitutionally permitted
+    check-permission: func(operation: string) -> result<bool, error>;
+
+    /// Get the list of supported operations
+    list-operations: func() -> result<list<string>, error>;
+}
+
+/// Constitutional constraint enforcement.
+/// Runtime validation against the 6 primitive questions and 10 verification tests.
+interface constraints {
+    /// Validate a claim against the 6 constitutional questions
+    /// Returns: { exists: bool, identified: bool, relationships: bool,
+    ///            constraints: bool, transformations: bool, verified: bool }
+    validate-claim: func(claim: string) -> result<string, error>;
+
+    /// Check if a transformation is constitutionally permitted
+    check-transformation: func(from: string, to: string, rule: string) -> result<bool, error>;
+
+    /// Enforce a constitutional constraint
+    enforce: func(constraint-id: string, context: string) -> result<bool, error>;
+}
+
+/// Capability-based isolation.
+/// Components can only access what they are explicitly granted.
+interface isolation {
+    /// A capability grant
+    record capability {
+        /// What resource this grants access to
+        resource: string,
+        /// What operations are permitted
+        permissions: list<string>,
+        /// Expiration (ISO 8601 timestamp, or "permanent")
+        expires: string,
+    }
+
+    /// Request a capability from the runtime
+    request-capability: func(resource: string, permissions: list<string>) -> result<capability, error>;
+
+    /// Check if a capability is currently granted
+    check-capability: func(resource: string, permission: string) -> result<bool, error>;
+
+    /// Revoke a capability
+    revoke-capability: func(resource: string) -> result<bool, error>;
+}
+
+/// Cryptographic attestation of execution provenance.
+interface attestation {
+    /// An attestation record
+    record attestation-record {
+        /// Component that executed
+        component-id: string,
+        /// Operation executed
+        operation: string,
+        /// Input hash (SHA-256)
+        input-hash: string,
+        /// Output hash (SHA-256)
+        output-hash: string,
+        /// Timestamp (ISO 8601)
+        timestamp: string,
+        /// Execution result
+        result: string,
+        /// Cryptographic signature of this record
+        signature: string,
+    }
+
+    /// Create an attestation for an execution
+    attest: func(record: attestation-record) -> result<attestation-record, error>;
+
+    /// Verify an attestation
+    verify-attestation: func(record: attestation-record) -> result<bool, error>;
+
+    /// Get the attestation chain for a component
+    get-attestation-chain: func(component-id: string) -> result<list<attestation-record>, error>;
+}
+
+/// Component orchestration — lifecycle and communication.
+interface orchestration {
+    /// Component lifecycle state
+    enum lifecycle-state {
+        registered,
+        initialized,
+        running,
+        paused,
+        stopped,
+        error,
+    }
+
+    /// Register a component with the runtime
+    register: func(component-id: string) -> result<bool, error>;
+
+    /// Initialize a registered component
+    initialize: func(component-id: string) -> result<bool, error>;
+
+    /// Start execution of an initialized component
+    start: func(component-id: string) -> result<bool, error>;
+
+    /// Pause a running component
+    pause: func(component-id: string) -> result<bool, error>;
+
+    /// Stop a component
+    stop: func(component-id: string) -> result<bool, error>;
+
+    /// Get the current state of a component
+    get-state: func(component-id: string) -> result<lifecycle-state, error>;
+
+    /// Send a message between components
+    send-message: func(from: string, to: string, payload: string) -> result<bool, error>;
+
+    /// Get the component dependency graph
+    get-dependency-graph: func() -> result<string, error>;
+}
+
+/// The CoreFab runtime interface.
+/// This is what the runtime provides to components.
+interface runtime {
+    /// Get the runtime version
+    version: func() -> result<string, error>;
+
+    /// Get the runtime capabilities
+    capabilities: func() -> result<list<string>, error>;
+
+    /// Execute a constitutional blueprint
+    execute-blueprint: func(blueprint: string) -> result<string, error>;
+
+    /// Validate a blueprint before execution
+    validate-blueprint: func(blueprint: string) -> result<bool, error>;
+}
+
+/// The USR world — what the runtime exposes to the host.
+world corefab {
+    export identity;
+    export execution;
+    export constraints;
+    export isolation;
+    export attestation;
+    export orchestration;
+    export runtime;
+}
