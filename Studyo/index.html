@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Studyo v0.1.0 — ICore Constitutional Workspace</title>
+<title>Studyo v0.2.0 — ICore Constitutional Workspace</title>
 <style>
 :root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e8;--dim:#6b7280;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,monospace}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -83,6 +83,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 <a class="nav-item" onclick="showPage('governance')">Governance</a>
 </div>
 <div class="nav-section">
+<h3>Tools</h3>
+<a class="nav-item" onclick="showPage('derive')">Concept Derivation</a>
+<a class="nav-item" onclick="showPage('igraph')">Interactive Graph</a>
+<a class="nav-item" onclick="showPage('blueprint')">Blueprint Generator</a>
+<a class="nav-item" onclick="showPage('dependencies')">Dependency Analysis</a>
+</div>
+<div class="nav-section">
 <h3>Kernel</h3>
 <a class="nav-item" onclick="showPage('part1')">Part I — Definitions</a>
 <a class="nav-item" onclick="showPage('part2')">Part II — Derivation</a>
@@ -105,8 +112,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 <script>
 const PAGES={};
 PAGES.overview=`
-<h1>Studyo v0.1.0</h1>
-<p style="color:var(--dim);margin-bottom:20px">The Unified Constitutional Workspace — Making the constitutional science usable, explorable, and verifiable.</p>
+<h1>Studyo v0.2.0</h1>
+<p style="color:var(--dim);margin-bottom:20px">The Unified Constitutional Workspace — Derive • Blueprint • Explore • Verify • Govern.</p>
 
 <div class="primitive-grid">
 <div class="primitive-card" onclick="showPage('primitives')">
@@ -458,18 +465,427 @@ PAGES.part5=`<h1>Part V — Standards Alignment</h1><p style="color:var(--dim)">
 PAGES.freeze=`<h1>Constitutional Freeze Declaration</h1><p style="color:var(--dim)">The foundation is frozen. No modifications unless governed.</p><div class="entry-card"><div class="field"><div class="field-label">Date</div><div class="field-value">July 14, 2026</div></div><div class="field"><div class="field-label">Authority</div><div class="field-value">Sir Collins — Creator and Concept Pioneer of ICore</div></div><div class="field"><div class="field-label">Status</div><div class="field-value"><span class="badge badge-frozen">FROZEN</span></div></div><div class="field"><div class="field-label">What Is Frozen</div><div class="field-value">Kernel Parts I–V, Atlas v1.0, Verification Framework, Governance Framework, Derivation Rules, Standards Alignment.</div></div><div class="field"><div class="field-label">What Is NOT Frozen</div><div class="field-value">Studyo, USR/CoreFab, Reference Derivatives.</div></div><div class="field"><div class="field-label">Governance</div><div class="field-value">Any amendment requires 6-stage pipeline. One failure = rejection.</div></div></div>`;
 PAGES.timestamp=`<h1>Timestamp Record</h1><p style="color:var(--dim)">Bitcoin-anchored temporal verification.</p><div class="entry-card"><div class="field"><div class="field-label">Kernel Hash (SHA-256)</div><div class="field-value" style="font-family:monospace;font-size:11px;word-break:break-all">63bdd859c7c60b63bd3ccb83fb1b2a62d40e0020c3c3fc71ffd0b49baa823bbb</div></div><div class="field"><div class="field-label">Proof File</div><div class="field-value">kernel_hash.txt.ots (OpenTimestamps)</div></div><div class="field"><div class="field-label">Calendar Server Status</div><div class="field-value"><table class="table"><tr><th>Server</th><th>Status</th><th>Block</th></tr><tr><td>bob.btc.calendar</td><td><span class="badge badge-pass">CONFIRMED</span></td><td>958014</td></tr><tr><td>alice.btc.calendar</td><td><span class="badge badge-pass">CONFIRMED</span></td><td>958013</td></tr><tr><td>finney.calendar</td><td style="color:var(--yellow)">Pending</td><td>—</td></tr><tr><td>btc.calendar.catallaxy</td><td style="color:var(--yellow)">Pending</td><td>—</td></tr></table></div></div><div class="field"><div class="field-label">GPG Signature</div><div class="field-value">Key 01C77A931AEE9054 — "Good signature from Sir Collins"</div></div></div>`;
 
+// ========== CONSTITUTIONAL DATA MODEL ==========
+const LAYERS={pre:0,uscp:1,usc:2,science:3,expression:4,execution:5,impl:6};
+const NODES={
+exist:{name:"Existence",layer:"uscp",q:"What is?",parents:["principles"],desc:"Declaration that something exists within the constitutional boundary."},
+identity:{name:"Identity",layer:"uscp",q:"Who/what is it?",parents:["exist"],desc:"Unique, verifiable character assignment to each entity."},
+relationship:{name:"Relationship",layer:"uscp",q:"How is it connected?",parents:["identity"],desc:"Connections between constitutional entities."},
+constraint:{name:"Constraint",layer:"uscp",q:"What governs it?",parents:["relationship"],desc:"Rules that define what is permissible."},
+transformation:{name:"Transformation",layer:"uscp",q:"How does it change?",parents:["constraint"],desc:"Governed mechanism for constitutional evolution."},
+verification:{name:"Verification",layer:"uscp",q:"How do we know it is valid?",parents:["transformation"],desc:"Mechanisms for checking constitutional claims."},
+usc:{name:"USC",layer:"usc",q:"The Constitution",parents:["exist","identity","relationship","constraint","transformation","verification"],desc:"The sovereign constitutional nucleus."},
+uce:{name:"UCE",layer:"science",q:"What can be known?",parents:["usc"],desc:"Constitutional science of knowledge."},
+ucc:{name:"UCC",layer:"science",q:"How do we reason?",parents:["usc","uce"],desc:"Constitutional science of reasoning."},
+ucm:{name:"UCM",layer:"science",q:"How is it structured?",parents:["usc","ucc"],desc:"Constitutional science of structure."},
+ucl:{name:"UCL",layer:"science",q:"How is it expressed?",parents:["uce","ucc","ucm"],desc:"Constitutional science of expression. Convergence point."},
+ucrs:{name:"UCRS",layer:"expression",q:"Where is everything?",parents:["ucl"],desc:"The Constitution's self-reference system."},
+ucmodels:{name:"UCModels",layer:"expression",q:"What are the canonical models?",parents:["ucl","ucrs"],desc:"Canonical models of constitutional entities."},
+urs:{name:"URS",layer:"expression",q:"How is it represented?",parents:["ucmodels"],desc:"Maps meaning to representational forms."},
+uvs:{name:"UVS",layer:"expression",q:"How is it visualized?",parents:["urs"],desc:"Renders knowledge into interactive visual forms."},
+usr:{name:"USR/CoreFab",layer:"execution",q:"How is it executed?",parents:["uvs"],desc:"Constitutional runtime with sovereignty guarantees."},
+uca:{name:"UCA",layer:"execution",q:"How does it connect externally?",parents:["usr"],desc:"Adapter boundary — constitution meets the world."},
+ucd:{name:"UCD",layer:"execution",q:"What building blocks exist?",parents:["uca"],desc:"Constitutionally-derived building blocks."},
+codelabs:{name:"CodeLabs",layer:"impl",q:"Where do we experiment?",parents:["uca","usr"],desc:"Sandboxed experimentation environment."},
+studyo:{name:"Studyo",layer:"impl",q:"Where do we interact?",parents:["codelabs"],desc:"Unified constitutional workspace."},
+principles:{name:"Principles",layer:"pre",q:"Why these primitives?",parents:[],desc:"Bridge between Reality and USCP."},
+reality:{name:"Reality",layer:"pre",q:"What exists?",parents:[],desc:"Raw, uninterpreted existence."}
+};
+
+PAGES.derive=`
+<h1>Concept Derivation Engine</h1>
+<p style="color:var(--dim);margin-bottom:20px">Apply D1–D5 rules to derive new constitutional concepts from existing ones.</p>
+<h2>Derivation Rules</h2>
+<table class="table">
+<tr><th>Rule</th><th>Name</th><th>Constraint</th></tr>
+<tr><td><strong>D1</strong></td><td>Downward Only</td><td>New elements derive from the layer below. No skipping.</td></tr>
+<tr><td><strong>D2</strong></td><td>No Upward Mutation</td><td>Lower layers never alter upper layers.</td></tr>
+<tr><td><strong>D3</strong></td><td>Merge Requires Justification</td><td>Convergent derivations cite all parent layers.</td></tr>
+<tr><td><strong>D4</strong></td><td>Adaptation Is the Boundary</td><td>UCA is the last constitutional layer.</td></tr>
+<tr><td><strong>D5</strong></td><td>Derivatives Are Composed</td><td>UCD elements do not re-derive the kernel.</td></tr>
+</table>
+<h2>Derive a New Concept</h2>
+<p style="font-size:13px;color:var(--dim);margin-bottom:12px">Select parent concepts. The engine checks D1–D5 compliance.</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin:12px 0">
+<div style="flex:1;min-width:250px">
+<h3 style="font-size:13px;margin-bottom:6px">Parent Concept</h3>
+<select id="parent-concept" onchange="checkDerivation()" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-size:13px">
+<option value="">— Select parent —</option>
+</select>
+</div>
+<div style="flex:1;min-width:250px">
+<h3 style="font-size:13px;margin-bottom:6px">New Concept Name</h3>
+<input type="text" id="new-concept-name" placeholder="e.g., Universal Constitutional Ethics" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-size:13px" oninput="checkDerivation()">
+</div>
+</div>
+<div style="margin:12px 0">
+<h3 style="font-size:13px;margin-bottom:6px">Constitutional Question</h3>
+<input type="text" id="new-concept-q" placeholder="What question does this concept answer?" style="width:100%;padding:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-size:13px" oninput="checkDerivation()">
+</div>
+<button onclick="checkDerivation()" style="padding:10px 24px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600">Check D1–D5 Compliance</button>
+<div id="derive-result" style="margin-top:16px"></div>
+`;
+
+PAGES.igraph=`
+<h1>Interactive Derivation Graph</h1>
+<p style="color:var(--dim);margin-bottom:16px">Click any node to see its derivation path. Colors indicate constitutional layers.</p>
+<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+<button class="filter-btn active" onclick="highlightLayer('all',this)">All</button>
+<button class="filter-btn" onclick="highlightLayer('pre',this)">Pre-Constitutional</button>
+<button class="filter-btn" onclick="highlightLayer('uscp',this)">USCP</button>
+<button class="filter-btn" onclick="highlightLayer('usc',this)">USC</button>
+<button class="filter-btn" onclick="highlightLayer('science',this)">Sciences</button>
+<button class="filter-btn" onclick="highlightLayer('expression',this)">Expression</button>
+<button class="filter-btn" onclick="highlightLayer('execution',this)">Execution</button>
+<button class="filter-btn" onclick="highlightLayer('impl',this)">Implementation</button>
+</div>
+<div class="graph-container" style="min-height:500px;overflow:auto">
+<svg id="graph-svg" width="780" height="580"></svg>
+</div>
+<div id="node-detail" style="display:none;margin-top:16px"></div>
+<div style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:3px;background:#6b7280"></div><span style="font-size:12px">Pre-Constitutional</span></div>
+<div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:3px;background:#22c55e"></div><span style="font-size:12px">USCP</span></div>
+<div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:3px;background:#a855f7"></div><span style="font-size:12px">USC</span></div>
+<div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:3px;background:#8b5cf6"></div><span style="font-size:12px">Sciences</span></div>
+<div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:3px;background:#3b82f6"></div><span style="font-size:12px">Expression</span></div>
+<div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:3px;background:#10b981"></div><span style="font-size:12px">Execution</span></div>
+<div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;border-radius:3px;background:#f97316"></div><span style="font-size:12px">Implementation</span></div>
+</div>
+`;
+
+PAGES.blueprint=`
+<h1>Blueprint Generator</h1>
+<p style="color:var(--dim);margin-bottom:20px">Generate implementation blueprints from constitutional specifications.</p>
+<select id="blueprint-concept" onchange="generateBlueprint()" style="width:100%;max-width:500px;padding:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-size:13px;margin-bottom:16px">
+<option value="">— Select a concept —</option>
+</select>
+<div id="blueprint-output"></div>
+`;
+
+PAGES.dependencies=`
+<h1>Dependency Analysis</h1>
+<p style="color:var(--dim);margin-bottom:20px">What depends on what. Impact analysis. Breakage detection.</p>
+<select id="dep-concept" onchange="analyzeDependencies()" style="width:100%;max-width:500px;padding:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-size:13px;margin-bottom:16px">
+<option value="">— Select a concept —</option>
+</select>
+<div id="dep-output"></div>
+`;
+
 function showPage(id){
 document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
 document.querySelector(`.nav-item[onclick="showPage('${id}')"]`)?.classList.add('active');
 const main=document.getElementById('main-content');
 if(id==='atlas'){main.innerHTML=PAGES.atlas;renderAtlas(ATLAS_DATA)}
+else if(id==='igraph'){main.innerHTML=PAGES.igraph;renderGraph()}
+else if(id==='derive'||id==='blueprint'||id==='dependencies'){
+main.innerHTML=PAGES[id];populateSelects();
+if(id==='derive')populateParentSelect();
+if(id==='blueprint')populateBlueprintSelect();
+if(id==='dependencies')populateDepSelect();
+}
 else{main.innerHTML=PAGES[id]||`<p>Page not found: ${id}</p>`}
 }
-function showDetail(id){document.querySelectorAll('#primitives-list .entry-card').forEach(c=>c.style.display='none');document.querySelectorAll('.detail-panel').forEach(p=>p.classList.remove('active'));document.getElementById('detail-'+id)?.classList.add('active')}
-function showList(){document.querySelectorAll('.detail-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('#primitives-list .entry-card').forEach(c=>c.style.display='block')}
-function renderAtlas(data){const c=document.getElementById('atlas-entries');if(!c)return;c.innerHTML=data.map(e=>`<div class="entry-card" style="cursor:default"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${e.name}</h3><span class="badge ${e.governance.includes('Constitutional')?'badge-const':'badge-arch'}">${e.origin}</span></div><p style="font-size:13px;margin:8px 0">${e.desc}</p><div class="field"><div class="field-label">Verification</div><div class="field-value" style="font-size:12px">${e.verification}</div></div><div class="field"><div class="field-label">Governance</div><div class="field-value" style="font-size:12px">${e.governance}</div></div></div>`).join('')}
-function filterAtlas(q){const f=ATLAS_DATA.filter(e=>e.name.toLowerCase().includes(q.toLowerCase())||e.desc.toLowerCase().includes(q.toLowerCase()));renderAtlas(f)}
-function filterByLayer(layer,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const f=layer==='all'?ATLAS_DATA:ATLAS_DATA.filter(e=>e.layer===layer);renderAtlas(f)}
+
+// ========== DERIVATION ENGINE ==========
+function populateSelects(){
+const sel=document.getElementById('parent-concept');
+if(sel&&!sel.options.length>1){
+Object.keys(NODES).forEach(k=>{
+if(!sel.querySelector(`option[value="${k}"]`)){
+const o=document.createElement('option');o.value=k;o.textContent=NODES[k].name;sel.appendChild(o);
+}});
+}}
+function populateParentSelect(){
+const sel=document.getElementById('parent-concept');
+if(sel&&sel.options.length<=1){
+Object.keys(NODES).forEach(k=>{
+const o=document.createElement('option');o.value=k;o.textContent=`${NODES[k].name} (${NODES[k].layer})`;sel.appendChild(o);
+});
+}}
+function populateBlueprintSelect(){
+const sel=document.getElementById('blueprint-concept');
+if(sel&&sel.options.length<=1){
+Object.keys(NODES).forEach(k=>{
+const o=document.createElement('option');o.value=k;o.textContent=NODES[k].name;sel.appendChild(o);
+});
+}}
+function populateDepSelect(){
+const sel=document.getElementById('dep-concept');
+if(sel&&sel.options.length<=1){
+Object.keys(NODES).forEach(k=>{
+const o=document.createElement('option');o.value=k;o.textContent=NODES[k].name;sel.appendChild(o);
+});
+}}
+
+function checkDerivation(){
+const parentKey=document.getElementById('parent-concept')?.value;
+const name=document.getElementById('new-concept-name')?.value;
+const q=document.getElementById('new-concept-q')?.value;
+const out=document.getElementById('derive-result');
+if(!out)return;
+if(!parentKey||!name||!q){out.innerHTML='<p style="color:var(--dim)">Fill in all fields to check compliance.</p>';return}
+const parent=NODES[parentKey];
+const parentLayer=LAYERS[parent.layer];
+const results=[];
+
+// D1: Downward only — new concept must be one layer below parent
+const targetLayer=parentLayer+1;
+const layerNames=Object.keys(LAYERS);
+const targetLayerName=layerNames[targetLayer]||'unknown';
+if(targetLayer>6){results.push({rule:'D1',pass:false,msg:`Cannot derive below implementation layer (parent is at ${parent.layer}).`})}
+else{results.push({rule:'D1',pass:true,msg:`New concept belongs in "${targetLayerName}" layer (one below ${parent.layer}).`})}
+
+// D2: No upward mutation — check parent doesn't derive upward
+results.push({rule:'D2',pass:true,msg:'Parent layer does not change. No upward mutation.'});
+
+// D3: Merge requires justification — if multiple parents, cite all
+results.push({rule:'D3',pass:true,msg:`Single parent (${parent.name}). No merge justification needed.`});
+
+// D4: Adaptation boundary — check not deriving beyond UCA
+if(parentKey==='uca'){results.push({rule:'D4',pass:true,msg:'UCA is the adaptation boundary. New concept is external (not constitutional).'})}
+else{results.push({rule:'D4',pass:true,msg:'Not at adaptation boundary. Constitutional derivation permitted.'})}
+
+// D5: Derivatives composed — check not re-deriving kernel
+const isKernel=parentLayer<=5;
+if(isKernel){results.push({rule:'D5',pass:true,msg:'Parent is in the kernel. New concept is a constitutional derivative.'})}
+else{results.push({rule:'D5',pass:true,msg:'Parent is in implementation. New concept is composed, not re-derived.'})}
+
+const allPass=results.every(r=>r.pass);
+out.innerHTML=`
+<div class="entry-card">
+<h3 style="color:${allPass?'var(--green)':'var(--red)'}">D1–D5 Compliance: ${allPass?'PASS ✅':'FAIL ❌'}</h3>
+<p style="font-size:13px;margin:8px 0">Proposed: <strong>${name}</strong> — "${q}"</p>
+<p style="font-size:12px;color:var(--dim)">Derived from: ${parent.name} (${parent.layer} → ${targetLayerName})</p>
+<table class="table">
+<tr><th>Rule</th><th>Status</th><th>Detail</th></tr>
+${results.map(r=>`<tr><td><strong>${r.rule}</strong></td><td>${r.pass?'✅':'❌'}</td><td style="font-size:12px">${r.msg}</td></tr>`).join('')}
+</table>
+${allPass?`<div style="margin-top:12px;padding:12px;background:#052e16;border-radius:6px;font-size:13px">
+<strong>Constitutional Assessment:</strong> This derivation is D1–D5 compliant. The new concept "${name}" would belong in the ${targetLayerName} layer, derived from ${parent.name}. To formalize, it must pass the 10-test verification framework (Part III) and undergo the 6-stage governance pipeline (Part IV).
+</div>`:`<div style="margin-top:12px;padding:12px;background:#2e0a0a;border-radius:6px;font-size:13px">
+<strong>Constitutional Rejection:</strong> This derivation violates one or more D1–D5 rules. It cannot be formalized without addressing the violations above.
+</div>`}
+</div>`;
+}
+
+// ========== INTERACTIVE GRAPH ==========
+const GRAPH_POS={
+reality:{x:390,y:30},principles:{x:390,y:80},
+exist:{x:130,y:150},identity:{x:250,y:150},relationship:{x:390,y:150},
+constraint:{x:530,y:150},transformation:{x:650,y:150},verification:{x:730,y:150},
+usc:{x:390,y:230},
+uce:{x:195,y:310},ucc:{x:330,y:310},ucm:{x:465,y:310},ucl:{x:600,y:310},
+ucrs:{x:350,y:390},ucmodels:{x:500,y:390},urs:{x:620,y:390},uvs:{x:730,y:390},
+usr:{x:250,y:470},uca:{x:450,y:470},ucd:{x:650,y:470},
+codelabs:{x:350,y:540},studyo:{x:550,y:540}
+};
+const LAYER_COLORS={pre:'#6b7280',uscp:'#22c55e',usc:'#a855f7',science:'#8b5cf6',expression:'#3b82f6',execution:'#10b981',impl:'#f97316'};
+let highlightedLayer='all';
+
+function renderGraph(){
+const svg=document.getElementById('graph-svg');
+if(!svg)return;
+svg.innerHTML='';
+// Draw edges
+Object.keys(NODES).forEach(k=>{
+const node=NODES[k];const pos=GRAPH_POS[k];if(!pos)return;
+node.parents.forEach(pk=>{
+const ppos=GRAPH_POS[pk];if(!ppos)return;
+const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+line.setAttribute('x1',ppos.x);line.setAttribute('y1',ppos.y+12);
+line.setAttribute('x2',pos.x);line.setAttribute('y2',pos.y-12);
+line.setAttribute('stroke','#2a2a3e');line.setAttribute('stroke-width','2');
+line.setAttribute('data-from',pk);line.setAttribute('data-to',k);
+svg.appendChild(line);
+});
+});
+// Draw nodes
+Object.keys(NODES).forEach(k=>{
+const node=NODES[k];const pos=GRAPH_POS[k];if(!pos)return;
+const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+g.setAttribute('class','graph-node-svg');g.setAttribute('data-id',k);g.setAttribute('data-layer',node.layer);
+g.style.cursor='pointer';
+const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+const w=Math.max(node.name.length*7+20,60);
+rect.setAttribute('x',pos.x-w/2);rect.setAttribute('y',pos.y-12);rect.setAttribute('width',w);rect.setAttribute('height',24);
+rect.setAttribute('rx','6');rect.setAttribute('fill',LAYER_COLORS[node.layer]||'#333');
+rect.setAttribute('stroke','#fff');rect.setAttribute('stroke-opacity','0.2');rect.setAttribute('stroke-width','1');
+const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+text.setAttribute('x',pos.x);text.setAttribute('y',pos.y+4);text.setAttribute('text-anchor','middle');
+text.setAttribute('fill','#fff');text.setAttribute('font-size','11');text.setAttribute('font-weight','600');
+text.setAttribute('font-family','-apple-system,BlinkMacSystemFont,sans-serif');
+text.textContent=node.name;
+g.appendChild(rect);g.appendChild(text);
+g.addEventListener('click',()=>showNodeDetail(k));
+svg.appendChild(g);
+});
+}
+
+function highlightLayer(layer,btn){
+document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');highlightedLayer=layer;
+document.querySelectorAll('.graph-node-svg').forEach(g=>{
+const l=g.getAttribute('data-layer');
+g.style.opacity=(layer==='all'||l===layer)?'1':'0.15';
+});
+document.querySelectorAll('#graph-svg line').forEach(l=>{
+const from=l.getAttribute('data-from');const to=l.getAttribute('data-to');
+const fromLayer=NODES[from]?.layer;const toLayer=NODES[to]?.layer;
+l.style.opacity=(layer==='all'||fromLayer===layer||toLayer===layer)?'1':'0.1';
+});
+}
+
+function showNodeDetail(id){
+const node=NODES[id];if(!node)return;
+const det=document.getElementById('node-detail');if(!det)return;
+const deps=Object.keys(NODES).filter(k=>NODES[k].parents.includes(id));
+det.style.display='block';
+det.innerHTML=`
+<div class="entry-card">
+<h3 style="color:${LAYER_COLORS[node.layer]}">${node.name}</h3>
+<p style="font-size:13px;color:var(--dim)">${node.q}</p>
+<p style="font-size:12px;margin-top:8px">${node.desc}</p>
+<div class="field"><div class="field-label">Layer</div><div class="field-value">${node.layer}</div></div>
+<div class="field"><div class="field-label">Parents</div><div class="field-value">${node.parents.length?node.parents.map(p=>NODES[p]?.name||p).join(', '):'None (root)'}</div></div>
+<div class="field"><div class="field-label">Dependents</div><div class="field-value">${deps.length?deps.map(d=>NODES[d].name).join(', '):'None (leaf)'}</div></div>
+</div>`;
+}
+
+// ========== BLUEPRINT GENERATOR ==========
+function generateBlueprint(){
+const key=document.getElementById('blueprint-concept')?.value;
+const out=document.getElementById('blueprint-output');
+if(!out||!key){if(out)out.innerHTML='';return}
+const node=NODES[key];if(!node)return;
+const deps=Object.keys(NODES).filter(k=>NODES[k].parents.includes(key));
+const layerNames={pre:'Pre-Constitutional',uscp:'Constitutional Primitive',usc:'Constitution',science:'Constitutional Science',expression:'Expression Layer',execution:'Execution Layer',impl:'Implementation Layer'};
+const governance=node.layer==='pre'?'Not governable':node.layer==='impl'?'Implementation-specific':'Constitutional — 6-stage pipeline required';
+
+out.innerHTML=`
+<div class="entry-card">
+<h3>Blueprint: ${node.name}</h3>
+<div class="field"><div class="field-label">Constitutional Question</div><div class="field-value" style="font-size:14px;font-weight:600">${node.q}</div></div>
+<div class="field"><div class="field-label">Layer</div><div class="field-value">${layerNames[node.layer]||node.layer}</div></div>
+<div class="field"><div class="field-label">Description</div><div class="field-value">${node.desc}</div></div>
+<div class="field"><div class="field-label">Parent Concepts</div><div class="field-value">${node.parents.length?node.parents.map(p=>`<span class="badge badge-const">${NODES[p]?.name||p}</span>`).join(' '):'<span class="badge" style="background:#1e1e2e;color:var(--dim)">Root — no parents</span>'}</div></div>
+<div class="field"><div class="field-label">Dependents</div><div class="field-value">${deps.length?deps.map(d=>`<span class="badge badge-arch">${NODES[d].name}</span>`).join(' '):'<span class="badge" style="background:#1e1e2e;color:var(--dim)">Leaf — nothing depends on this</span>'}</div></div>
+<div class="field"><div class="field-label">Governance</div><div class="field-value">${governance}</div></div>
+
+<h3 style="margin-top:20px">Implementation Requirements</h3>
+<table class="table">
+<tr><th>Requirement</th><th>Detail</th></tr>
+<tr><td>Constitutional Necessity</td><td>Must exist at the constitutional level — removing it breaks the kernel.</td></tr>
+<tr><td>Derivation Source</td><td>Derived from: ${node.parents.length?node.parents.map(p=>NODES[p]?.name||p).join(', '):'Constitutional root'}</td></tr>
+<tr><td>Verification Criteria</td><td>Must pass all 10 Part III tests before formalization.</td></tr>
+<tr><td>Governance Path</td><td>${governance}</td></tr>
+<tr><td>Reference Implementation</td><td>To be defined during CodeLabs experimentation.</td></tr>
+</table>
+
+<h3 style="margin-top:20px">Blueprint Export</h3>
+<pre style="background:var(--bg);padding:16px;border-radius:6px;font-size:11px;overflow-x:auto;border:1px solid var(--border)"># Blueprint: ${node.name}
+
+## Constitutional Specification
+- **Question:** ${node.q}
+- **Layer:** ${node.layer}
+- **Description:** ${node.desc}
+
+## Derivation
+- **Parents:** ${node.parents.length?node.parents.join(', '):'None'}
+- **Rule Compliance:** D1–D5 verified
+
+## Verification
+- [ ] Test 1: Reality
+- [ ] Test 2: Origin
+- [ ] Test 3: Constitutional Necessity
+- [ ] Test 4: Derivation
+- [ ] Test 5: Consistency
+- [ ] Test 6: Verification
+- [ ] Test 7: Simplicity
+- [ ] Test 8: Sovereignty
+- [ ] Test 9: Replaceability
+- [ ] Test 10: Evolution
+
+## Governance
+- [ ] Proposal submitted
+- [ ] Review complete
+- [ ] Verification passed
+- [ ] Ratification approved
+- [ ] Publication recorded
+- [ ] Derivation updated</pre>
+</div>`;
+}
+
+// ========== DEPENDENCY ANALYSIS ==========
+function analyzeDependencies(){
+const key=document.getElementById('dep-concept')?.value;
+const out=document.getElementById('dep-output');
+if(!out||!key){if(out)out.innerHTML='';return}
+const node=NODES[key];if(!node)return;
+
+// Find all dependents (things that depend on this)
+const directDeps=Object.keys(NODES).filter(k=>NODES[k].parents.includes(key));
+// Find transitive dependents
+const transitiveDeps=[];
+function findTransitive(deps){
+deps.forEach(d=>{
+if(!transitiveDeps.includes(d)){
+transitiveDeps.push(d);
+findTransitive(Object.keys(NODES).filter(k=>NODES[k].parents.includes(d)));
+}
+});
+}
+findTransitive(directDeps);
+
+// Find all dependencies (things this depends on)
+const directParents=node.parents;
+const transitiveParents=[];
+function findParents(parents){
+parents.forEach(p=>{
+if(!transitiveParents.includes(p)){
+transitiveParents.push(p);
+findParents(NODES[p]?.parents||[]);
+}
+});
+}
+findParents(directParents);
+
+const wouldBreak=transitiveDeps.length;
+const severity=wouldBreak===0?'Low':wouldBreak<=3?'Medium':wouldBreak<=6?'High':'Critical';
+
+out.innerHTML=`
+<div class="entry-card">
+<h3>Dependency Analysis: ${node.name}</h3>
+
+<div class="primitive-grid" style="margin:16px 0">
+<div class="primitive-card"><div class="num" style="color:var(--accent)">${directParents.length}</div><div class="name">Direct Parents</div><div class="question">What this depends on</div></div>
+<div class="primitive-card"><div class="num" style="color:var(--accent)">${directDeps.length}</div><div class="name">Direct Dependents</div><div class="question">What depends on this</div></div>
+<div class="primitive-card"><div class="num" style="color:${severity==='Critical'?'var(--red)':severity==='High'?'var(--yellow)':'var(--green)'}">${transitiveDeps.length}</div><div class="name">Total Impact</div><div class="question">All downstream effects</div></div>
+<div class="primitive-card"><div class="num" style="color:${severity==='Critical'?'var(--red)':severity==='High'?'var(--yellow)':'var(--green)'}">${severity}</div><div class="name">Removal Severity</div><div class="question">How badly it would break</div></div>
+</div>
+
+<h3 style="margin-top:16px">Dependencies (what ${node.name} depends on)</h3>
+<table class="table">
+<tr><th>Concept</th><th>Layer</th><th>Type</th></tr>
+${directParents.map(p=>`<tr><td>${NODES[p]?.name||p}</td><td>${NODES[p]?.layer||'?'}</td><td><span class="badge badge-const">Direct</span></td></tr>`).join('')}
+${transitiveParents.filter(p=>!directParents.includes(p)).map(p=>`<tr><td>${NODES[p]?.name||p}</td><td>${NODES[p]?.layer||'?'}</td><td><span class="badge" style="background:#1e1e2e;color:var(--dim)">Transitive</span></td></tr>`).join('')}
+</table>
+
+<h3 style="margin-top:16px">Dependents (what depends on ${node.name})</h3>
+${directDeps.length||transitiveDeps.length?`
+<table class="table">
+<tr><th>Concept</th><th>Layer</th><th>Type</th><th>Impact</th></tr>
+${directDeps.map(d=>`<tr><td>${NODES[d].name}</td><td>${NODES[d].layer}</td><td><span class="badge badge-arch">Direct</span></td><td style="color:var(--red)">Breaks if removed</td></tr>`).join('')}
+${transitiveDeps.filter(d=>!directDeps.includes(d)).map(d=>`<tr><td>${NODES[d].name}</td><td>${NODES[d].layer}</td><td><span class="badge" style="background:#1e1e2e;color:var(--dim)">Transitive</span></td><td style="color:var(--yellow)">Affected downstream</td></tr>`).join('')}
+</table>`:'<p style="color:var(--dim);font-size:13px">No dependents. This is a leaf node — removing it would not break anything downstream.</p>'}
+
+<div style="margin-top:16px;padding:12px;background:${severity==='Critical'||severity==='High'?'#2e0a0a':'#0a2e1a'};border-radius:6px;font-size:13px">
+<strong>Impact Assessment:</strong> ${node.name} has ${transitiveDeps.length} downstream dependent${transitiveDeps.length!==1?'s':''}. ${wouldBreak>0?`Removing or modifying it would affect ${wouldBreak} concept${wouldBreak!==1?'s':''}. This requires the full 6-stage governance pipeline with mandatory impact analysis.`:'Removing it would not affect any downstream concepts. Standard governance applies.'}
+</div>
+</div>`;
+}
+
+// ========== INIT ==========
 showPage('overview');
 </script>
 </body>

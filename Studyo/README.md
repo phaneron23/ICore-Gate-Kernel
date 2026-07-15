@@ -1,54 +1,42 @@
-# Studyo v0.1.0 — The Unified Constitutional Workspace
+# Studyo v0.2.0 — The Unified Constitutional Workspace
 
 **ICore** = InitialCore
 **Originator:** Sir Collins — Creator and Concept Pioneer of ICore
-**Version:** 0.1.0
-**Status:** First constitutional application
+**Version:** 0.2.0
+**Status:** Second constitutional application release
 
 ---
 
-## What Is Studyo
+## What Changed from v0.1.0
 
-Studyo is the first living embodiment of ICore — transforming the constitutional science from a static body of knowledge into an interactive, verifiable, and executable constitutional engineering environment.
+v0.1.0 was Explore • Verify • Govern.
+v0.2.0 adds **Derive • Blueprint** — making the constitution not just explorable but *productive*.
 
-**Kernel** defines truth.
-**Atlas** organizes truth.
-**Studyo** interacts with truth.
-**USR/CoreFab** executes truth.
-**Reference Derivatives** demonstrate truth.
-
-## v0.1.0 Capabilities
+## v0.2.0 Capabilities
 
 | Capability | Status | Description |
 |-----------|--------|-------------|
-| Atlas Explorer | ✅ | Browse all 24 entries with 10-field format, search, filter |
-| Derivation Graph | ✅ | Visual hierarchy with D1–D5 rules |
+| Atlas Explorer | ✅ | Browse all entries with 10-field format, search, filter |
+| Interactive Graph | ✅ | SVG-based derivation graph with click-to-inspect, layer highlighting |
+| Concept Derivation | ✅ | Apply D1–D5 rules to derive new concepts, compliance checking |
+| Blueprint Generator | ✅ | Generate implementation templates from constitutional specs |
+| Dependency Analysis | ✅ | Impact analysis, breakage detection, transitive dependency tracing |
 | Verification Dashboard | ✅ | 20/20 components, 120/120 checks, timestamp status |
 | Governance Overview | ✅ | 6-stage pipeline, 4-role separation, amendment types |
-| Concept Derivation | ❌ v0.2.0 | Requires URS/CoreFab runtime |
-| Blueprint Generation | ❌ v0.2.0 | Requires URS/CoreFab runtime |
 
 ## Technology
 
 - **Self-contained HTML/CSS/JS** — offline-first, no dependencies
-- **Dark theme** — constitutional aesthetic
-- **Responsive** — works on Android, desktop, any screen
+- **SVG graph rendering** — interactive derivation visualization
+- **Constitutional data model** — 22 nodes with full derivation relationships
 - **Single file** — `index.html` is the entire application
 
-## How to Use
+## Roadmap
 
-1. Open `index.html` in any browser
-2. Navigate via the sidebar
-3. Explore Atlas entries, verify the foundation, understand governance
-
-## Versioning
-
-- **v0.1.0** — First implementation. Explorable, verifiable, governed.
-- **v0.2.0** — Concept derivation + blueprint generation (requires runtime)
-- **v1.0.0** — Full constitutional workspace with USR/CoreFab integration
-
-Every release maximizes constitutional value within its scope.
+- **v0.1.0** — Explore • Verify • Govern ✓
+- **v0.2.0** — Derive • Blueprint ✓ (current)
+- **v0.3.0** — Execute (USR/CoreFab via Rust + WASM)
 
 ---
 
-*Studyo v0.1.0 — The constitution made interactive.*
+*Studyo v0.2.0 — The constitution made productive.*
