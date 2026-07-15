@@ -84,7 +84,7 @@ Everything flows downward. Nothing flows upward.
               ═══════════════════════════════
                    ↓
      ┌──────────────────────────────────────┐
-     │  CodeLabs → Studio → Users           │  ← Interface layer
+     │  CodeLabs → Studyo → Users           │  ← Interface layer
      └──────────────────────────────────────┘
 ```
 
@@ -97,7 +97,7 @@ Everything flows downward. Nothing flows upward.
 **Three zones.**
 - **Pre-constitutional** (Reality, Principles): what exists before the constitution.
 - **Constitutional** (USCP through UCD): the governed, verified, sovereign core.
-- **Implementation** (CodeLabs, Studio, external systems): where constitution meets the world.
+- **Implementation** (CodeLabs, Studyo, external systems): where constitution meets the world.
 
 **USC is the Constitution, not a layer beside it.** The old model had "Constitution" as a separate concept. The refined model recognizes that USC *is* the Constitution — the complete, sovereign constitutional authority derived from USCP's six primitives.
 

@@ -29,7 +29,7 @@
 
 ## What This Kernel Does NOT Define
 
-- Concrete implementations (UCA adapters, CoreFab runtime, Studio UI)
+- Concrete implementations (UCA adapters, CoreFab runtime, Studyo UI)
 - Application-layer systems (CodeLabs, Constitutional Atlas)
 - External integrations beyond standards alignment
 - Economic or organizational structures

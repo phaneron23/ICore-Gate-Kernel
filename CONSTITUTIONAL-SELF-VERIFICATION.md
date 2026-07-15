@@ -361,7 +361,7 @@ Each component is tested against six questions:
 ## 15. Studyo
 
 ### Q1: Does it exist?
-**PASS.** Defined in Part I, lines 187–195. *(Note: Part I currently says "Studio" — naming update to "Studyo" pending.)*
+**PASS.** Defined in Part I, lines 187–195. *(Note: Part I currently says "Studyo" — naming update to "Studyo" pending.)*
 
 ### Q2: Can it be uniquely identified?
 **PASS.** Only unified constitutional workspace.
@@ -537,10 +537,10 @@ Each component is tested against six questions:
 **None.** The Kernel is constitutionally self-consistent.
 
 ### Naming Issue (Non-Critical)
-**Part I, line 187:** Still says "Studio" instead of "Studyo". This is a naming update that requires a Clarification amendment (fast-track, no kernel change).
+**Part I, line 187:** Still says "Studyo" instead of "Studyo". This is a naming update that requires a Clarification amendment (fast-track, no kernel change).
 
 ### Recommended Amendments
-1. **Studio → Studyo** (Clarification) — naming update in Part I, Part II, Atlas files
+1. **Studyo → Studyo** (Clarification) — naming update in Part I, Part II, Atlas files
 2. **Atlas Enhancement** — add "Verification Criteria" and "Governance Status" columns to Atlas pages per the execution plan's recommendation
 
 ### Constitutional Conclusion

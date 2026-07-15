@@ -35,7 +35,7 @@ The answer is six irreducible primitives — the smallest complete constitutiona
 ## The Hierarchy
 
 ```
-Reality → Principles → USCP → USC → UCE → UCC → UCM → UCL → UCRS → UCModels → URS → UVS → USR → UCA → UCD → CodeLabs → Studio
+Reality → Principles → USCP → USC → UCE → UCC → UCM → UCL → UCRS → UCModels → URS → UVS → USR → UCA → UCD → CodeLabs → Studyo
 ```
 
 | Layer | Name | Role |
@@ -46,7 +46,7 @@ Reality → Principles → USCP → USC → UCE → UCC → UCM → UCL → UCRS
 | Sciences | UCE/UCC/UCM/UCL | Knowledge, logic, math, language |
 | Expression | UCRS/UCModels | Self-reference and canonical models |
 | Execution | USR/UCA/UCD | Runtime, adapters, building blocks |
-| Implementation | CodeLabs/Studio | Experimentation and interface |
+| Implementation | CodeLabs/Studyo | Experimentation and interface |
 
 **Key architectural decision:** USC is not a layer above the Constitution. **USC IS the Constitution.** Everything above derives from it; everything below grounds it.
 
@@ -130,7 +130,7 @@ All files are in: `/root/workspace/ICore-Gate-Kernel-v1/`
     ├── Atlas-Sciences.md              (UCE/UCC/UCM/UCL)
     ├── Atlas-Expression.md            (UCRS/UCModels)
     ├── Atlas-Execution.md             (USR/UCA/UCD)
-    └── Atlas-Implementation.md        (CodeLabs/Studio)
+    └── Atlas-Implementation.md        (CodeLabs/Studyo)
 ```
 
 ---

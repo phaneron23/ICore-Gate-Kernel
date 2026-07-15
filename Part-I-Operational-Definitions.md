@@ -180,11 +180,11 @@ Definitions follow derivation order: each builds on the one before it.
 
 **What does it depend on?** The full constitutional stack (via UCA) — experimentation requires the complete foundation to be meaningful.
 
-**What depends on it?** Studio — the unified workspace integrates CodeLabs as its interactive experimentation surface.
+**What depends on it?** Studyo — the unified workspace integrates CodeLabs as its interactive experimentation surface.
 
 ---
 
-### Studio (studio.initialcore.net)
+### Studyo (studio.initialcore.net)
 
 **What is it?** The unified constitutional workspace that integrates CodeLabs, the Constitutional Atlas, and all constitutional tools into one sovereign, accessible interface.
 
@@ -192,7 +192,7 @@ Definitions follow derivation order: each builds on the one before it.
 
 **What does it depend on?** CodeLabs and the full constitutional stack — the workspace is the outermost interface, consuming everything beneath it.
 
-**What depends on it?** Nothing within the kernel — Studio is the outermost layer. External users and systems interact with ICore through Studio.
+**What depends on it?** Nothing within the kernel — Studyo is the outermost layer. External users and systems interact with ICore through Studyo.
 
 ---
 
@@ -206,7 +206,7 @@ Constitutional reference: UCRS → UCModels
 Constitutional expression: URS → UVS
 Constitutional execution: USR/CoreFab → UCA
 Constitutional derivatives: UCD → Implementations
-Interface layer:       CodeLabs → Studio
+Interface layer:       CodeLabs → Studyo
 ```
 
 *Every definition above is constitutional. The derivation graph (Part II) makes the dependency order explicit.*

@@ -76,7 +76,7 @@ An element graduates from Gate to ICore when it satisfies all five criteria:
 
 1. **Validated.** Passed all 10 Part III tests in at least one full verification cycle.
 2. **Stable.** No modification or deprecation proposals in the last 90 days.
-3. **Depended on.** At least one downstream element (UCD, implementation, or Studio component) derives from it.
+3. **Depended on.** At least one downstream element (UCD, implementation, or Studyo component) derives from it.
 4. **Reviewed.** Independently reviewed by at least two parties uninvolved in its creation.
 5. **Ratified.** Formally approved by the constitutional authority.
 
