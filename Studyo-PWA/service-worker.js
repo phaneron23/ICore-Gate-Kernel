@@ -1,8 +1,8 @@
-// ICore Studyo Service Worker — v0.1.0
+// ICore Studyo Service Worker — v0.2.0
 // Brave-first, offline-first, sovereign
 // Zero external requests. Everything from same origin.
 
-const CACHE_NAME = 'studyo-v0.1.0';
+const CACHE_NAME = 'studyo-v0.2.0';
 
 const PRECACHE_ASSETS = [
   '/',
@@ -24,10 +24,11 @@ const PRECACHE_ASSETS = [
   '/ui/about.js',
   '/storage/db.js',
   '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icons/icon-512.png',
+  '/icons/favicon.ico'
 ];
 
-// Install: cache all assets
+// Install: cache all assets, then activate immediately
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -36,31 +37,62 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activate: clean old caches
+// Activate: clean ALL old caches, then claim all clients
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
         keys
           .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
+          .map(key => {
+            console.log('[SW] Removing old cache:', key);
+            return caches.delete(key);
+          })
       )
-    ).then(() => self.clients.claim())
+    ).then(() => {
+      // Notify all clients that SW updated
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({ type: 'SW_UPDATED', version: 'v0.2.0' });
+        });
+      });
+    }).then(() => self.clients.claim())
   );
 });
 
-// Fetch: cache-first, same-origin only
+// Fetch strategy:
+// - HTML: network-first (always get fresh version)
+// - Everything else: cache-first with background update
 self.addEventListener('fetch', event => {
   // Only handle same-origin requests
   if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
 
+  // Network-first for HTML pages
+  if (event.request.mode === 'navigate' || 
+      event.request.url.endsWith('.html') ||
+      event.request.url.endsWith('/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, clone);
+          });
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Cache-first for everything else (JS, CSS, images)
   event.respondWith(
     caches.match(event.request)
       .then(cached => {
         if (cached) {
-          // Return cached version, fetch update in background
+          // Return cached, update in background
           event.waitUntil(
             fetch(event.request).then(response => {
               if (response.ok) {

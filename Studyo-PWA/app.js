@@ -1,4 +1,4 @@
-// ICore Studyo — Main Application Controller v0.1.0
+// ICore Studyo — Main Application Controller v0.2.0
 // Brave-first, Offline-first, Sovereign
 
 const App = {
@@ -35,10 +35,52 @@ const App = {
       try {
         const reg = await navigator.serviceWorker.register('/service-worker.js');
         console.log('SW registered:', reg.scope);
+
+        // Listen for SW update notifications
+        navigator.serviceWorker.addEventListener('message', event => {
+          if (event.data && event.data.type === 'SW_UPDATED') {
+            this.showUpdateBanner(event.data.version);
+          }
+        });
+
+        // Check for waiting SW (update available)
+        if (reg.waiting) {
+          this.showUpdateBanner('new');
+        }
+
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              this.showUpdateBanner('new');
+            }
+          });
+        });
       } catch (e) {
         console.warn('SW registration failed:', e);
       }
     }
+  },
+
+  showUpdateBanner(version) {
+    // Remove existing banner if any
+    const existing = document.getElementById('update-banner');
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'update-banner';
+    banner.style.cssText = `
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: var(--accent); color: var(--bg-primary);
+      padding: 12px 16px; text-align: center; font-weight: 600;
+      font-family: var(--font-system); font-size: 0.85rem;
+      cursor: pointer;
+    `;
+    banner.textContent = `📱 Update available (${version || 'new'}). Tap to reload.`;
+    banner.onclick = () => {
+      window.location.reload();
+    };
+    document.body.prepend(banner);
   },
 
   // Navigation
