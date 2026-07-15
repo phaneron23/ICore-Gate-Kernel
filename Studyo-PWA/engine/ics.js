@@ -54,11 +54,11 @@ window.ICS = {
     { id: 'T2-24', name: 'UCM M6 — Information Theory', severity: 'minor', test: (c) => true },
     { id: 'T2-25', name: 'UCM M7 — Topology', severity: 'minor', test: (c) => true },
     // UCL tests (7)
-    { id: 'T2-26', name: 'UCL — Subject Field', severity: 'critical', test: (c) => c?.expression?.Subject || c?.subject },
-    { id: 'T2-27', name: 'UCL — Predicate Field', severity: 'critical', test: (c) => c?.expression?.Predicate || c?.predicate },
-    { id: 'T2-28', name: 'UCL — Object Field', severity: 'critical', test: (c) => c?.expression?.Object || c?.object },
-    { id: 'T2-29', name: 'UCL — Source Field', severity: 'critical', test: (c) => c?.expression?.Source || c?.origin },
-    { id: 'T2-30', name: 'UCL — Context Field', severity: 'critical', test: (c) => c?.expression?.Context || c?.context },
+    { id: 'T2-26', name: 'UCL — Subject Field', severity: 'critical', test: (c) => !!(c?.expression?.Subject || c?.subject) },
+    { id: 'T2-27', name: 'UCL — Predicate Field', severity: 'critical', test: (c) => !!(c?.expression?.Predicate || c?.predicate) },
+    { id: 'T2-28', name: 'UCL — Object Field', severity: 'critical', test: (c) => !!(c?.expression?.Object || c?.object) },
+    { id: 'T2-29', name: 'UCL — Source Field', severity: 'critical', test: (c) => !!(c?.expression?.Source || c?.origin) },
+    { id: 'T2-30', name: 'UCL — Context Field', severity: 'critical', test: (c) => !!(c?.expression?.Context || c?.context) },
     { id: 'T2-31', name: 'UCL — Meaning-Serialization', severity: 'major', test: (c) => true },
     { id: 'T2-32', name: 'UCL — Vocabulary Compliance', severity: 'major', test: (c) => true }
   ],
@@ -68,10 +68,10 @@ window.ICS = {
     { id: 'T3-01', name: 'UCRS — Reference Completeness', severity: 'critical', test: (c) => c?.reference !== undefined },
     { id: 'T3-02', name: 'UCRS — Reference Uniqueness', severity: 'critical', test: (c) => typeof c?.reference === 'string' },
     { id: 'T3-03', name: 'UCRS — Trace to USCP', severity: 'critical', test: (c) => true }, // Requires full chain
-    { id: 'T3-04', name: 'UCModels — Model Completeness', severity: 'critical', test: (c) => c?.definition && c?.relationships && c?.lifecycle },
+    { id: 'T3-04', name: 'UCModels — Model Completeness', severity: 'critical', test: (c) => !!(c?.definition && c?.relationships && c?.lifecycle) },
     { id: 'T3-05', name: 'UCModels — Relationship Integrity', severity: 'major', test: (c) => Array.isArray(c?.relationships) },
-    { id: 'T3-06', name: 'UCModels — Lifecycle Validity', severity: 'major', test: (c) => c?.lifecycle?.state },
-    { id: 'T3-07', name: 'URS — Representation Present', severity: 'critical', test: (c) => c?.text || c?.definition },
+    { id: 'T3-06', name: 'UCModels — Lifecycle Validity', severity: 'major', test: (c) => !!c?.lifecycle?.state },
+    { id: 'T3-07', name: 'URS — Representation Present', severity: 'critical', test: (c) => !!(c?.text || c?.definition) },
     { id: 'T3-08', name: 'URS — Meaning Preservation', severity: 'major', test: (c) => true },
     { id: 'T3-09', name: 'Cross-Layer Consistency', severity: 'critical', test: (c) => true },
     { id: 'T3-10', name: 'Governance Pipeline', severity: 'major', test: (c) => c?.lifecycle?.governed === true }

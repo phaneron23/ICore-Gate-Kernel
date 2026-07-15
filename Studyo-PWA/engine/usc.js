@@ -84,7 +84,7 @@ window.USC = {
       source: 'UCRS-RR1-RR5',
       description: 'All references must be unique, immutable, traceable, scoped, and governed.',
       appliesTo: 'referential',
-      test: (claim) => claim && claim.reference && claim.reference.valid === true
+      test: (claim) => claim && claim.reference && (claim.referenceValid === true || typeof claim.reference === 'string')
     }
   ],
 

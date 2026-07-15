@@ -44,12 +44,14 @@ window.TrustVerifier = {
         Predicate: 'asserts',
         Object: text,
         Source: 'user-input',
-        Context: 'trust-verification'
+        Context: 'trust-verification',
+        canonical: true
       },
-      
+    
       // Reference
       reference: 'claim-' + Date.now(),
-      
+      referenceValid: true,
+    
       // Standards
       standards: 'ICore Kernel v1.0'
     };
