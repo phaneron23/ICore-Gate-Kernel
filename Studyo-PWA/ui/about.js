@@ -1,4 +1,4 @@
-// ICore Studyo — About Screen
+// ICore Studyo — About Screen v1.3.0
 
 window.AboutScreen = {
   render() {
@@ -8,7 +8,7 @@ window.AboutScreen = {
           <div style="font-size: 3rem; margin-bottom: var(--space-md);">🔷</div>
           <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: var(--space-xs);">ICore Studyo</h2>
           <p class="text-secondary" style="font-size: 0.85rem;">Universal Constitutional Workspace</p>
-          <p class="text-muted" style="font-size: 0.75rem; margin-top: var(--space-sm);">Version 0.1.0</p>
+          <p class="text-muted" style="font-size: 0.75rem; margin-top: var(--space-sm);">Version 1.3.0</p>
         </div>
 
         <!-- Origin -->
@@ -28,8 +28,8 @@ window.AboutScreen = {
             ICore is a 7-layer constitutional architecture, each layer derived from the one below
             through strict dependency rules. It begins with 6 foundational primitives (USCP),
             builds a Constitution (USC), develops constitutional sciences (UCE/UCC/UCM/UCL),
-            establishes reference systems (UCRS/UCModels/URS/UVS), and culminates in
-            a runtime and workspace.
+            establishes reference systems (UCRS/UCModels/URS/UVS), defines the execution
+            and adapter boundary (USR/CoreFab + UCA), and culminates in a workspace.
           </p>
         </div>
 
@@ -42,8 +42,23 @@ window.AboutScreen = {
             <strong>Layer 3:</strong> USC — The Constitution (Kernel v1.0)<br>
             <strong>Layer 4:</strong> Sciences — UCE · UCC · UCM · UCL<br>
             <strong>Layer 5:</strong> Reference — UCRS · UCModels · URS · UVS<br>
-            <strong>Layer 6:</strong> Runtime — USR/CoreFab · UCA · UCD<br>
-            <strong>Layer 7:</strong> Workspace — CodeLabs · Studyo
+            <strong>Layer 6:</strong> Execution — USR/CoreFab v0.1.0 · UCA v0.1.0<br>
+            <strong>Layer 7:</strong> Workspace — Studyo
+          </p>
+        </div>
+
+        <!-- Formal Specifications -->
+        <div class="about-section">
+          <h3>📜 Formal Specifications</h3>
+          <p>
+            <strong>USR/CoreFab v0.1.0</strong> — Constitutional execution engine.<br>
+            6 contracts (Identity, Execution, Constraints, Isolation, Attestation,
+            Orchestration). 5 runtime axioms. 31 invariants. 15 conformance tests.
+            Deterministic, capability-based, self-attesting.<br><br>
+            <strong>UCA v0.1.0</strong> — Universal adapter boundary.<br>
+            4 adapter axioms. 5 domains (Naming, Serialization, Execution, Storage,
+            Communication). 13 reference adapters. 12 conformance tests. Sovereignty
+            guarantee: constitution never depends on any adapter.
           </p>
         </div>
 
@@ -70,7 +85,8 @@ window.AboutScreen = {
             <strong>Offline-first:</strong> Works without internet.<br>
             <strong>Mobile-first:</strong> Designed for phones.<br>
             <strong>Brave-first:</strong> Respects your privacy.<br>
-            <strong>Zero tracking:</strong> No analytics, no telemetry.
+            <strong>Zero tracking:</strong> No analytics, no telemetry.<br>
+            <strong>Zero external requests:</strong> All assets bundled.
           </p>
         </div>
 
@@ -97,12 +113,15 @@ window.AboutScreen = {
             Built as a Progressive Web App (PWA). Zero external dependencies.
             Zero network requests. All constitutional logic runs client-side in JavaScript.
             Data stored in IndexedDB. Installable on Android via Brave or Firefox.
+            Runtime engine uses SubtleCrypto for SHA-256 attestation chains.
           </p>
         </div>
 
         <div class="text-center mt-lg mb-lg">
           <p class="text-muted" style="font-size: 0.7rem;">
             ICore Constitutional Specification v0.1.0<br>
+            USR/CoreFab Formal Specification v0.1.0<br>
+            UCA Formal Specification v0.1.0<br>
             Self-verified · GPG-signed · Immutable record<br>
             © 2026 Sir Collins · All rights reserved
           </p>

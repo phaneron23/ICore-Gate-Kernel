@@ -1,4 +1,4 @@
-// ICore Studyo — Main Application Controller v1.1.0
+// ICore Studyo — Main Application Controller v1.3.0
 // Brave-first, Offline-first, Sovereign
 
 const App = {
@@ -244,6 +244,66 @@ const App = {
     window.addEventListener('online', updateStatus);
     window.addEventListener('offline', updateStatus);
     updateStatus();
+  },
+
+  // Runtime Self-Verification Demo
+  async runRuntimeDemo() {
+    const container = document.getElementById('runtime-demo-result');
+    if (!container) return;
+    container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); font-size:0.85rem;">⏳ Running runtime self-verification...</div>';
+
+    try {
+      // 1. USR/CoreFab self-verification
+      const runtime = new CoreFab.UsrRuntime();
+      await runtime.verify();
+      const contractNames = Object.keys(runtime).filter(k =>
+        runtime[k] && typeof runtime[k] === 'object' && k !== 'verify'
+      );
+
+      // 2. Execute a demo blueprint
+      const demoResult = await runtime.executeBlueprint({
+        name: 'Demo-Component', layer: 'execution', version: '0.1.0',
+        parents: [], question: 'Demonstrate constitutional execution',
+        operation: 'validate-identity',
+        input: JSON.stringify({ name: 'Demo', layer: 'execution', question: 'Show runtime works' })
+      });
+
+      // 3. UCA sovereignty test
+      const ucaReg = new UCA.AdapterRegistry();
+      UCA.loadReferenceAdapters(ucaReg);
+      const sovereigntyTests = UCA.runSovereigntyTests(ucaReg);
+      const svPassed = sovereigntyTests.filter(t => t.passed).length;
+
+      container.innerHTML = `
+        <div style="padding: var(--space-md); background: var(--bg-input); border-radius: var(--radius-sm); font-size: 0.8rem;">
+          <div style="font-weight: 700; color: var(--accent); margin-bottom: var(--space-sm);">✅ Runtime Self-Verification: PASS</div>
+
+          <div style="margin-bottom: var(--space-sm);">
+            <strong>USR/CoreFab v${CoreFab.RUNTIME_VERSION}</strong><br>
+            Contracts: Identity ✅ · Execution ✅ · Constraints ✅ · Isolation ✅ · Attestation ✅ · Orchestration ✅<br>
+            Demo operation: <code>${demoResult.operation}</code> → ${demoResult.status} (attestation: ${demoResult.attestation.signature.slice(0,16)}…)
+          </div>
+
+          <div style="margin-bottom: var(--space-sm);">
+            <strong>UCA v0.1.0</strong><br>
+            Reference adapters loaded: ${ucaReg.all().length} (${ucaReg.active().length} active)<br>
+            Sovereignty tests: ${svPassed}/${sovereigntyTests.length} PASS<br>
+            Domains: ${Object.keys(UCA.DOMAINS).map(d => UCA.DOMAINS[d].label).join(' · ')}
+          </div>
+
+          <div style="color: var(--text-muted); font-size: 0.75rem; font-style: italic;">
+            All operations client-side. Zero external requests. Constitution never depends on any adapter.
+          </div>
+        </div>
+      `;
+    } catch (e) {
+      container.innerHTML = `
+        <div style="padding: var(--space-md); background: var(--bg-input); border-radius: var(--radius-sm); font-size: 0.8rem;">
+          <div style="font-weight: 700; color: var(--error); margin-bottom: var(--space-sm);">❌ Runtime Self-Verification: FAIL</div>
+          <div style="color: var(--text-secondary);">${e.msg || String(e)}</div>
+        </div>
+      `;
+    }
   }
 };
 

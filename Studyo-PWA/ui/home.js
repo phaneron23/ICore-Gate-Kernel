@@ -1,4 +1,4 @@
-// ICore Studyo — Home Screen
+// ICore Studyo — Home Screen v1.3.0
 
 window.HomeScreen = {
   render() {
@@ -45,7 +45,7 @@ window.HomeScreen = {
           </div>
         </div>
 
-        <!-- Stats -->
+        <!-- Constitutional Status -->
         <div class="card">
           <div class="card-header">
             <span style="font-size: 1.5rem;">📊</span>
@@ -86,6 +86,14 @@ window.HomeScreen = {
                 <div class="layer-status status-complete">✅</div>
               </div>
               <div class="layer-item">
+                <div class="layer-number">L6</div>
+                <div class="layer-info">
+                  <div class="layer-name">Execution &amp; Adapters</div>
+                  <div class="layer-desc">USR/CoreFab v0.1.0 · UCA v0.1.0</div>
+                </div>
+                <div class="layer-status status-complete">✅</div>
+              </div>
+              <div class="layer-item">
                 <div class="layer-number">ICS</div>
                 <div class="layer-info">
                   <div class="layer-name">Conformance Suite</div>
@@ -95,6 +103,33 @@ window.HomeScreen = {
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Runtime Demo -->
+        <div class="card">
+          <div class="card-header">
+            <span style="font-size: 1.5rem;">⚙️</span>
+            <div>
+              <div class="card-title">Constitutional Runtime</div>
+              <div class="card-description">USR/CoreFab v0.1.0 — 6 contracts, deterministic execution</div>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); margin-top: var(--space-md);">
+            <div style="padding: var(--space-sm); background: var(--bg-input); border-radius: var(--radius-sm); text-align: center;">
+              <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Contracts</div>
+              <div style="font-size: 1.1rem; font-weight: 700;">6</div>
+              <div style="font-size: 0.7rem; color: var(--text-secondary);">Identity · Execution · Constraints · Isolation · Attestation · Orchestration</div>
+            </div>
+            <div style="padding: var(--space-sm); background: var(--bg-input); border-radius: var(--radius-sm); text-align: center;">
+              <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Adapter Domains</div>
+              <div style="font-size: 1.1rem; font-weight: 700;">5</div>
+              <div style="font-size: 0.7rem; color: var(--text-secondary);">Naming · Serialization · Execution · Storage · Communication</div>
+            </div>
+          </div>
+          <button class="btn btn-secondary" style="margin-top: var(--space-md); width: 100%;" onclick="App.runRuntimeDemo()">
+            ⚡ Run Runtime Self-Verification
+          </button>
+          <div id="runtime-demo-result" style="margin-top: var(--space-sm);"></div>
         </div>
 
         <!-- Originator -->
