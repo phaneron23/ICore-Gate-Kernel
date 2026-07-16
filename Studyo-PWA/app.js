@@ -118,45 +118,36 @@ const App = {
 
   // PWA Install
   setupInstall() {
-    const installBtn = document.getElementById('install-btn');
-    
-    // Always show install button
-    if (installBtn) {
-      installBtn.style.display = 'block';
-      installBtn.addEventListener('click', () => this.installPWA());
-    }
-
     // Capture browser install prompt when available
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredInstallPrompt = e;
-      if (installBtn) {
-        installBtn.style.display = 'block';
-        installBtn.textContent = '📱 Install App';
-      }
     });
 
     window.addEventListener('appinstalled', () => {
       this.deferredInstallPrompt = null;
-      if (installBtn) {
-        installBtn.textContent = '✅ Installed';
-        setTimeout(() => { installBtn.style.display = 'none'; }, 2000);
+      const btn = document.getElementById('install-btn');
+      if (btn) {
+        btn.textContent = '✅ Installed';
+        setTimeout(() => { btn.style.display = 'none'; }, 2000);
       }
     });
   },
 
   async installPWA() {
-    const installBtn = document.getElementById('install-btn');
-    
-    // If browser provides the native prompt, use it
+    // If browser provides the native install prompt, use it
     if (this.deferredInstallPrompt) {
-      this.deferredInstallPrompt.prompt();
-      const { outcome } = await this.deferredInstallPrompt.userChoice;
-      this.deferredInstallPrompt = null;
-      return;
+      try {
+        this.deferredInstallPrompt.prompt();
+        const { outcome } = await this.deferredInstallPrompt.userChoice;
+        this.deferredInstallPrompt = null;
+        return;
+      } catch (e) {
+        // Prompt failed, fall through to manual guide
+      }
     }
 
-    // Fallback: show manual instructions
+    // Always show manual install guide
     this.showInstallGuide();
   },
 
