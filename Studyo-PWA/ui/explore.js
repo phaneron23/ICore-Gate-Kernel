@@ -11,7 +11,7 @@ window.ExploreScreen = {
       { num: 'L4', name: 'Sciences', desc: 'UCE · UCC · UCM · UCL', entities: ['Epistemology', 'Calculus', 'Mathematics', 'Language'], status: 'complete' },
       { num: 'L5', name: 'Reference', desc: 'UCRS · UCModels · URS · UVS', entities: ['Reference System', 'Canonical Models', 'Representation', 'Visualization'], status: 'complete' },
       { num: 'ICS', name: 'Conformance', desc: '57 Tests · C3 Certified', entities: ['Tier 1 (15)', 'Tier 2 (32)', 'Tier 3 (10)', 'CR-2026-001'], status: 'complete' },
-      { num: 'L6', name: 'Runtime', desc: 'USR · UCA · UCD', entities: ['Runtime', 'Adapters', 'Derivatives'], status: 'complete' },
+      { num: 'L6', name: 'Runtime', desc: 'USR/CoreFab · UCA', entities: ['USR/CoreFab v0.1.0 — Execution engine, 6 contracts', 'UCA v0.1.0 — Adapter boundary, 5 domains, 13 reference adapters', 'UCD — Deferred (user decision pending)'], status: 'complete' },
       { num: 'L7', name: 'Workspace', desc: 'CodeLabs · Studyo', entities: ['Experimentation', 'This App'], status: 'complete' }
     ];
 

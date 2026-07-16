@@ -1,6 +1,7 @@
 {
   "name": "ICore Studyo — Universal Constitutional Workspace",
   "short_name": "Studyo",
+  "version": "1.3.0",
   "description": "Constitutional workspace for trustworthy intelligence. Sovereign, offline-first, mobile-first.",
   "start_url": "/",
   "scope": "/",

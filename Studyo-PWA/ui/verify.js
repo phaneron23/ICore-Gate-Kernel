@@ -163,7 +163,7 @@ window.VerifyScreen = {
             <span style="font-size: 1.2rem;">🧪</span>
             <div class="card-title">ICS Conformance</div>
             <span style="margin-left: auto; font-size: 0.8rem; color: var(--text-secondary);">
-              ${results.ics.summary.passed}/${results.ics.summary.total}
+              ${results.ics.summary.realPassed}/${results.ics.summary.realTests} real
             </span>
           </div>
 
@@ -171,15 +171,15 @@ window.VerifyScreen = {
           <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); margin-bottom: var(--space-md); text-align: center;">
             <div style="padding: var(--space-sm); background: var(--bg-input); border-radius: var(--radius-sm);">
               <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Tier 1</div>
-              <div style="font-size: 0.9rem; font-weight: 700;">${results.ics.summary.details.tier1.passed}/15</div>
+              <div style="font-size: 0.9rem; font-weight: 700;">${results.ics.summary.details.tier1.passed}</div>
             </div>
             <div style="padding: var(--space-sm); background: var(--bg-input); border-radius: var(--radius-sm);">
               <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Tier 2</div>
-              <div style="font-size: 0.9rem; font-weight: 700;">${results.ics.summary.details.tier2.passed}/32</div>
+              <div style="font-size: 0.9rem; font-weight: 700;">${results.ics.summary.details.tier2.passed}</div>
             </div>
             <div style="padding: var(--space-sm); background: var(--bg-input); border-radius: var(--radius-sm);">
               <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Tier 3</div>
-              <div style="font-size: 0.9rem; font-weight: 700;">${results.ics.summary.details.tier3.passed}/10</div>
+              <div style="font-size: 0.9rem; font-weight: 700;">${results.ics.summary.details.tier3.passed}</div>
             </div>
           </div>
 
@@ -203,7 +203,10 @@ window.VerifyScreen = {
             </ul>
           ` : `
             <div class="text-center" style="padding: var(--space-md); color: var(--trust-verified);">
-              ✅ All ${results.ics.summary.total} tests passed
+              ✅ All ${results.ics.summary.realTests} substantive tests passed
+            </div>
+            <div style="text-align:center; font-size:0.75rem; color:var(--text-muted); margin-top:var(--space-xs);">
+              ${results.ics.summary.placeholders} structural tests (placeholder) also passed
             </div>
           `}
         </div>
@@ -292,12 +295,15 @@ window.VerifyScreen = {
 
     lines.push('');
     lines.push('───────────────────────────────────────────────────────────');
-    lines.push('  ICS CONFORMANCE (57 Tests)');
+    lines.push(`  ICS CONFORMANCE (${results.ics.summary.realTests} substantive + ${results.ics.summary.placeholders} structural)`);
     lines.push('───────────────────────────────────────────────────────────');
     lines.push('');
-    lines.push(`  Tier 1 — Constitutional Core:     ${results.ics.summary.details.tier1.passed}/15`);
-    lines.push(`  Tier 2 — Science-Specific:         ${results.ics.summary.details.tier2.passed}/32`);
-    lines.push(`  Tier 3 — Cross-Layer Integration:  ${results.ics.summary.details.tier3.passed}/10`);
+    lines.push(`  Tier 1 — Constitutional Core:     ${results.ics.summary.details.tier1.passed} passed`);
+    lines.push(`  Tier 2 — Science-Specific:         ${results.ics.summary.details.tier2.passed} passed`);
+    lines.push(`  Tier 3 — Cross-Layer Integration:  ${results.ics.summary.details.tier3.passed} passed`);
+    lines.push('');
+    lines.push(`  Substantive tests: ${results.ics.summary.realPassed}/${results.ics.summary.realTests}`);
+    lines.push(`  Structural tests:  ${results.ics.summary.placeholders}/${results.ics.summary.placeholders} (placeholder, return true)`);
     lines.push('');
 
     // Failed tests detail
@@ -313,7 +319,7 @@ window.VerifyScreen = {
         lines.push(`    [FAIL] ${r.id} — ${r.name} (${r.severity})`);
       }
     } else {
-      lines.push('  All 57 tests passed.');
+      lines.push(`  All ${results.ics.summary.realTests} substantive tests passed.`);
     }
 
     const placeholders = allTests.filter(r => r.placeholder);

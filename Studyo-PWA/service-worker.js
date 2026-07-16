@@ -1,8 +1,8 @@
-// ICore Studyo Service Worker — v0.2.0
+// ICore Studyo Service Worker — v1.3.0
 // Brave-first, offline-first, sovereign
 // Zero external requests. Everything from same origin.
 
-const CACHE_NAME = 'studyo-v0.2.0';
+const CACHE_NAME = 'studyo-v1.3.0';
 
 const PRECACHE_ASSETS = [
   '/',
@@ -17,6 +17,8 @@ const PRECACHE_ASSETS = [
   '/engine/ucmodels.js',
   '/engine/ics.js',
   '/engine/trust-verify.js',
+  '/engine/corefab.js',
+  '/engine/uca.js',
   '/ui/home.js',
   '/ui/verify.js',
   '/ui/explore.js',
@@ -53,7 +55,7 @@ self.addEventListener('activate', event => {
       // Notify all clients that SW updated
       return self.clients.matchAll().then(clients => {
         clients.forEach(client => {
-          client.postMessage({ type: 'SW_UPDATED', version: 'v0.2.0' });
+          client.postMessage({ type: 'SW_UPDATED', version: 'v1.3.0' });
         });
       });
     }).then(() => self.clients.claim())

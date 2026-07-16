@@ -156,7 +156,8 @@ window.TrustVerifier = {
 
     const uscpPercent = uscpScore / 6;
     const uscPercent = uscScore / 10;
-    const icsPercent = icsSummary.passed / icsSummary.total;
+    // Honest scoring: only real (non-placeholder) tests count toward trust
+    const icsPercent = icsSummary.realPassed / icsSummary.realTests;
 
     const weightedScore = (
       uscpPercent * uscpWeight +
@@ -164,7 +165,7 @@ window.TrustVerifier = {
       icsPercent * icsWeight
     );
 
-    const score = Math.round(weightedScore * 100);
+    const score = Math.min(100, Math.max(0, Math.round(weightedScore * 100)));
 
     let level, label;
     if (score >= 80) {
