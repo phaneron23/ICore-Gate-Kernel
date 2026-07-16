@@ -1,4 +1,4 @@
-// ICore Studyo — Main Application Controller v1.0.0
+// ICore Studyo — Main Application Controller v1.1.0
 // Brave-first, Offline-first, Sovereign
 
 const App = {
@@ -15,7 +15,7 @@ const App = {
     // Setup navigation
     this.setupNav();
 
-    // Setup install prompt
+    // Setup install
     this.setupInstall();
 
     // Setup offline detection
@@ -118,25 +118,127 @@ const App = {
 
   // PWA Install
   setupInstall() {
+    const installBtn = document.getElementById('install-btn');
+    
+    // Always show install button
+    if (installBtn) {
+      installBtn.style.display = 'block';
+      installBtn.addEventListener('click', () => this.installPWA());
+    }
+
+    // Capture browser install prompt when available
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredInstallPrompt = e;
-      const btn = document.getElementById('install-btn');
-      if (btn) btn.style.display = 'block';
+      if (installBtn) {
+        installBtn.style.display = 'block';
+        installBtn.textContent = '📱 Install App';
+      }
     });
 
     window.addEventListener('appinstalled', () => {
       this.deferredInstallPrompt = null;
-      const btn = document.getElementById('install-btn');
-      if (btn) btn.style.display = 'none';
+      if (installBtn) {
+        installBtn.textContent = '✅ Installed';
+        setTimeout(() => { installBtn.style.display = 'none'; }, 2000);
+      }
     });
   },
 
   async installPWA() {
-    if (!this.deferredInstallPrompt) return;
-    this.deferredInstallPrompt.prompt();
-    const { outcome } = await this.deferredInstallPrompt.userChoice;
-    this.deferredInstallPrompt = null;
+    const installBtn = document.getElementById('install-btn');
+    
+    // If browser provides the native prompt, use it
+    if (this.deferredInstallPrompt) {
+      this.deferredInstallPrompt.prompt();
+      const { outcome } = await this.deferredInstallPrompt.userChoice;
+      this.deferredInstallPrompt = null;
+      return;
+    }
+
+    // Fallback: show manual instructions
+    this.showInstallGuide();
+  },
+
+  showInstallGuide() {
+    // Detect browser
+    const ua = navigator.userAgent;
+    const isBrave = ua.includes('Brave');
+    const isFirefox = ua.includes('Firefox');
+    const isChrome = ua.includes('Chrome') && !isBrave;
+    
+    let steps = '';
+    if (isBrave) {
+      steps = `
+        <ol>
+          <li>Tap the <strong>⋮ menu</strong> (top right)</li>
+          <li>Tap <strong>"Add to Home screen"</strong></li>
+          <li>Tap <strong>"Install"</strong> or <strong>"Add"</strong></li>
+          <li>Studyo will appear on your home screen</li>
+        </ol>
+        <p style="margin-top:12px; color:var(--text-dim); font-size:0.8rem;">
+          ⚠️ Note: Brave Shields "Block Scripts" must be OFF for the app to work.
+        </p>
+      `;
+    } else if (isFirefox) {
+      steps = `
+        <ol>
+          <li>Tap the <strong>⋮ menu</strong> (top right)</li>
+          <li>Tap <strong>"Install"</strong> or <strong>"Add to Home screen"</strong></li>
+          <li>Confirm the installation</li>
+        </ol>
+      `;
+    } else if (isChrome) {
+      steps = `
+        <ol>
+          <li>Tap the <strong>⋮ menu</strong> (top right)</li>
+          <li>Tap <strong>"Add to Home screen"</strong></li>
+          <li>Tap <strong>"Install"</strong></li>
+        </ol>
+      `;
+    } else {
+      steps = `
+        <ol>
+          <li>Open your browser menu</li>
+          <li>Look for <strong>"Add to Home screen"</strong> or <strong>"Install App"</strong></li>
+          <li>Follow the prompts</li>
+        </ol>
+      `;
+    }
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'install-overlay';
+    overlay.style.cssText = `
+      position:fixed; top:0; left:0; right:0; bottom:0;
+      background:rgba(0,0,0,0.85); z-index:999;
+      display:flex; align-items:center; justify-content:center;
+      padding:20px;
+    `;
+    overlay.innerHTML = `
+      <div style="
+        background:var(--bg-card); border:1px solid var(--border);
+        border-radius:12px; padding:24px; max-width:400px; width:100%;
+      ">
+        <h3 style="margin:0 0 16px; color:var(--text);">📱 Install Studyo</h3>
+        <p style="color:var(--text-secondary); margin:0 0 16px; font-size:0.9rem;">
+          Add Studyo to your home screen for the full app experience:
+        </p>
+        <div style="color:var(--text); font-size:0.9rem; line-height:1.8;">
+          ${steps}
+        </div>
+        <button onclick="document.getElementById('install-overlay').remove()" style="
+          margin-top:20px; width:100%; padding:12px;
+          background:var(--accent); color:var(--bg-primary);
+          border:none; border-radius:8px; font-weight:600;
+          font-family:var(--font-system); cursor:pointer;
+        ">Got it</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.remove();
+    });
   },
 
   // Offline Detection
