@@ -1,17 +1,13 @@
-// ICore Studyo — Main Application Controller v0.2.0
+// ICore Studyo — Main Application Controller v1.0.0
 // Brave-first, Offline-first, Sovereign
 
 const App = {
   currentScreen: 'home',
   deferredInstallPrompt: null,
 
-  async init() {
+  init() {
     // Initialize database
-    try {
-      await DB.init();
-    } catch (e) {
-      console.warn('IndexedDB unavailable:', e);
-    }
+    DB.init().catch(e => console.warn('IndexedDB unavailable:', e));
 
     // Register service worker
     this.registerSW();
@@ -36,14 +32,12 @@ const App = {
         const reg = await navigator.serviceWorker.register('/service-worker.js');
         console.log('SW registered:', reg.scope);
 
-        // Listen for SW update notifications
         navigator.serviceWorker.addEventListener('message', event => {
           if (event.data && event.data.type === 'SW_UPDATED') {
             this.showUpdateBanner(event.data.version);
           }
         });
 
-        // Check for waiting SW (update available)
         if (reg.waiting) {
           this.showUpdateBanner('new');
         }
@@ -63,7 +57,6 @@ const App = {
   },
 
   showUpdateBanner(version) {
-    // Remove existing banner if any
     const existing = document.getElementById('update-banner');
     if (existing) existing.remove();
 
@@ -77,9 +70,7 @@ const App = {
       cursor: pointer;
     `;
     banner.textContent = `📱 Update available (${version || 'new'}). Tap to reload.`;
-    banner.onclick = () => {
-      window.location.reload();
-    };
+    banner.onclick = () => window.location.reload();
     document.body.prepend(banner);
   },
 
@@ -94,16 +85,14 @@ const App = {
 
   async navigate(screen) {
     this.currentScreen = screen;
-    
-    // Update nav
+
+    // Update nav active state
     document.querySelectorAll('.nav-item').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.screen === screen);
     });
 
-    // Get screen container
-    const container = document.getElementById('screen');
-    
     // Render screen
+    const container = document.getElementById('screen');
     switch (screen) {
       case 'home':
         container.innerHTML = HomeScreen.render();
@@ -124,7 +113,6 @@ const App = {
         container.innerHTML = HomeScreen.render();
     }
 
-    // Scroll to top
     window.scrollTo(0, 0);
   },
 
@@ -133,44 +121,31 @@ const App = {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredInstallPrompt = e;
-      
-      // Show install button in header
       const btn = document.getElementById('install-btn');
       if (btn) btn.style.display = 'block';
-
-      // Show install banner on home
-      const banner = document.getElementById('install-banner');
-      if (banner) banner.style.display = 'block';
     });
 
     window.addEventListener('appinstalled', () => {
       this.deferredInstallPrompt = null;
       const btn = document.getElementById('install-btn');
       if (btn) btn.style.display = 'none';
-      const banner = document.getElementById('install-banner');
-      if (banner) banner.style.display = 'none';
     });
   },
 
   async installPWA() {
     if (!this.deferredInstallPrompt) return;
-    
     this.deferredInstallPrompt.prompt();
     const { outcome } = await this.deferredInstallPrompt.userChoice;
-    console.log('Install outcome:', outcome);
     this.deferredInstallPrompt = null;
   },
 
   // Offline Detection
   setupOffline() {
     const banner = document.getElementById('offline-banner');
-    
+    if (!banner) return;
+
     const updateStatus = () => {
-      if (!navigator.onLine) {
-        banner.style.display = 'block';
-      } else {
-        banner.style.display = 'none';
-      }
+      banner.style.display = navigator.onLine ? 'none' : 'block';
     };
 
     window.addEventListener('online', updateStatus);
@@ -179,5 +154,9 @@ const App = {
   }
 };
 
-// Initialize on DOM ready
-document.addEventListener('DOMContentLoaded', () => App.init());
+// Initialize — handle both early and late DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => App.init());
+} else {
+  App.init();
+}

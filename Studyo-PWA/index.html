@@ -4,12 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#00e676">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="ICore Studyo — Universal Constitutional Workspace. Sovereign, offline-first, mobile-first.">
-  
+  <meta name="description" content="ICore Studyo — Universal Constitutional Workspace">
   <title>ICore Studyo</title>
-  
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="/icons/favicon.ico" sizes="32x32">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
@@ -17,12 +13,10 @@
 </head>
 <body>
   <div id="app">
-    <!-- Offline Banner -->
     <div id="offline-banner" class="offline-banner" style="display:none">
       ⚡ Offline Mode — All data stays on device
     </div>
 
-    <!-- Header -->
     <header class="header">
       <div class="header-inner">
         <div class="header-brand">
@@ -38,10 +32,8 @@
       </div>
     </header>
 
-    <!-- Main Content Area (screens injected here) -->
     <main id="screen" class="main"></main>
 
-    <!-- Bottom Navigation -->
     <nav class="bottom-nav">
       <div class="bottom-nav-inner">
         <button class="nav-item active" data-screen="home">
@@ -68,7 +60,7 @@
     </nav>
   </div>
 
-  <!-- Core Scripts (order matters: engine first, then UI, then app) -->
+  <!-- Constitutional Engine -->
   <script src="/engine/uscp.js"></script>
   <script src="/engine/usc.js"></script>
   <script src="/engine/sciences.js"></script>
@@ -76,12 +68,18 @@
   <script src="/engine/ucmodels.js"></script>
   <script src="/engine/ics.js"></script>
   <script src="/engine/trust-verify.js"></script>
+
+  <!-- Storage -->
   <script src="/storage/db.js"></script>
+
+  <!-- UI Screens -->
   <script src="/ui/home.js"></script>
   <script src="/ui/verify.js"></script>
   <script src="/ui/explore.js"></script>
   <script src="/ui/history.js"></script>
   <script src="/ui/about.js"></script>
+
+  <!-- Application -->
   <script src="/app.js"></script>
 </body>
 </html>
