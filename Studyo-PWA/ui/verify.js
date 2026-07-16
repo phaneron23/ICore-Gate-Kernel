@@ -222,25 +222,174 @@ window.VerifyScreen = {
           </p>
         </div>
 
-        <!-- Export -->
-        <button class="btn btn-secondary mt-md" onclick="VerifyScreen.exportResult()">
-          📤 Export Verification Record
-        </button>
+        <!-- Export Actions -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); margin-top: var(--space-md);">
+          <button class="btn btn-secondary" onclick="VerifyScreen.exportReport()">
+            📄 Export Report
+          </button>
+          <button class="btn btn-secondary" onclick="VerifyScreen.exportJSON()">
+            📦 Export JSON
+          </button>
+        </div>
+
+        <!-- Export Status -->
+        <div id="export-status" style="margin-top: var(--space-sm);"></div>
       </div>
     `;
   },
 
-  exportResult() {
-    // Get the last verification result from the page
-    const result = window._lastVerifyResult;
-    if (!result) return;
+  // Format a constitutional verification report (human-readable)
+  formatReport(result) {
+    const { claim, trust, results, timestamp } = result;
+    const ts = new Date(timestamp).toISOString().replace('T', ' ').slice(0, 19);
 
-    const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+    const lines = [
+      '═══════════════════════════════════════════════════════════',
+      '  ICore Constitutional Verification Record',
+      '  ICS v0.1.0 · Studyo v1.3.0',
+      '═══════════════════════════════════════════════════════════',
+      '',
+      `  Date:      ${ts}`,
+      `  Claim ID:  ${claim.id}`,
+      `  Originator: Sir Collins (access1@tutamail.com)`,
+      '',
+      '───────────────────────────────────────────────────────────',
+      '  CLAIM',
+      '───────────────────────────────────────────────────────────',
+      '',
+      `  ${claim.text}`,
+      '',
+      '───────────────────────────────────────────────────────────',
+      '  TRUST ASSESSMENT',
+      '───────────────────────────────────────────────────────────',
+      '',
+      `  Score:  ${trust.score}% — ${trust.label}`,
+      '',
+      `  USCP Grounding:  ${trust.breakdown.uscp}%  (${results.uscp.score}/${results.uscp.max} primitives)`,
+      `  USC Compliance:  ${trust.breakdown.usc}%  (${results.usc.score}/${results.usc.max} rules)`,
+      `  ICS Conformance: ${trust.breakdown.ics}%  (${results.ics.summary.passed}/${results.ics.summary.total} tests)`,
+      '',
+      '───────────────────────────────────────────────────────────',
+      '  USCP PRIMITIVES (Layer 2)',
+      '───────────────────────────────────────────────────────────',
+    ];
+
+    for (const r of results.uscp.details) {
+      const icon = r.passed ? 'PASS' : 'FAIL';
+      lines.push(`  [${icon}]  ${r.name} — ${r.question}`);
+    }
+
+    lines.push('');
+    lines.push('───────────────────────────────────────────────────────────');
+    lines.push('  USC RULES (Layer 3)');
+    lines.push('───────────────────────────────────────────────────────────');
+
+    for (const r of results.usc.details) {
+      const icon = r.passed ? 'PASS' : 'FAIL';
+      lines.push(`  [${icon}]  ${r.rule} — ${r.name}`);
+      lines.push(`         Source: ${r.source}`);
+    }
+
+    lines.push('');
+    lines.push('───────────────────────────────────────────────────────────');
+    lines.push('  ICS CONFORMANCE (57 Tests)');
+    lines.push('───────────────────────────────────────────────────────────');
+    lines.push('');
+    lines.push(`  Tier 1 — Constitutional Core:     ${results.ics.summary.details.tier1.passed}/15`);
+    lines.push(`  Tier 2 — Science-Specific:         ${results.ics.summary.details.tier2.passed}/32`);
+    lines.push(`  Tier 3 — Cross-Layer Integration:  ${results.ics.summary.details.tier3.passed}/10`);
+    lines.push('');
+
+    // Failed tests detail
+    const allTests = [
+      ...results.ics.details.tier1,
+      ...results.ics.details.tier2,
+      ...results.ics.details.tier3
+    ];
+    const failed = allTests.filter(r => !r.passed);
+    if (failed.length > 0) {
+      lines.push('  Failed tests:');
+      for (const r of failed) {
+        lines.push(`    [FAIL] ${r.id} — ${r.name} (${r.severity})`);
+      }
+    } else {
+      lines.push('  All 57 tests passed.');
+    }
+
+    const placeholders = allTests.filter(r => r.placeholder);
+    if (placeholders.length > 0) {
+      lines.push('');
+      lines.push(`  Note: ${placeholders.length} tests are placeholder implementations (return true).`);
+      lines.push('  These test structural compliance only, not semantic correctness.');
+    }
+
+    lines.push('');
+    lines.push('───────────────────────────────────────────────────────────');
+    lines.push('  CERTIFICATION');
+    lines.push('───────────────────────────────────────────────────────────');
+    lines.push('');
+    lines.push(`  Level: ${results.ics.summary.level}`);
+    lines.push(`  Conformant: ${results.ics.summary.conformant ? 'Yes' : 'No'}`);
+    lines.push('');
+    lines.push('  IMPORTANT: This is self-verification — the claim was tested against ICore\'s');
+    lines.push('  own constitutional framework. The strongest supported claim is:');
+    lines.push('  "This claim passed ICore\'s defined conformance suite."');
+    lines.push('  Broader claims require independent review, independent implementations,');
+    lines.push('  and cross-domain validation.');
+    lines.push('');
+    lines.push('═══════════════════════════════════════════════════════════');
+    lines.push('  ICore — Universal Constitutional Science of Trustworthy Intelligence');
+    lines.push('  studio.initialcore.net');
+    lines.push('═══════════════════════════════════════════════════════════');
+
+    return lines.join('\n');
+  },
+
+  // Export as formatted report (TXT)
+  exportReport() {
+    const result = window._lastVerifyResult;
+    if (!result) return this._exportNotice('No verification result to export.');
+
+    const report = this.formatReport(result);
+    const blob = new Blob([report], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `icore-verify-${result.claim.id}.json`;
+    a.download = `ICore-Verification-${result.claim.id}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+    this._exportNotice('Report exported successfully.');
+  },
+
+  // Export as JSON (for machine consumption)
+  exportJSON() {
+    const result = window._lastVerifyResult;
+    if (!result) return this._exportNotice('No verification result to export.');
+
+    const envelope = {
+      schema: 'ICore-Verification/v1.0',
+      originator: 'Sir Collins <access1@tutamail.com>',
+      spec: 'ICS v0.1.0',
+      runtime: 'Studyo v1.3.0',
+      exportedAt: new Date().toISOString(),
+      verification: result
+    };
+
+    const blob = new Blob([JSON.stringify(envelope, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ICore-Verification-${result.claim.id}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    this._exportNotice('JSON record exported successfully.');
+  },
+
+  _exportNotice(msg) {
+    const el = document.getElementById('export-status');
+    if (el) {
+      el.innerHTML = `<div style="text-align:center; font-size:0.8rem; color:var(--accent);">✅ ${msg}</div>`;
+      setTimeout(() => { el.innerHTML = ''; }, 3000);
+    }
   }
 };
