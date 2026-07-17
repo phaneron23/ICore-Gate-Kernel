@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#00e676">
+  <meta name="description" content="ICore Constitutional Workflow Engine — First UCD Derivative">
+  <title>ICore Workflow Engine</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icons/favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="offline-banner" class="offline-banner" style="display:none">
+      ⚡ Offline Mode — All data stays on device
+    </div>
+
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-brand">
+          <span class="header-logo">⚙️</span>
+          <div>
+            <div class="header-title">Workflow Engine</div>
+            <div class="header-subtitle">ICore UCD Module</div>
+          </div>
+        </div>
+        <a href="https://app.initialcore.net" class="btn btn-secondary"
+           style="width:auto; padding:6px 12px; font-size:0.7rem; text-decoration:none;">
+          🔷 Studyo
+        </a>
+      </div>
+    </header>
+
+    <main id="screen" class="main"></main>
+
+    <nav class="bottom-nav">
+      <div class="bottom-nav-inner">
+        <button class="nav-item active" data-screen="dashboard">
+          <span class="nav-item-icon">📊</span>
+          <span>Home</span>
+        </button>
+        <button class="nav-item" data-screen="builder">
+          <span class="nav-item-icon">🔧</span>
+          <span>Build</span>
+        </button>
+        <button class="nav-item" data-screen="executor">
+          <span class="nav-item-icon">⚡</span>
+          <span>Run</span>
+        </button>
+        <button class="nav-item" data-screen="history">
+          <span class="nav-item-icon">📋</span>
+          <span>History</span>
+        </button>
+        <button class="nav-item" data-screen="about">
+          <span class="nav-item-icon">ℹ️</span>
+          <span>About</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ═══ ICore Platform (Shared Constitutional Engine) ═══ -->
+  <!-- L2: Primitives -->
+  <script src="/platform/uscp.js"></script>
+  <!-- L3: Constitution -->
+  <script src="/platform/usc.js"></script>
+  <!-- L4: Sciences -->
+  <script src="/platform/sciences.js"></script>
+  <!-- L5: Reference Systems -->
+  <script src="/platform/ucrs.js"></script>
+  <script src="/platform/ucmodels.js"></script>
+  <!-- L6: Runtime -->
+  <script src="/platform/corefab.js"></script>
+  <script src="/platform/uca.js"></script>
+  <!-- Verification & Trust -->
+  <script src="/platform/ics.js"></script>
+  <script src="/platform/trust-verify.js"></script>
+  <!-- Event Bus (constitutional event system) -->
+  <script src="/platform/event-bus.js"></script>
+  <!-- Platform Aggregate -->
+  <script src="/platform/index.js"></script>
+
+  <!-- ═══ UCD Module (Workflow Engine) ═══ -->
+  <script src="/engine/workflow.js"></script>
+  <script src="/engine/derivation.js"></script>
+
+  <!-- ═══ UI Screens ═══ -->
+  <script src="/ui/dashboard.js"></script>
+  <script src="/ui/builder.js"></script>
+  <script src="/ui/executor.js"></script>
+  <script src="/ui/history.js"></script>
+  <script src="/ui/about.js"></script>
+
+  <!-- ═══ Application ═══ -->
+  <script src="/app.js"></script>
+</body>
+</html>
