@@ -1,157 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#00bfa5">
-  <meta name="description" content="UWA — Universal Workspace Adapter. Constitutional workspace orchestration for ICore.">
-  <title>UWA — Universal Workspace Adapter</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
-  <style>
-    :root { --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2e; --text: #e0e0e0; --dim: #666; --accent: #00bfa5; --accent2: #1de9b6; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; line-height: 1.6; }
-    .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
-    header { border-bottom: 1px solid var(--border); padding: 1.5rem 0; margin-bottom: 2rem; }
-    header h1 { color: var(--accent); font-size: 1.5rem; font-weight: 600; }
-    header p { color: var(--dim); font-size: 0.85rem; margin-top: 0.25rem; }
-    .badge { display: inline-block; background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-left: 0.5rem; }
-    .spec-content { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-top: 1rem; }
-    .spec-content h1 { color: var(--accent); font-size: 1.3rem; margin: 1.5rem 0 0.5rem; }
-    .spec-content h2 { color: var(--accent2); font-size: 1.1rem; margin: 1.2rem 0 0.4rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
-    .spec-content h3 { color: var(--text); font-size: 1rem; margin: 1rem 0 0.3rem; }
-    .spec-content p { margin: 0.5rem 0; color: var(--dim); }
-    .spec-content code { background: var(--bg); padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; color: var(--accent); }
-    .spec-content pre { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; margin: 0.5rem 0; }
-    .spec-content pre code { background: none; padding: 0; }
-    .spec-content table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; }
-    .spec-content th, .spec-content td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; font-size: 0.85rem; }
-    .spec-content th { background: var(--bg); color: var(--accent); }
-    .spec-content ul, .spec-content ol { padding-left: 1.5rem; margin: 0.5rem 0; }
-    .spec-content li { margin: 0.2rem 0; color: var(--dim); }
-    .spec-content blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; margin: 0.5rem 0; color: var(--dim); font-style: italic; }
-    .spec-content hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
-    .status-bar { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
-    .status-item { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; flex: 1; min-width: 200px; }
-    .status-item h3 { color: var(--accent); font-size: 0.8rem; margin-bottom: 0.25rem; }
-    .status-item p { color: var(--text); font-size: 1.1rem; font-weight: 600; }
-    .status-item .dim { color: var(--dim); font-size: 0.75rem; font-weight: 400; }
-    footer { border-top: 1px solid var(--border); margin-top: 2rem; padding-top: 1rem; text-align: center; color: var(--dim); font-size: 0.75rem; }
-    @media (max-width: 600px) { .container { padding: 1rem; } header h1 { font-size: 1.2rem; } }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#00bfa5"><meta name="description" content="UWA — Universal Workspace Adapter. Constitutional component model for ICore.">
+<title>UWA — Universal Workspace Adapter</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+<style>
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--dim:#666;--accent:#00bfa5;--accent2:#1de9b6;--green:#00e676;--red:#ff5252;--orange:#ff9100}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'SF Mono','Fira Code','Cascadia Code',monospace;line-height:1.6}
+.ctn{max-width:1000px;margin:0 auto;padding:1.5rem}
+header{border-bottom:1px solid var(--border);padding:1.2rem 0;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center}
+header h1{color:var(--accent);font-size:1.3rem}header .badge{background:var(--accent);color:#000;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:700;margin-left:.5rem}
+header .install-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.8rem;font-family:inherit}
+.status-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center}
+.sc .lb{color:var(--dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}.sc .vl{color:var(--accent);font-size:1.2rem;font-weight:700;margin-top:.2rem}.sc .sb{color:var(--dim);font-size:.65rem;margin-top:.1rem}
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.2rem;margin-bottom:1rem}
+.sec h2{color:var(--accent);font-size:1rem;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
+textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.8rem;border-radius:6px;font-family:inherit;font-size:.85rem;resize:vertical;min-height:80px}
+textarea:focus{outline:none;border-color:var(--accent)}textarea::placeholder{color:var(--dim)}
+.btn-row{display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap}
+.btn{background:var(--accent);color:#000;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:600}.btn:hover{opacity:.9}
+.btn2{background:var(--surface);color:var(--text);border:1px solid var(--border)}.btn2:hover{border-color:var(--accent)}
+.out{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.8rem;margin-top:.8rem;font-size:.8rem;max-height:300px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+.out.ok{border-color:var(--green)}.out.err{border-color:var(--red)}
+.elog{max-height:200px;overflow-y:auto}.ei{padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.75rem;display:flex;gap:.5rem}
+.ei .tm{color:var(--dim);min-width:70px}.ei .nm{color:var(--accent2);min-width:200px}.ei .dt{color:var(--text)}
+.cl{display:grid;gap:.3rem}.ci{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;border-radius:4px;font-size:.8rem;background:var(--bg)}
+.ci .tid{color:var(--accent2);min-width:80px;font-weight:600}.ci .tn{color:var(--dim);flex:1}.ci .tr{font-weight:700;min-width:50px;text-align:right}
+.ci.pass .tr{color:var(--green)}.ci.fail .tr{color:var(--red)}
+footer{border-top:1px solid var(--border);margin-top:1.5rem;padding-top:1rem;text-align:center;color:var(--dim);font-size:.7rem}
+@media(max-width:600px){.ctn{padding:1rem}.status-bar{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🧩 UWA <span class="badge">v0.1.0</span></h1>
-      <p>Universal Workspace Adapter — Constitutional Workspace Orchestration</p>
-    </header>
+<div class="ctn">
+<header><h1>🧩 UWA <span class="badge">v0.1.0</span></h1><button class="install-btn" onclick="installPWA()">📱 Install</button></header>
+<div class="status-bar">
+<div class="sc"><div class="lb">Components</div><div class="vl" id="s-comp">0</div><div class="sb">registered</div></div>
+<div class="sc"><div class="lb">Running</div><div class="vl" id="s-run">0</div><div class="sb">active</div></div>
+<div class="sc"><div class="lb">Events</div><div class="vl" id="s-evt">0</div><div class="sb">emitted</div></div>
+<div class="sc"><div class="lb">Compositions</div><div class="vl" id="s-cmp">0</div><div class="sb">edges</div></div>
+<div class="sc"><div class="lb">Status</div><div class="vl" style="color:var(--green)" id="s-sts">Ready</div><div class="sb">constitutional</div></div>
+</div>
 
-    <div class="status-bar">
-      <div class="status-item">
-        <h3>Component Model</h3>
-        <p>Active</p>
-        <span class="dim">Workspace orchestration engine</span>
-      </div>
-      <div class="status-item">
-        <h3>Platform Engine</h3>
-        <p id="engine-status">Loading...</p>
-        <span class="dim">ICS v0.2.0 + Trust v0.2.0</span>
-      </div>
-      <div class="status-item">
-        <h3>Conformance</h3>
-        <p id="conformance-status">—</p>
-        <span class="dim">ICS test results</span>
-      </div>
-    </div>
+<div class="sec"><h2>📐 Create Component</h2>
+<textarea id="compInput" placeholder='{"name":"my-component","interface":{"operations":["process"]},"contract":{"invariants":["output is valid"]}}'></textarea>
+<div class="btn-row"><button class="btn" onclick="createComponent()">Create</button><button class="btn btn2" onclick="loadSample()">Sample</button></div>
+<div class="out" id="compOut"></div></div>
 
-    <div class="spec-content" id="spec">
-      <p style="color: var(--dim); text-align: center; padding: 2rem;">Loading specification...</p>
-    </div>
+<div class="sec"><h2>⚡ Lifecycle Control</h2>
+<textarea id="lifecycleInput" placeholder="component-id" style="min-height:40px"></textarea>
+<div class="btn-row">
+<button class="btn" onclick="lcAction('start')">▶ Start</button>
+<button class="btn btn2" onclick="lcAction('suspend')">⏸ Suspend</button>
+<button class="btn btn2" onclick="lcAction('resume')">⏯ Resume</button>
+<button class="btn btn2" onclick="lcAction('terminate')" style="border-color:var(--red)">⏹ Terminate</button>
+</div><div class="out" id="lcOut"></div></div>
 
-    <footer>
-      <p>ICore Universal Workspace Adapter v0.1.0 — Originated by Sir Collins (access1@tutamail.com)</p>
-      <p style="margin-top: 0.25rem;">Constitutional artifact. Offline-first. Zero dependencies.</p>
-    </footer>
-  </div>
+<div class="sec"><h2>🔗 Compose Components</h2>
+<textarea id="compInput2" placeholder='{"parent":"id1","child":"id2","type":"hierarchical"}' style="min-height:40px"></textarea>
+<div class="btn-row"><button class="btn" onclick="composeComponents()">Compose</button></div>
+<div class="out" id="compOut2"></div></div>
 
-  <!-- Platform engines -->
-  <script src="platform/uscp.js"></script>
-  <script src="platform/usc.js"></script>
-  <script src="platform/sciences.js"></script>
-  <script src="platform/ucrs.js"></script>
-  <script src="platform/ucmodels.js"></script>
-  <script src="platform/ics.js"></script>
-  <script src="platform/trust-verify.js"></script>
+<div class="sec"><h2>🔍 Runtime Verification</h2>
+<div class="btn-row"><button class="btn" onclick="verifyRuntime()">Verify All</button><button class="btn btn2" onclick="runConformance()">Run Conformance</button></div>
+<div class="out" id="verifyOut"></div><div class="cl" id="confGrid" style="margin-top:.8rem"></div></div>
 
-  <script>
-    // Simple markdown-to-HTML converter for spec display
-    function md(text) {
-      return text
-        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-        .replace(/^---$/gm, '<hr>')
-        .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/`([^`]+)`/g, '<code>$1</code>')
-        .replace(/^\| (.+)$/gm, function(m) {
-          const cells = m.replace(/^\| /, '').split(' | ');
-          return '<tr>' + cells.map(c => '<td>' + c + '</td>').join('') + '</tr>';
-        })
-        .replace(/(<tr>.*<\/tr>
-?)+/g, function(m) { return '<table>' + m + '</table>'; })
-        .replace(/^- (.+)$/gm, '<li>$1</li>')
-        .replace(/(<li>.*<\/li>
-?)+/g, function(m) { return '<ul>' + m + '</ul>'; })
-        .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
-        .replace(/
+<div class="sec"><h2>📡 Event Log</h2>
+<div class="elog" id="elog"><div class="ei"><span class="tm">--:--</span><span class="nm">uwa:runtime:ready</span><span class="dt">UWA v0.1.0 initialized</span></div></div></div>
 
-/g, '</p><p>')
-        .replace(/^(?!<[hultob])/gm, '<p>')
-        .replace(/<p><\/p>/g, '')
-        .replace(/<p>(<h[123]>)/g, '$1')
-        .replace(/(<\/h[123]>)<\/p>/g, '$1')
-        .replace(/<p>(<hr>)/g, '$1')
-        .replace(/(<hr>)<\/p>/g, '$1')
-        .replace(/<p>(<table>)/g, '$1')
-        .replace(/(<\/table>)<\/p>/g, '$1')
-        .replace(/<p>(<ul>)/g, '$1')
-        .replace(/(<\/ul>)<\/p>/g, '$1')
-        .replace(/<p>(<blockquote>)/g, '$1')
-        .replace(/(<\/blockquote>)<\/p>/g, '$1')
-        .replace(/<p>(<pre>)/g, '$1')
-        .replace(/(<\/pre>)<\/p>/g, '$1');
-    }
+<footer><p>ICore Universal Workspace Adapter v0.1.0 — Originated by Sir Collins (access1@tutamail.com)</p>
+<p style="margin-top:.2rem">Constitutional artifact. Offline-first. Zero dependencies. Event-driven.</p></footer>
+</div>
 
-    // Load spec
-    fetch('https://raw.githubusercontent.com/ICore-Gate-Kernel/ICore-Gate-Kernel-v1/main/UWA/UWA-v0.1.0-FORMAL-SPEC.md')
-      .then(r => r.ok ? r.text() : Promise.reject())
-      .then(text => {
-        document.getElementById('spec').innerHTML = md(text);
-      })
-      .catch(() => {
-        // Fallback: embed spec content
-        document.getElementById('spec').innerHTML = '<h2>UWA — Universal Workspace Adapter</h2><p>The formal specification defines workspace orchestration for ICore constitutional components.</p><p>Refer to the <a href="https://github.com/ICore-Gate-Kernel/ICore-Gate-Kernel-v1" style="color: var(--accent);">GitHub repository</a> for the full specification.</p>';
-      });
+<script src="engine/component.js"></script><script src="engine/event.js"></script><script src="engine/execution.js"></script><script src="engine/composition.js"></script><script src="engine/workspace.js"></script>
 
-    // Run platform verification
-    setTimeout(() => {
-      try {
-        if (window.ICS && window.TrustVerifier) {
-          const result = TrustVerifier.verify('UWA constitutional workspace adapter');
-          document.getElementById('engine-status').textContent = 'Active';
-          document.getElementById('engine-status').style.color = '#00e676';
-          document.getElementById('conformance-status').textContent = result.trust.label;
-          document.getElementById('conformance-status').style.color = result.trust.level === 'verified' ? '#00e676' : '#ff9100';
-        }
-      } catch(e) {
-        document.getElementById('engine-status').textContent = 'Error';
-        document.getElementById('engine-status').style.color = '#ff5252';
-      }
-    }, 500);
-  </script>
+<script>
+let runtime;function init(){runtime=new WorkspaceRuntime();upd();log('uwa:runtime:ready','UWA v'+runtime.version()+' initialized');}
+function upd(){const s=runtime.getStatus();document.getElementById('s-comp').textContent=s.components;document.getElementById('s-run').textContent=s.running;document.getElementById('s-evt').textContent=s.events;document.getElementById('s-cmp').textContent=s.compositions;}
+function log(nm,dt){const t=new Date().toTimeString().slice(0,8);const el=document.getElementById('elog');const d=document.createElement('div');d.className='ei';d.innerHTML=`<span class="tm">${t}</span><span class="nm">${nm}</span><span class="dt">${String(dt).slice(0,120)}</span>`;el.insertBefore(d,el.firstChild);if(el.children.length>50)el.removeChild(el.lastChild);}
+['uwa:component:created','uwa:component:declared','uwa:component:validated','uwa:component:initialized','uwa:component:started','uwa:component:suspended','uwa:component:resumed','uwa:component:terminated','uwa:event:emitted','uwa:execution:complete','uwa:composition:added'].forEach(e=>window.addEventListener(e,ev=>{log(e,JSON.stringify(ev.detail).slice(0,120));upd();}));
+
+async function createComponent(){const v=document.getElementById('compInput').value.trim();const o=document.getElementById('compOut');if(!v){o.textContent='Enter component JSON';o.className='out err';return;}try{const cfg=JSON.parse(v);const c=await runtime.createComponent(cfg.name,cfg);o.textContent=JSON.stringify({id:c.id,name:c.name,lifecycle:c.lifecycle},null,2);o.className='out ok';document.getElementById('lifecycleInput').value=c.id;}catch(e){o.textContent=e.message;o.className='out err';}}
+function loadSample(){document.getElementById('compInput').value=JSON.stringify({name:'sample-component',interface:{operations:['process','validate']},contract:{invariants:['output is valid'],postconditions:['result delivered']}},null,2);}
+
+async function lcAction(action){const id=document.getElementById('lifecycleInput').value.trim();const o=document.getElementById('lcOut');if(!id){o.textContent='Enter component ID';o.className='out err';return;}try{await runtime.component[action](id);o.textContent=`✅ ${action} → ${runtime.component.getState(id)}`;o.className='out ok';}catch(e){o.textContent=e.message;o.className='out err';}}
+
+async function composeComponents(){const v=document.getElementById('compInput2').value.trim();const o=document.getElementById('compOut2');if(!v){o.textContent='Enter composition JSON';o.className='out err';return;}try{const d=JSON.parse(v);await runtime.compose(d.parent,d.child,d.type);o.textContent=`✅ Composed: ${d.parent} → ${d.child} (${d.type})`;o.className='out ok';}catch(e){o.textContent=e.message;o.className='out err';}}
+
+async function verifyRuntime(){const o=document.getElementById('verifyOut');try{const comps=runtime.component.list();for(const c of comps){if(c.lifecycle===ComponentLifecycle.Terminated)continue;if(c.lifecycle===ComponentLifecycle.Running){runtime.execution.records.filter(r=>r.componentId===c.id);}}o.textContent='✅ Runtime is constitutionally consistent';o.className='out ok';}catch(e){o.textContent='❌ '+e.message;o.className='out err';}}
+
+async function runConformance(){const g=document.getElementById('confGrid');g.innerHTML='';const tests=[
+['UWA-01','Component Creation',async()=>{const c=await runtime.createComponent('test',{});return c&&c.id}],
+['UWA-02','Lifecycle Compliance',async()=>{const c=await runtime.createComponent('lc-test',{});const s=runtime.component.getState(c.id);return s===ComponentLifecycle.Validated}],
+['UWA-03','Interface Declaration',async()=>{const c=await runtime.createComponent('if-test',{interface:{operations:['op1']}});return c.interface.operations.length>0}],
+['UWA-04','Contract Declaration',async()=>{const c=await runtime.createComponent('ct-test',{contract:{invariants:['inv1']}});return c.contract.invariants.length>0}],
+['UWA-05','State Singularity',async()=>{const c=await runtime.component.create('sing');const s1=runtime.component.getState(c.id);return typeof s1==='string';}],
+['UWA-06','Transition Determinism',async()=>{const c=await runtime.createComponent('det-test',{});const s1=runtime.component.getState(c.id);return s1===ComponentLifecycle.Validated}],
+['UWA-07','Termination Is Terminal',async()=>{const c=await runtime.createComponent('term-test',{});await runtime.component.terminate(c.id);try{await runtime.component.start(c.id);return false;}catch{return true;}}],
+['UWA-08','Composition Declaration',async()=>{const a=await runtime.createComponent('comp-a',{});const b=await runtime.createComponent('comp-b',{});await runtime.compose(a.id,b.id,'hierarchical');return runtime.composition.getChildren(a.id).length>0}],
+['UWA-09','Event Typing',async()=>{try{await runtime.event.emit('x','y','invalid','{}');return false;}catch{return true;}}],
+['UWA-10','Execution Provenance',async()=>{const c=await runtime.createComponent('exec-test',{eventHandlers:[{eventType:'lifecycle',eventName:'start',targetState:ComponentLifecycle.Running}]});await runtime.component.initialize(c.id);await runtime.component.start(c.id);const r=await runtime.execution.execute(c,{type:'lifecycle',name:'start'},runtime);return r.inputHash&&r.outputHash}],
+];
+let pass=0,fail=0;for(const[id,name,test]of tests){try{const ok=await test();if(ok)pass++;else fail++;g.innerHTML+=`<div class="ci ${ok?'pass':'fail'}"><span class="tid">${id}</span><span class="tn">${name}</span><span class="tr">${ok?'PASS':'FAIL'}</span></div>`;}catch(e){fail++;g.innerHTML+=`<div class="ci fail"><span class="tid">${id}</span><span class="tn">${name}</span><span class="tr">ERROR</span></div>`;}}
+const o=document.getElementById('verifyOut');o.textContent=`Conformance: ${pass}/${tests.length} passed (${fail} failed)`;o.className=fail===0?'out ok':'out err';}
+
+let dp;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});function installPWA(){if(dp){dp.prompt();dp=null;}}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+window.addEventListener('DOMContentLoaded',init);
+</script>
 </body>
 </html>

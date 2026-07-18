@@ -1,7 +1,7 @@
 {
   "name": "UWA \u2014 Universal Workspace Adapter",
   "short_name": "UWA",
-  "description": "Constitutional workspace orchestration for ICore",
+  "description": "Constitutional workspace orchestration",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0f",
