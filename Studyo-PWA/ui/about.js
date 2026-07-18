@@ -25,11 +25,12 @@ window.AboutScreen = {
         <div class="about-section">
           <h3>📐 Nature</h3>
           <p>
-            ICore is a 7-layer constitutional architecture, each layer derived from the one below
+            ICore is a constitutional architecture, each layer derived from the one below
             through strict dependency rules. It begins with 6 foundational primitives (USCP),
             builds a Constitution (USC), develops constitutional sciences (UCE/UCC/UCM/UCL),
-            establishes reference systems (UCRS/UCModels/URS/UVS), defines the execution
-            and adapter boundary (USR/CoreFab + UCA), and culminates in a workspace.
+            establishes reference systems (UCRS/UCModels/URS/UVS), defines component models
+            (UWA), networking (UCN), orchestration (USR/CoreFab), adaptation boundary (UCA),
+            and culminates in derivatives (UCD) and a workspace.
           </p>
         </div>
 
@@ -37,13 +38,11 @@ window.AboutScreen = {
         <div class="about-section">
           <h3>🏗️ Structure</h3>
           <p>
-            <strong>Layer 1:</strong> ICore — The founding principle<br>
-            <strong>Layer 2:</strong> USCP — 6 Foundational Primitives<br>
-            <strong>Layer 3:</strong> USC — The Constitution (Kernel v1.0)<br>
-            <strong>Layer 4:</strong> Sciences — UCE · UCC · UCM · UCL<br>
-            <strong>Layer 5:</strong> Reference — UCRS · UCModels · URS · UVS<br>
-            <strong>Layer 6:</strong> Execution — USR/CoreFab v0.1.0 · UCA v0.1.0<br>
-            <strong>Layer 7:</strong> Workspace — Studyo
+            <strong>Foundation:</strong> ICore → USCP → USC<br>
+            <strong>Sciences:</strong> UCE · UCC · UCM · UCL<br>
+            <strong>Reference:</strong> UCRS · UCModels · URS · UVS<br>
+            <strong>Platforms:</strong> UWA · UCN · USR/CoreFab · UCA<br>
+            <strong>Applications:</strong> UCD · ICS · Studyo
           </p>
         </div>
 

@@ -1,25 +1,27 @@
 # USR/CoreFab Formal Specification v0.1.0
 
-*The constitutional formalization of the execution layer — where constitutional logic becomes constitutional action.*
+*The constitutional formalization of orchestration — where UWA components are coordinated over UCN networks into sovereign constitutional action.*
 
 ---
 
 ## Preamble
 
-This document is the **formal specification** of Layer 6: USR (Universal Sovereign Runtime) and CoreFab (Constitutional Fabrication). It translates the demonstrated v0.1.0 implementation into normative constitutional law — the rules that any conforming runtime must satisfy.
+This document is the **formal specification** of USR (Universal Sovereign Runtime) and CoreFab (Constitutional Fabrication). It defines how UWA components are orchestrated and how UCN networks are coordinated to produce sovereign constitutional execution.
+
+USR does not define what a component is (that is UWA). USR does not define how components communicate across a network (that is UCN). USR defines how validated components are **orchestrated into deterministic constitutional action** — the runtime that makes components execute, attests to their behavior, and enforces sovereignty.
 
 The v0.1.0 implementation proved that constitutional execution is possible. This specification proves that it is **definable, verifiable, and sovereign**.
 
-**Classification:** Constitutional — defines execution law for all of ICore.
+**Classification:** Constitutional — defines orchestration law for all of ICore.
 
 **Derivation:**
 ```
-UVS → USR/CoreFab (constitutional execution engine)
+UWA + UCN → USR/CoreFab (orchestration engine)
 ```
 
-**Depends on:** UVS (execution requires visual/interactive constitutional interfaces) and transitively the entire stack above USCP — execution must consume meaning produced by every layer it executes for.
+**Depends on:** UWA (execution requires components to orchestrate) and UCN (orchestration across sovereign nodes requires networking). Transitively the entire stack above USCP.
 
-**Depended on by:** UCA (adapters bridge the runtime to external systems). UCA is the constitutional boundary; USR/CoreFab is the constitutional interior.
+**Depended on by:** UCA (adapters bridge the orchestrated runtime to external systems). UCA is the constitutional boundary; USR/CoreFab is the constitutional interior.
 
 ---
 
@@ -60,11 +62,11 @@ The foundation is complete. The six primitives are fully represented.
 
 | Term | Definition |
 |------|-----------|
-| **USR** | Universal Sovereign Runtime — the constitutional runtime environment that provides identity, constraints, isolation, attestation, and orchestration. |
-| **CoreFab** | Constitutional Fabrication — the execution engine operating within USR. Executes operations deterministically and produces provenance. |
-| **Component** | A constitutional execution unit declared within USR. Every component has an identity, operates under constraints, executes within isolation, and produces attestations. |
-| **Blueprint** | A declarative specification of a component and its intended execution. Blueprints are constitutionally validated before execution. |
-| **Operation** | A discrete constitutional action executed by a component. Operations are named, registered, and deterministic. |
+| **USR** | Universal Sovereign Runtime — the constitutional orchestration environment that coordinates UWA components over UCN networks. Provides isolation, attestation, and sovereign execution. |
+| **CoreFab** | Constitutional Fabrication — the orchestration engine operating within USR. Orchestrates component execution deterministically and produces provenance. |
+| **Component** | A constitutional unit defined by UWA and orchestrated by USR. USR does not define components — it orchestrates them. |
+| **Blueprint** | A declarative specification of a component and its intended execution. Blueprints are constitutionally validated by USR before orchestration. |
+| **Operation** | A discrete constitutional action orchestrated by USR. Operations are named, registered, and deterministic. |
 | **Capability** | A grant of access to a governed resource, with explicit permissions and optional expiration. Capabilities are never implicit. |
 
 ### 2.2 The Relationship Between USR and CoreFab

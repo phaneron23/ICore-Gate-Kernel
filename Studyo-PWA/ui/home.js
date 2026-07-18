@@ -86,10 +86,42 @@ window.HomeScreen = {
                 <div class="layer-status status-complete">✅</div>
               </div>
               <div class="layer-item">
-                <div class="layer-number">L6</div>
+                <div class="layer-number">L6a</div>
                 <div class="layer-info">
-                  <div class="layer-name">Execution &amp; Adapters</div>
-                  <div class="layer-desc">USR/CoreFab v0.1.0 · UCA v0.1.0</div>
+                  <div class="layer-name">UWA Components</div>
+                  <div class="layer-desc">Component Model &amp; Execution</div>
+                </div>
+                <div class="layer-status status-complete">✅</div>
+              </div>
+              <div class="layer-item">
+                <div class="layer-number">L6b</div>
+                <div class="layer-info">
+                  <div class="layer-name">UCN Networking</div>
+                  <div class="layer-desc">Discovery · Communication · Trust</div>
+                </div>
+                <div class="layer-status status-complete">✅</div>
+              </div>
+              <div class="layer-item">
+                <div class="layer-number">L6c</div>
+                <div class="layer-info">
+                  <div class="layer-name">USR Orchestration</div>
+                  <div class="layer-desc">CoreFab v0.1.0</div>
+                </div>
+                <div class="layer-status status-complete">✅</div>
+              </div>
+              <div class="layer-item">
+                <div class="layer-number">L6d</div>
+                <div class="layer-info">
+                  <div class="layer-name">UCA Adaptation</div>
+                  <div class="layer-desc">Constitutional Boundary v0.1.0</div>
+                </div>
+                <div class="layer-status status-complete">✅</div>
+              </div>
+              <div class="layer-item">
+                <div class="layer-number">L7</div>
+                <div class="layer-info">
+                  <div class="layer-name">Applications</div>
+                  <div class="layer-desc">UCD · ICS · Studyo</div>
                 </div>
                 <div class="layer-status status-complete">✅</div>
               </div>

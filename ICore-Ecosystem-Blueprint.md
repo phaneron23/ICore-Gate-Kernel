@@ -29,7 +29,7 @@ Principles
     ↓
 5. Canonical Models · UCRS · URS · UVS — Reference systems
     ↓
-6. CoreFab (USR) · UCA · UCD — Runtime and derivatives
+6. UWA · UCN · USR (CoreFab) · UCA · UCD — Constitutional platforms and derivatives
     ↓
 7. CodeLabs · Studyo — Research and workspace
     ↓
@@ -51,7 +51,9 @@ Principles
 | 5 | UCRS | Reference | The Constitution's self-reference system |
 | 5 | URS | Representation | Maps meaning to representational forms |
 | 5 | UVS | Visualization | Renders knowledge into interactive visual forms |
-| 6 | CoreFab (USR) | Runtime | Constitutional execution engine |
+| 6 | UWA | Components | Constitutional component model and execution |
+| 6 | UCN | Networking | Constitutional discovery, communication, trust |
+| 6 | USR (CoreFab) | Orchestration | Constitutional runtime and orchestration engine |
 | 6 | UCA | Adapters | Adaptation boundary — constitution meets the external world |
 | 6 | UCD | Derivatives | Constitutionally-derived building blocks |
 | 7 | CodeLabs | Research | Sandboxed experimentation environment |
