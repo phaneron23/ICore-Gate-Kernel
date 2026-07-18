@@ -1,83 +1,133 @@
-// ICore Studyo — Trust Verification Engine v0.1.0
-// The core engine that verifies trust claims against the constitutional framework.
+// ICore Studyo — Trust Verification Engine v0.2.0
+// v0.2.0: analyzeClaim() no longer hardcodes verification-passing fields.
+// Claims reflect what the input ACTUALLY provides — not what we wish it had.
+// Originated by Sir Collins (access1@tutamail.com). Constitutional artifact.
 
 window.TrustVerifier = {
-  version: '0.1.0',
+  version: '0.2.0',
 
-  // Analyze a trust claim — extract structured data from text
+  // Analyze a trust claim — extract structured data from text.
+  // v0.2.0: This does NOT pre-fill epistemic.humble, derivation.valid,
+  // structure.consistent, or referenceValid. Those are TESTED by the
+  // verification pipeline — not assumed. If the input doesn't establish
+  // them, they remain absent, and downstream tests will correctly fail.
   analyzeClaim(text) {
     const lower = text.toLowerCase();
-    
-    // Build a structured claim from natural language
+
+    // Build a claim structure — only populate fields the input establishes.
     const claim = {
       id: 'claim-' + Date.now(),
       text: text,
       timestamp: new Date().toISOString(),
-      
-      // USCP grounding
+
+      // USCP grounding — definition is the claim text itself
       definition: text,
-      origin: text.length > 0 ? ['user-input'] : [],
       identity: { unique: true, id: 'claim-' + Date.now() },
+
+      // v0.2.0: origin is NOT auto-set. The claim must establish its origin.
+      // An empty origin means the verification pipeline should flag it.
+      origin: [],
+
       relationships: [],
       constraints: {},
       lifecycle: { state: 'Proposed', governed: true },
+
+      // v0.2.0: verification array is NOT auto-populated.
+      // User-declared verification results are not trusted by construction.
       verification: [],
-      
-      // Epistemic properties
-      knowledge: text.length > 0 ? [text] : [],
+
+      // Epistemic properties — v0.2.0: NOT hardcoded to humble: true.
+      // The claim must explicitly demonstrate epistemic humility.
+      // epistemic: intentionally absent unless claim establishes it
+
+      // Knowledge — v0.2.0: structured object, not just raw text
+      knowledge: {
+        claims: [],
+        derivations: []
+      },
+
+      // Citations — empty unless claim references sources
       citations: [],
-      epistemic: { humble: true },
-      
-      // Derivation
+
+      // Derivation — v0.2.0: valid is NOT hardcoded.
+      // The verification pipeline checks this; we don't assert it.
       derivation: {
         chain: [],
-        direction: 'downward',
-        valid: true
+        direction: 'downward'
+        // valid: intentionally absent — tested, not assumed
       },
-      
-      // Structure
-      structure: { consistent: true },
-      
-      // Expression (UCL 5-field)
+
+      // Structure — v0.2.0: consistent is NOT hardcoded.
+      // structure: intentionally absent — tested by ICS T3-09
+
+      // Expression (UCL 5-field) — only if claim provides structured expression
       expression: {
         Subject: 'Trust Claim',
         Predicate: 'asserts',
         Object: text,
         Source: 'user-input',
-        Context: 'trust-verification',
-        canonical: true
+        Context: 'trust-verification'
+        // canonical: intentionally absent — tested by T2-32
       },
-    
-      // Reference
+
+      // Reference — v0.2.0: referenceValid is NOT auto-true.
       reference: 'claim-' + Date.now(),
-      referenceValid: true,
-    
-      // Standards
+      // referenceValid: intentionally absent — tested, not assumed
+
+      // Standards — must explicitly reference what standard this follows
       standards: 'ICore Kernel v1.0'
     };
 
-    // Detect keywords to enrich the claim
+    // ── Enrich claim from actual text content ────────────────────────
+
+    // Extract constitutional keywords present in the text
     const keywords = this.extractKeywords(lower);
-    claim.keywords = keywords;
+    if (keywords.length > 0) {
+      claim.keywords = keywords;
+    }
 
-    // If claim mentions sources/evidence, add citations
+    // Only add citations if the claim text actually references sources
     if (lower.includes('because') || lower.includes('evidence') || lower.includes('test')) {
-      claim.citations.push({ source: 'claim-text', detail: 'Claim references evidence' });
+      claim.citations.push({
+        source: 'claim-text',
+        type: 'derived',
+        verified: false,
+        detail: 'Claim references evidence (unverified)'
+      });
     }
 
-    // If claim mentions derivation/chain
+    // Only add derivation chain entries if the claim references derivation
     if (lower.includes('derived') || lower.includes('chain') || lower.includes('trace')) {
-      claim.derivation.chain.push('user-declared-derivation');
+      claim.derivation.chain.push({
+        rule: 'CR1',
+        premises: ['user-declared'],
+        conclusion: 'user-declared derivation',
+        parent: null
+      });
     }
 
-    // If claim mentions verification
-    if (lower.includes('verified') || lower.includes('test') || lower.includes('pass')) {
-      claim.verification.push({ type: 'user-declared', result: 'passed' });
+    // v0.2.0: Do NOT auto-add verification records from keyword detection.
+    // "verified" in text ≠ verification passed. The pipeline verifies.
+    // If the user explicitly claims verification, note it as a declaration:
+    if (lower.includes('verified') || lower.includes('certified')) {
+      claim.verification.push({
+        type: 'user-declared',
+        result: 'passed',
+        note: 'User claims verification — not independently verified'
+      });
     }
 
-    // If claim mentions relationships
+    // Only add relationship if claim references dependencies
     if (lower.includes('depends') || lower.includes('requires') || lower.includes('because')) {
       claim.relationships.push({ type: 'dependency', target: 'evidence' });
+    }
+
+    // v0.2.0: Set epistemic humility based on claim content.
+    // Claims that acknowledge uncertainty demonstrate humility.
+    if (lower.includes('uncertain') || lower.includes('unknown')
+      || lower.includes('provisional') || lower.includes('may')
+      || lower.includes('humble') || lower.includes('boundaries')) {
+      claim.epistemic = { humble: true };
     }
 
     return claim;
@@ -104,7 +154,7 @@ window.TrustVerifier = {
 
   // Full verification pipeline
   verify(text) {
-    // Step 1: Analyze the claim
+    // Step 1: Analyze the claim (v0.2.0: honest, no trust-washing)
     const claim = this.analyzeClaim(text);
 
     // Step 2: USCP grounding (6 tests)
@@ -125,7 +175,7 @@ window.TrustVerifier = {
     const model = UCModels.buildModel(claim);
     const modelResults = UCModels.verifyModel(model);
 
-    // Step 7: ICS conformance (57 tests)
+    // Step 7: ICS v0.2.0 conformance (57 tests, all real)
     const icsResults = ICS.runAll(claim);
     const icsSummary = ICS.summarize(icsResults);
 
@@ -143,7 +193,8 @@ window.TrustVerifier = {
         ics: { summary: icsSummary, details: icsResults }
       },
       trust,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      engineVersion: '0.2.0'
     };
   },
 
@@ -156,8 +207,10 @@ window.TrustVerifier = {
 
     const uscpPercent = uscpScore / 6;
     const uscPercent = uscScore / 10;
-    // Honest scoring: only real (non-placeholder) tests count toward trust
-    const icsPercent = icsSummary.realPassed / icsSummary.realTests;
+    // v0.2.0: All 57 tests are real — use full summary
+    const icsPercent = icsSummary.total > 0
+      ? icsSummary.passed / icsSummary.total
+      : 0;
 
     const weightedScore = (
       uscpPercent * uscpWeight +

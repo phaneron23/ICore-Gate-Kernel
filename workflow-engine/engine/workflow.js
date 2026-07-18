@@ -466,9 +466,11 @@ window.WorkflowEngine = (() => {
           step.result = { ...output, outputHash, timestamp: isoNow() };
 
           // Produce step-level attestation record (SHA-256 via SubtleCrypto)
+          const stepAttestationData = `${step.id}:${inputHash}:${outputHash}:${isoNow()}`;
           const attestationRecord = {
             stepId: step.id,
             stepName: step.name,
+            hash: await sha256(stepAttestationData),
             inputHash,
             outputHash,
             algorithm: 'SHA-256',
