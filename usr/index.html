@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#e040fb">
+  <meta name="description" content="USR — Universal Sovereign Runtime. Constitutional execution engine for ICore.">
+  <title>USR — Universal Sovereign Runtime</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <style>
+    :root { --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2e; --text: #e0e0e0; --dim: #666; --accent: #e040fb; --accent2: #ea80fc; --green: #00e676; --red: #ff5252; --orange: #ff9100; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; line-height: 1.6; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+    header { border-bottom: 1px solid var(--border); padding: 1.2rem 0; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { color: var(--accent); font-size: 1.3rem; }
+    header .badge { background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; margin-left: 0.5rem; }
+    header .install-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: inherit; }
+    header .install-btn:hover { border-color: var(--accent); }
+
+    .status-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+    .status-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem; text-align: center; }
+    .status-card .label { color: var(--dim); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .status-card .value { color: var(--accent); font-size: 1.2rem; font-weight: 700; margin-top: 0.2rem; }
+    .status-card .sub { color: var(--dim); font-size: 0.65rem; margin-top: 0.1rem; }
+
+    .section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin-bottom: 1rem; }
+    .section h2 { color: var(--accent); font-size: 1rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+    .section h2 .icon { font-size: 1.1rem; }
+
+    textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.8rem; border-radius: 6px; font-family: inherit; font-size: 0.85rem; resize: vertical; min-height: 100px; }
+    textarea:focus { outline: none; border-color: var(--accent); }
+    textarea::placeholder { color: var(--dim); }
+
+    .btn-row { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
+    .btn { background: var(--accent); color: #000; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.8rem; font-weight: 600; }
+    .btn:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); }
+    .btn-danger { background: var(--red); }
+
+    .output { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem; margin-top: 0.8rem; font-size: 0.8rem; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; }
+    .output.success { border-color: var(--green); }
+    .output.error { border-color: var(--red); }
+
+    .event-log { max-height: 200px; overflow-y: auto; }
+    .event-item { padding: 0.3rem 0; border-bottom: 1px solid var(--border); font-size: 0.75rem; display: flex; gap: 0.5rem; }
+    .event-item .time { color: var(--dim); min-width: 70px; }
+    .event-item .name { color: var(--accent2); min-width: 180px; }
+    .event-item .detail { color: var(--text); }
+
+    .conformance-grid { display: grid; gap: 0.3rem; }
+    .conformance-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.6rem; border-radius: 4px; font-size: 0.8rem; background: var(--bg); }
+    .conformance-item .test-id { color: var(--accent2); min-width: 60px; font-weight: 600; }
+    .conformance-item .test-name { color: var(--dim); flex: 1; }
+    .conformance-item .test-result { font-weight: 700; min-width: 50px; text-align: right; }
+    .conformance-item.pass .test-result { color: var(--green); }
+    .conformance-item.fail .test-result { color: var(--red); }
+
+    footer { border-top: 1px solid var(--border); margin-top: 1.5rem; padding-top: 1rem; text-align: center; color: var(--dim); font-size: 0.7rem; }
+    @media (max-width: 600px) { .container { padding: 1rem; } .status-bar { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>⚡ USR <span class="badge">v0.1.0</span></h1>
+      <button class="install-btn" id="installBtn" onclick="installPWA()">📱 Install</button>
+    </header>
+
+    <div class="status-bar" id="statusBar">
+      <div class="status-card"><div class="label">Runtime</div><div class="value" id="s-version">v0.1.0</div><div class="sub">USR/CoreFab</div></div>
+      <div class="status-card"><div class="label">Components</div><div class="value" id="s-components">0</div><div class="sub">registered</div></div>
+      <div class="status-card"><div class="label">Attestations</div><div class="value" id="s-attestations">0</div><div class="sub">chain length</div></div>
+      <div class="status-card"><div class="label">Messages</div><div class="value" id="s-messages">0</div><div class="sub">exchanged</div></div>
+      <div class="status-card"><div class="label">Status</div><div class="value" id="s-status" style="color:var(--green)">Ready</div><div class="sub" id="s-sub">constitutional</div></div>
+    </div>
+
+    <!-- Blueprint Execution -->
+    <div class="section">
+      <h2><span class="icon">📐</span> Execute Blueprint</h2>
+      <textarea id="blueprintInput" placeholder='{"name": "my-component", "layer": "execution", "operation": "compute-hash", "input": "hello world"}'></textarea>
+      <div class="btn-row">
+        <button class="btn" onclick="executeBlueprint()">▶ Execute</button>
+        <button class="btn btn-secondary" onclick="loadSample()">📋 Sample</button>
+        <button class="btn btn-secondary" onclick="clearOutput('blueprintOutput')">Clear</button>
+      </div>
+      <div class="output" id="blueprintOutput"></div>
+    </div>
+
+    <!-- Runtime Verification -->
+    <div class="section">
+      <h2><span class="icon">🔍</span> Runtime Verification</h2>
+      <div class="btn-row">
+        <button class="btn" onclick="verifyRuntime()">Verify Runtime</button>
+        <button class="btn btn-secondary" onclick="runConformance()">Run Conformance (USR-01 → USR-15)</button>
+      </div>
+      <div class="output" id="verifyOutput"></div>
+      <div class="conformance-grid" id="conformanceGrid" style="margin-top: 0.8rem;"></div>
+    </div>
+
+    <!-- Event Log -->
+    <div class="section">
+      <h2><span class="icon">📡</span> Event Log <span style="color:var(--dim);font-size:0.75rem;font-weight:400;">(event-driven architecture)</span></h2>
+      <div class="event-log" id="eventLog">
+        <div class="event-item"><span class="time">--:--</span><span class="name">usr:runtime:ready</span><span class="detail">USR v0.1.0 initialized</span></div>
+      </div>
+    </div>
+
+    <footer>
+      <p>ICore Universal Sovereign Runtime v0.1.0 — Originated by Sir Collins (access1@tutamail.com)</p>
+      <p style="margin-top:0.2rem;">Constitutional artifact. Offline-first. Zero dependencies. Event-driven.</p>
+    </footer>
+  </div>
+
+  <!-- Platform engines -->
+  <script src="platform/uscp.js"></script>
+  <script src="platform/usc.js"></script>
+  <script src="platform/sciences.js"></script>
+  <script src="platform/ucrs.js"></script>
+  <script src="platform/ucmodels.js"></script>
+  <script src="platform/ics.js"></script>
+  <script src="platform/trust-verify.js"></script>
+
+  <!-- Domain engines -->
+  <script src="engine/identity.js"></script>
+  <script src="engine/execution.js"></script>
+  <script src="engine/constraints.js"></script>
+  <script src="engine/isolation.js"></script>
+  <script src="engine/attestation.js"></script>
+  <script src="engine/orchestration.js"></script>
+  <script src="engine/runtime.js"></script>
+
+  <script>
+    // Initialize runtime
+    let runtime;
+    const events = [];
+
+    function init() {
+      runtime = new UsrRuntime();
+      updateStatus();
+      logEvent('usr:runtime:ready', 'USR v' + runtime.version() + ' initialized');
+    }
+
+    function updateStatus() {
+      const s = runtime.getStatus();
+      document.getElementById('s-components').textContent = s.components;
+      document.getElementById('s-attestations').textContent = s.attestations;
+      document.getElementById('s-messages').textContent = s.messages;
+    }
+
+    function logEvent(name, detail) {
+      const now = new Date();
+      const time = now.toTimeString().slice(0, 8);
+      events.push({ time, name, detail: String(detail).slice(0, 120) });
+      const log = document.getElementById('eventLog');
+      const div = document.createElement('div');
+      div.className = 'event-item';
+      div.innerHTML = `<span class="time">${time}</span><span class="name">${name}</span><span class="detail">${String(detail).slice(0, 120)}</span>`;
+      log.insertBefore(div, log.firstChild);
+      if (log.children.length > 50) log.removeChild(log.lastChild);
+    }
+
+    // Listen to all USR events
+    ['usr:identity:registered', 'usr:execution:registered', 'usr:execution:complete',
+     'usr:isolation:granted', 'usr:isolation:revoked',
+     'usr:attestation:created',
+     'usr:orchestration:registered', 'usr:orchestration:transition', 'usr:orchestration:message'
+    ].forEach(evt => {
+      window.addEventListener(evt, e => {
+        logEvent(evt, JSON.stringify(e.detail).slice(0, 120));
+        updateStatus();
+      });
+    });
+
+    async function executeBlueprint() {
+      const input = document.getElementById('blueprintInput').value.trim();
+      const out = document.getElementById('blueprintOutput');
+      if (!input) { out.textContent = 'Enter a blueprint JSON'; out.className = 'output error'; return; }
+      try {
+        const result = await runtime.executeBlueprint(input);
+        out.textContent = JSON.stringify(result, null, 2);
+        out.className = 'output success';
+      } catch (e) {
+        out.textContent = e.message;
+        out.className = 'output error';
+      }
+    }
+
+    function loadSample() {
+      document.getElementById('blueprintInput').value = JSON.stringify({
+        name: 'sample-component', layer: 'execution', version: '0.1.0',
+        operation: 'validate-identity',
+        input: { name: 'test', layer: 'impl', question: 'What is?' }
+      }, null, 2);
+    }
+
+    function clearOutput(id) { const el = document.getElementById(id); el.textContent = ''; el.className = 'output'; }
+
+    async function verifyRuntime() {
+      const out = document.getElementById('verifyOutput');
+      try {
+        await runtime.verify();
+        out.textContent = '✅ Runtime is constitutionally consistent. All engines pass.';
+        out.className = 'output success';
+      } catch (e) {
+        out.textContent = '❌ ' + e.message;
+        out.className = 'output error';
+      }
+    }
+
+    async function runConformance() {
+      const grid = document.getElementById('conformanceGrid');
+      grid.innerHTML = '';
+      const tests = [
+        ['USR-01', 'Identity Registration', async () => { const c = await runtime.identity.declare('test', 'execution', '0.1.0', [], 'test'); await runtime.identity.register(c); return true; }],
+        ['USR-02', 'Identity Uniqueness', async () => { try { const c = await runtime.identity.declare('dup', 'execution', '0.1.0', [], 'test'); await runtime.identity.register(c); await runtime.identity.register(c); return false; } catch { return true; } }],
+        ['USR-03', 'D1 Enforcement', () => runtime.constraints.enforce('d1_no_skip', { parent_layer: 5, child_layer: 3 }) === false],
+        ['USR-04', 'Operation Registration', async () => { try { await runtime.execution.execute('nonexistent', {}, 'x'); return false; } catch { return true; } }],
+        ['USR-05', 'Deterministic Execution', async () => { const r1 = await runtime.execution.execute('compute-hash', 'test', 'x'); const r2 = await runtime.execution.execute('compute-hash', 'test', 'x'); return r1.outputHash === r2.outputHash; }],
+        ['USR-06', 'Execution Provenance', async () => { const r = await runtime.execution.execute('compute-hash', 'x', 'y'); return r.inputHash && r.outputHash; }],
+        ['USR-07', 'Capability Enforcement', () => !runtime.isolation.checkCapability('nonexistent', 'execution', 'execute')],
+        ['USR-08', 'Capability Revocation', async () => { await runtime.isolation.requestCapability('revoke-test', 'storage', ['read']); const before = runtime.isolation.checkCapability('revoke-test', 'storage', 'read'); runtime.isolation.revokeCapability('revoke-test', 'storage'); const after = runtime.isolation.checkCapability('revoke-test', 'storage', 'read'); return before && !after; }],
+        ['USR-09', 'Attestation Integrity', async () => { const r = await runtime.attestation.attest('x', 'compute-hash', 'in', 'out', 'success'); return runtime.attestation.verify(r); }],
+        ['USR-10', 'Chain Consistency', async () => { await runtime.attestation.attest('y', 'compute-hash', 'a', 'b', 'success'); return runtime.attestation.verifyChain(); }],
+        ['USR-11', 'Lifecycle Compliance', () => { try { runtime.orchestration.start('nonexistent'); return false; } catch { return true; } }],
+        ['USR-12', 'Message Isolation', () => { try { runtime.orchestration.sendMessage('x', 'y', 'test'); return false; } catch { return true; } }],
+        ['USR-13', 'Blueprint Validation', () => { try { runtime.validateBlueprint({}); return false; } catch { return true; } }],
+        ['USR-14', 'Error Transparency', () => { try { runtime.validateBlueprint({}); } catch (e) { return e.message.includes(':'); } return false; }],
+        ['USR-15', 'Runtime Self-Verification', async () => { await runtime.verify(); return true; }],
+      ];
+
+      let pass = 0, fail = 0;
+      for (const [id, name, test] of tests) {
+        try {
+          const result = await test();
+          const cls = result ? 'pass' : 'fail';
+          if (result) pass++; else fail++;
+          grid.innerHTML += `<div class="conformance-item ${cls}"><span class="test-id">${id}</span><span class="test-name">${name}</span><span class="test-result">${result ? 'PASS' : 'FAIL'}</span></div>`;
+        } catch (e) {
+          fail++;
+          grid.innerHTML += `<div class="conformance-item fail"><span class="test-id">${id}</span><span class="test-name">${name}</span><span class="test-result">ERROR</span></div>`;
+        }
+      }
+      const out = document.getElementById('verifyOutput');
+      out.textContent = `Conformance: ${pass}/${tests.length} passed (${fail} failed)`;
+      out.className = fail === 0 ? 'output success' : 'output error';
+    }
+
+    // PWA install
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
+    function installPWA() { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; } }
+
+    // Register service worker
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js').catch(() => {});
+
+    // Init on load
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
