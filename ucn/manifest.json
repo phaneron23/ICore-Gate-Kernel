@@ -1,0 +1,16 @@
+{
+  "name": "UCN \u2014 Universal Constitutional Network",
+  "short_name": "UCN",
+  "description": "Sovereign networking for ICore constitutional components",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#ff6d00",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

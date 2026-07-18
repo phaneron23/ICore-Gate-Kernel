@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00bfa5">
+  <meta name="description" content="UWA — Universal Workspace Adapter. Constitutional workspace orchestration for ICore.">
+  <title>UWA — Universal Workspace Adapter</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+  <style>
+    :root { --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2e; --text: #e0e0e0; --dim: #666; --accent: #00bfa5; --accent2: #1de9b6; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; line-height: 1.6; }
+    .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+    header { border-bottom: 1px solid var(--border); padding: 1.5rem 0; margin-bottom: 2rem; }
+    header h1 { color: var(--accent); font-size: 1.5rem; font-weight: 600; }
+    header p { color: var(--dim); font-size: 0.85rem; margin-top: 0.25rem; }
+    .badge { display: inline-block; background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-left: 0.5rem; }
+    .spec-content { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-top: 1rem; }
+    .spec-content h1 { color: var(--accent); font-size: 1.3rem; margin: 1.5rem 0 0.5rem; }
+    .spec-content h2 { color: var(--accent2); font-size: 1.1rem; margin: 1.2rem 0 0.4rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+    .spec-content h3 { color: var(--text); font-size: 1rem; margin: 1rem 0 0.3rem; }
+    .spec-content p { margin: 0.5rem 0; color: var(--dim); }
+    .spec-content code { background: var(--bg); padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; color: var(--accent); }
+    .spec-content pre { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; margin: 0.5rem 0; }
+    .spec-content pre code { background: none; padding: 0; }
+    .spec-content table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; }
+    .spec-content th, .spec-content td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; font-size: 0.85rem; }
+    .spec-content th { background: var(--bg); color: var(--accent); }
+    .spec-content ul, .spec-content ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+    .spec-content li { margin: 0.2rem 0; color: var(--dim); }
+    .spec-content blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; margin: 0.5rem 0; color: var(--dim); font-style: italic; }
+    .spec-content hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    .status-bar { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+    .status-item { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; flex: 1; min-width: 200px; }
+    .status-item h3 { color: var(--accent); font-size: 0.8rem; margin-bottom: 0.25rem; }
+    .status-item p { color: var(--text); font-size: 1.1rem; font-weight: 600; }
+    .status-item .dim { color: var(--dim); font-size: 0.75rem; font-weight: 400; }
+    footer { border-top: 1px solid var(--border); margin-top: 2rem; padding-top: 1rem; text-align: center; color: var(--dim); font-size: 0.75rem; }
+    @media (max-width: 600px) { .container { padding: 1rem; } header h1 { font-size: 1.2rem; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧩 UWA <span class="badge">v0.1.0</span></h1>
+      <p>Universal Workspace Adapter — Constitutional Workspace Orchestration</p>
+    </header>
+
+    <div class="status-bar">
+      <div class="status-item">
+        <h3>Component Model</h3>
+        <p>Active</p>
+        <span class="dim">Workspace orchestration engine</span>
+      </div>
+      <div class="status-item">
+        <h3>Platform Engine</h3>
+        <p id="engine-status">Loading...</p>
+        <span class="dim">ICS v0.2.0 + Trust v0.2.0</span>
+      </div>
+      <div class="status-item">
+        <h3>Conformance</h3>
+        <p id="conformance-status">—</p>
+        <span class="dim">ICS test results</span>
+      </div>
+    </div>
+
+    <div class="spec-content" id="spec">
+      <p style="color: var(--dim); text-align: center; padding: 2rem;">Loading specification...</p>
+    </div>
+
+    <footer>
+      <p>ICore Universal Workspace Adapter v0.1.0 — Originated by Sir Collins (access1@tutamail.com)</p>
+      <p style="margin-top: 0.25rem;">Constitutional artifact. Offline-first. Zero dependencies.</p>
+    </footer>
+  </div>
+
+  <!-- Platform engines -->
+  <script src="platform/uscp.js"></script>
+  <script src="platform/usc.js"></script>
+  <script src="platform/sciences.js"></script>
+  <script src="platform/ucrs.js"></script>
+  <script src="platform/ucmodels.js"></script>
+  <script src="platform/ics.js"></script>
+  <script src="platform/trust-verify.js"></script>
+
+  <script>
+    // Simple markdown-to-HTML converter for spec display
+    function md(text) {
+      return text
+        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+        .replace(/^---$/gm, '<hr>')
+        .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/^\| (.+)$/gm, function(m) {
+          const cells = m.replace(/^\| /, '').split(' | ');
+          return '<tr>' + cells.map(c => '<td>' + c + '</td>').join('') + '</tr>';
+        })
+        .replace(/(<tr>.*<\/tr>
+?)+/g, function(m) { return '<table>' + m + '</table>'; })
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>
+?)+/g, function(m) { return '<ul>' + m + '</ul>'; })
+        .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+        .replace(/
+
+/g, '</p><p>')
+        .replace(/^(?!<[hultob])/gm, '<p>')
+        .replace(/<p><\/p>/g, '')
+        .replace(/<p>(<h[123]>)/g, '$1')
+        .replace(/(<\/h[123]>)<\/p>/g, '$1')
+        .replace(/<p>(<hr>)/g, '$1')
+        .replace(/(<hr>)<\/p>/g, '$1')
+        .replace(/<p>(<table>)/g, '$1')
+        .replace(/(<\/table>)<\/p>/g, '$1')
+        .replace(/<p>(<ul>)/g, '$1')
+        .replace(/(<\/ul>)<\/p>/g, '$1')
+        .replace(/<p>(<blockquote>)/g, '$1')
+        .replace(/(<\/blockquote>)<\/p>/g, '$1')
+        .replace(/<p>(<pre>)/g, '$1')
+        .replace(/(<\/pre>)<\/p>/g, '$1');
+    }
+
+    // Load spec
+    fetch('https://raw.githubusercontent.com/ICore-Gate-Kernel/ICore-Gate-Kernel-v1/main/UWA/UWA-v0.1.0-FORMAL-SPEC.md')
+      .then(r => r.ok ? r.text() : Promise.reject())
+      .then(text => {
+        document.getElementById('spec').innerHTML = md(text);
+      })
+      .catch(() => {
+        // Fallback: embed spec content
+        document.getElementById('spec').innerHTML = '<h2>UWA — Universal Workspace Adapter</h2><p>The formal specification defines workspace orchestration for ICore constitutional components.</p><p>Refer to the <a href="https://github.com/ICore-Gate-Kernel/ICore-Gate-Kernel-v1" style="color: var(--accent);">GitHub repository</a> for the full specification.</p>';
+      });
+
+    // Run platform verification
+    setTimeout(() => {
+      try {
+        if (window.ICS && window.TrustVerifier) {
+          const result = TrustVerifier.verify('UWA constitutional workspace adapter');
+          document.getElementById('engine-status').textContent = 'Active';
+          document.getElementById('engine-status').style.color = '#00e676';
+          document.getElementById('conformance-status').textContent = result.trust.label;
+          document.getElementById('conformance-status').style.color = result.trust.level === 'verified' ? '#00e676' : '#ff9100';
+        }
+      } catch(e) {
+        document.getElementById('engine-status').textContent = 'Error';
+        document.getElementById('engine-status').style.color = '#ff5252';
+      }
+    }, 500);
+  </script>
+</body>
+</html>
