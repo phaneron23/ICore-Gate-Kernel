@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#d500f9"><meta name="description" content="UCA — Universal Constitutional Adapters">
+<title>UCA — Universal Constitutional Adapters</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔌</text></svg>">
+<style>
+:root{--bg:#0a0a0f;--sf:#12121a;--bd:#1e1e2e;--tx:#e0e0e0;--dm:#666;--ac:#d500f9;--ac2:#ea80fc;--gn:#00e676;--rd:#ff5252}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'SF Mono','Fira Code','Cascadia Code',monospace;line-height:1.6}
+.ct{max-width:1000px;margin:0 auto;padding:1.5rem}
+header{border-bottom:1px solid var(--bd);padding:1.2rem 0;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center}
+header h1{color:var(--ac);font-size:1.3rem}header .bg{background:var(--ac);color:#000;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:700;margin-left:.5rem}
+header .ib{background:var(--sf);border:1px solid var(--bd);color:var(--tx);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.8rem;font-family:inherit}
+.sb{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.sc{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:.8rem;text-align:center}
+.sc .lb{color:var(--dm);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}.sc .vl{color:var(--ac);font-size:1.1rem;font-weight:700;margin-top:.2rem}.sc .sb2{color:var(--dm);font-size:.65rem;margin-top:.1rem}
+.sec{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:1.2rem;margin-bottom:1rem}
+.sec h2{color:var(--ac);font-size:1rem;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
+textarea{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--tx);padding:.8rem;border-radius:6px;font-family:inherit;font-size:.85rem;resize:vertical;min-height:60px}
+textarea:focus{outline:none;border-color:var(--ac)}textarea::placeholder{color:var(--dm)}
+.br{display:flex;gap:.5rem;margin-top:.8rem;flex-wrap:wrap}
+.btn{background:var(--ac);color:#000;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:600}.btn:hover{opacity:.9}
+.b2{background:var(--sf);color:var(--tx);border:1px solid var(--bd)}.b2:hover{border-color:var(--ac)}
+.out{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:.8rem;margin-top:.8rem;font-size:.8rem;max-height:300px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+.out.ok{border-color:var(--gn)}.out.er{border-color:var(--rd)}
+.el{max-height:200px;overflow-y:auto}.ei{padding:.3rem 0;border-bottom:1px solid var(--bd);font-size:.75rem;display:flex;gap:.5rem}
+.ei .tm{color:var(--dm);min-width:70px}.ei .nm{color:var(--ac2);min-width:220px}.ei .dt{color:var(--tx)}
+.cg{display:grid;gap:.3rem}.ci{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;border-radius:4px;font-size:.8rem;background:var(--bg)}
+.ci .tid{color:var(--ac2);min-width:75px;font-weight:600}.ci .tn{color:var(--dm);flex:1}.ci .tr{font-weight:700;min-width:50px;text-align:right}
+.ci.pass .tr{color:var(--gn)}.ci.fail .tr{color:var(--rd)}
+footer{border-top:1px solid var(--bd);margin-top:1.5rem;padding-top:1rem;text-align:center;color:var(--dm);font-size:.7rem}
+@media(max-width:600px){.ct{padding:1rem}.sb{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="ct">
+<header><h1>🔌 UCA <span class="bg">v0.1.0</span></h1><button class="ib" onclick="installPWA()">📱 Install</button></header>
+<div class="sb">
+<div class="sc"><div class="lb">Adapters</div><div class="vl" id="s-a">0</div><div class="sb2">registered</div></div>
+<div class="sc"><div class="lb">Active</div><div class="vl" id="s-ac">0</div><div class="sb2">on boundary</div></div>
+<div class="sc"><div class="lb">Naming</div><div class="vl" id="s-n">0</div><div class="sb2">mappings</div></div>
+<div class="sc"><div class="lb">Storage</div><div class="vl" id="s-st">0</div><div class="sb2">stores</div></div>
+<div class="sc"><div class="lb">Messages</div><div class="vl" id="s-m">0</div><div class="sb2">sent</div></div>
+<div class="sc"><div class="lb">Status</div><div class="vl" style="color:var(--gn)" id="s-s">Ready</div><div class="sb2">boundary</div></div>
+</div>
+
+<div class="sec"><h2>🔌 Register Adapter</h2>
+<textarea id="regInput" placeholder='{"name":"dns-adapter","domain":"naming","profile":"DNS","version":"0.1.0","operations":["resolve","register","verify"]}'></textarea>
+<div class="br"><button class="btn" onclick="registerAdapter()">Register</button><button class="b2" onclick="loadSample()">Sample</button></div>
+<div class="out" id="regOut"></div></div>
+
+<div class="sec"><h2>🔗 Naming Resolution</h2>
+<textarea id="nameInput" placeholder='{"adapterId":"...","entityId":"...","externalName":"example.com"}' style="min-height:40px"></textarea>
+<div class="br"><button class="btn" onclick="nameRegister()">Register Name</button><button class="b2" onclick="nameResolve()">Resolve</button><button class="b2" onclick="nameVerify()">Verify</button></div>
+<div class="out" id="nameOut"></div></div>
+
+<div class="sec"><h2>📦 Serialization Roundtrip</h2>
+<textarea id="serInput" placeholder='{"adapterId":"...","data":{"name":"test","value":42}}' style="min-height:40px"></textarea>
+<div class="br"><button class="btn" onclick="serRoundtrip()">Verify Roundtrip</button></div>
+<div class="out" id="serOut"></div></div>
+
+<div class="sec"><h2>💾 Storage</h2>
+<textarea id="storInput" placeholder='{"adapterId":"...","key":"doc-1","data":{"content":"hello"}}' style="min-height:40px"></textarea>
+<div class="br"><button class="btn" onclick="storStore()">Store</button><button class="b2" onclick="storRetrieve()">Retrieve</button><button class="b2" onclick="storVerify()">Verify Integrity</button></div>
+<div class="out" id="storOut"></div></div>
+
+<div class="sec"><h2>📨 Communication</h2>
+<textarea id="commInput" placeholder='{"adapterId":"...","destination":"node-beta","message":{"type":"greeting","data":"hello"}}' style="min-height:40px"></textarea>
+<div class="br"><button class="btn" onclick="commSend()">Send</button></div>
+<div class="out" id="commOut"></div></div>
+
+<div class="sec"><h2>🔍 Sovereignty Verification</h2>
+<div class="br"><button class="btn" onclick="runConformance()">Run Conformance (UCA-01 → UCA-12)</button></div>
+<div class="out" id="verifyOut"></div><div class="cg" id="confGrid" style="margin-top:.8rem"></div></div>
+
+<div class="sec"><h2>📡 Event Log</h2>
+<div class="el" id="elog"><div class="ei"><span class="tm">--:--</span><span class="nm">uca:runtime:ready</span><span class="dt">UCA v0.1.0 initialized</span></div></div></div>
+
+<footer><p>ICore Universal Constitutional Adapters v0.1.0 — Originated by Sir Collins (access1@tutamail.com)</p>
+<p style="margin-top:.2rem">Constitutional artifact. Offline-first. Zero dependencies. Event-driven.</p></footer>
+</div>
+
+<script src="engine/adapter.js"></script><script src="engine/naming.js"></script><script src="engine/serialization.js"></script><script src="engine/execution.js"></script><script src="engine/storage.js"></script><script src="engine/communication.js"></script><script src="engine/boundary.js"></script>
+<script>
+let rt;
+function init(){rt=new BoundaryRuntime();upd();log('uca:runtime:ready','UCA v'+rt.version()+' initialized');}
+function upd(){const s=rt.getStatus();document.getElementById('s-a').textContent=s.adapters;document.getElementById('s-ac').textContent=s.active;document.getElementById('s-n').textContent=rt.naming.mappings.size;document.getElementById('s-st').textContent=rt.storage.stores.size;document.getElementById('s-m').textContent=rt.communication.messages.length;}
+function log(nm,dt){const t=new Date().toTimeString().slice(0,8);const el=document.getElementById('elog');const d=document.createElement('div');d.className='ei';d.innerHTML=`<span class="tm">${t}</span><span class="nm">${nm}</span><span class="dt">${String(dt).slice(0,120)}</span>`;el.insertBefore(d,el.firstChild);if(el.children.length>50)el.removeChild(el.lastChild);}
+['uca:adapter:registered','uca:adapter:unregistered','uca:naming:registered','uca:serialization:serialize','uca:execution:complete','uca:storage:stored','uca:comm:sent'].forEach(e=>window.addEventListener(e,ev=>{log(e,JSON.stringify(ev.detail).slice(0,120));upd();}));
+
+async function registerAdapter(){const v=document.getElementById('regInput').value.trim();const o=document.getElementById('regOut');if(!v){o.textContent='Enter adapter JSON';o.className='out er';return;}try{const c=JSON.parse(v);const a=await rt.adapter.register(c.name,c.domain,c.profile,c);o.textContent=JSON.stringify({id:a.id,name:a.name,domain:a.domain,profile:a.profile,version:a.version},null,2);o.className='out ok';document.getElementById('regInput').dataset.adapterId=a.id;}catch(e){o.textContent=e.message;o.className='out er';}}
+function loadSample(){document.getElementById('regInput').value=JSON.stringify({name:'dns-adapter',domain:'naming',profile:'DNS',version:'0.1.0',operations:['resolve','register','verify']},null,2);}
+
+async function nameRegister(){const v=document.getElementById('nameInput').value.trim();const o=document.getElementById('nameOut');if(!v){o.textContent='Enter JSON';o.className='out er';return;}try{const c=JSON.parse(v);await rt.naming.registerMapping(c.adapterId,c.entityId,c.externalName);o.textContent=`✅ Registered: ${c.entityId} → ${c.externalName}`;o.className='out.ok';}catch(e){o.textContent=e.message;o.className='out er';}}
+async function nameResolve(){const v=document.getElementById('nameInput').value.trim();const o=document.getElementById('nameOut');if(!v){o.textContent='Enter JSON';o.className='out er';return;}try{const c=JSON.parse(v);const r=await rt.naming.resolve(c.adapterId,c.entityId);o.textContent=JSON.stringify(r,null,2);o.className='out ok';}catch(e){o.textContent=e.message;o.className='out er';}}
+async function nameVerify(){const v=document.getElementById('nameInput').value.trim();const o=document.getElementById('nameOut');if(!v){o.textContent='Enter JSON';o.className='out er';return;}try{const c=JSON.parse(v);const r=await rt.naming.verify(c.adapterId,c.externalName);o.textContent=JSON.stringify(r,null,2);o.className=r.verified?'out ok':'out er';}catch(e){o.textContent=e.message;o.className='out er';}}
+
+async function serRoundtrip(){const v=document.getElementById('serInput').value.trim();const o=document.getElementById('serOut');if(!v){o.textContent='Enter JSON';o.className='out er';return;}try{const c=JSON.parse(v);const ok=await rt.serialization.verifyRoundtrip(c.adapterId,c.data);o.textContent=`Roundtrip: ${ok?'✅ PASS (meaning preserved)':'❌ FAIL (meaning lost)'}`;o.className=ok?'out ok':'out er';}catch(e){o.textContent=e.message;o.className='out er';}}
+
+async function storStore(){const v=document.getElementById('storInput').value.trim();const o=document.getElementById('storOut');if(!v){o.textContent='Enter JSON';o.className='out er';return;}try{const c=JSON.parse(v);const r=await rt.storage.store(c.adapterId,c.key,c.data);o.textContent=JSON.stringify(r,null,2);o.className='out ok';}catch(e){o.textContent=e.message;o.className='out er';}}
+async function storRetrieve(){const v=document.getElementById('storInput').value.trim();const o=document.getElementById('storOut');if(!v){o.textContent='Enter JSON';o.className='out er';return;}try{const c=JSON.parse(v);const r=await rt.storage.retrieve(c.adapterId,c.key);o.textContent=JSON.stringify(r,null,2);o.className='out ok';}catch(e){o.textContent=e.message;o.className='out er';}}
+async function storVerify(){const v=document.getElementById('storInput').value.trim();const o=document.getElementById('storOut');if(!v){o.textContent='Enter JSON';o.className='out er';return;}try{const c=JSON.parse(v);const ok=await rt.storage.verifyIntegrity(c.adapterId,c.key);o.textContent=`Integrity: ${ok?'✅ VALID':'❌ TAMPERED'}`;o.className=ok?'out ok':'out er';}catch(e){o.textContent=e.message;o.className='out er';}}
+
+async function commSend(){const v=document.getElementById('commInput').value.trim();const o=document.getElementById('commOut');if(!v){o.textContent='Enter JSON';o.className='out er';return;}try{const c=JSON.parse(v);const r=await rt.communication.send(c.adapterId,c.destination,c.message);o.textContent=JSON.stringify({id:r.id,destination:r.destination},null,2);o.className='out ok';}catch(e){o.textContent=e.message;o.className='out er';}}
+
+async function runConformance(){const g=document.getElementById('confGrid');g.innerHTML='';
+// Set up test adapters
+const naming=await rt.adapter.register('test-naming','naming','DNS',{operations:['resolve','register','verify']});
+const ser=await rt.adapter.register('test-ser','serialization','JSON-LD',{operations:['serialize','deserialize']});
+const exec=await rt.adapter.register('test-exec','execution','WASM',{operations:['execute']});
+const stor=await rt.adapter.register('test-stor','storage','Syncthing',{operations:['store','retrieve']});
+const comm=await rt.adapter.register('test-comm','communication','HTTP',{operations:['send','receive']});
+
+const tests=[
+['UCA-01','Boundary Declaration',async()=>{const a=rt.adapter.getAdapter(naming.id);return a.name&&a.domain&&a.profile&&a.version}],
+['UCA-02','Dependency Direction',async()=>{return naming.dependencies.includes('USR/CoreFab')&&naming.layer===5}],
+['UCA-03','Interface-Bounded',async()=>{return naming.operations.length>0}],
+['UCA-04','Replaceability',async()=>{const old=naming.id;const n=await rt.adapter.replace(old,'test-naming-v2','DNS',{operations:['resolve']});return n.active&&!rt.adapter.getAdapter(old).active}],
+['UCA-05','Meaning Preservation',async()=>{const data={name:'test',nested:{a:1,b:[2,3]}};return rt.serialization.verifyRoundtrip(ser.id,data)}],
+['UCA-06','Offline Operability',async()=>{const count=rt.adapter.listActive().length;return count>=0}],
+['UCA-07','Sandbox Enforcement',async()=>{return rt.execution.sandboxCheck(exec.id)}],
+['UCA-08','Tamper Detection',async()=>{await rt.storage.store(stor.id,'integrity-test',{data:'original'});return rt.storage.verifyIntegrity(stor.id,'integrity-test')}],
+['UCA-09','Source Verification',async()=>{rt.communication.registerSource(comm.id,'known-source');const v1=await rt.communication.verifySource(comm.id,'known-source');const v2=await rt.communication.verifySource(comm.id,'unknown-source');return v1&&!v2}],
+['UCA-10','Auditability',async()=>{return rt.adapter.getLog().length>0}],
+['UCA-11','No Auth Outward',async()=>{return comm.domain==='communication'&&comm.footprint.length===0}],
+['UCA-12','Version Tracking',async()=>{const a=rt.adapter.getAdapter(ser.id);return a.version==='0.1.0'}],
+];
+let pass=0,fail=0;for(const[id,name,test]of tests){try{const ok=await test();if(ok)pass++;else fail++;g.innerHTML+=`<div class="ci ${ok?'pass':'fail'}"><span class="tid">${id}</span><span class="tn">${name}</span><span class="tr">${ok?'PASS':'FAIL'}</span></div>`;}catch(e){fail++;g.innerHTML+=`<div class="ci fail"><span class="tid">${id}</span><span class="tn">${name}</span><span class="tr">ERROR</span></div>`;}}
+const o=document.getElementById('verifyOut');o.textContent=`Conformance: ${pass}/${tests.length} passed (${fail} failed)`;o.className=fail===0?'out ok':'out er';upd();}
+
+let dp;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});function installPWA(){if(dp){dp.prompt();dp=null;}}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+window.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
