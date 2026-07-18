@@ -29,9 +29,11 @@ Principles
     ↓
 5. Canonical Models · UCRS · URS · UVS — Reference systems
     ↓
-6. UWA · UCN · USR (CoreFab) · UCA · UCD — Constitutional platforms and derivatives
+6. UWA · UCN · USR (CoreFab) · UCA — Constitutional platforms
     ↓
-7. CodeLabs · Studyo — Research and workspace
+7. UAS · USDS · UCD — Applications and derivatives
+    ↓
+8. CodeLabs · Studyo — Research and workspace
     ↓
 8. initialcore.net + constitutional subdomains — Publication and access
 ```
@@ -55,8 +57,10 @@ Principles
 | 6 | UCN | Networking | Constitutional discovery, communication, trust |
 | 6 | USR (CoreFab) | Orchestration | Constitutional runtime and orchestration engine |
 | 6 | UCA | Adapters | Adaptation boundary — constitution meets the external world |
-| 6 | UCD | Derivatives | Constitutionally-derived building blocks |
-| 7 | CodeLabs | Research | Sandboxed experimentation environment |
+| 7 | UAS | Agents | Universal Agentic System — constitutional agents |
+| 7 | USDS | Distribution | Universal Sovereign Distribution System |
+| 7 | UCD | Derivatives | Constitutionally-derived building blocks |
+| 8 | CodeLabs | Research | Sandboxed experimentation environment |
 | 7 | Studyo | Workspace | The Unified Constitutional Workspace |
 | 8 | initialcore.net | Publication | Canonical Web2 access point |
 | 8 | subdomains | Access | Constitutional Web3 sovereignty layer |

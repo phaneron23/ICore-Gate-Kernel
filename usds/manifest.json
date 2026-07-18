@@ -1,0 +1,11 @@
+{
+  "name": "USDS — Universal Sovereign Distribution",
+  "short_name": "USDS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#ff6d00",
+  "description": "Constitutional Distribution Management System — Package, Sign, Distribute, and Verify Constitutional Software.",
+  "orientation": "any",
+  "icons": []
+}

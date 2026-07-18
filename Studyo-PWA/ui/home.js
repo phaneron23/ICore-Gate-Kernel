@@ -121,7 +121,7 @@ window.HomeScreen = {
                 <div class="layer-number">L7</div>
                 <div class="layer-info">
                   <div class="layer-name">Applications</div>
-                  <div class="layer-desc">UCD · ICS · Studyo</div>
+                  <div class="layer-desc">UAS · USDS · UCD · ICS · Studyo</div>
                 </div>
                 <div class="layer-status status-complete">✅</div>
               </div>

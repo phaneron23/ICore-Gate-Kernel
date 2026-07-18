@@ -42,7 +42,7 @@ window.AboutScreen = {
             <strong>Sciences:</strong> UCE · UCC · UCM · UCL<br>
             <strong>Reference:</strong> UCRS · UCModels · URS · UVS<br>
             <strong>Platforms:</strong> UWA · UCN · USR/CoreFab · UCA<br>
-            <strong>Applications:</strong> UCD · ICS · Studyo
+            <strong>Applications:</strong> UAS · USDS · UCD · ICS · Studyo
           </p>
         </div>
 

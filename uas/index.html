@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#7c4dff">
+  <title>UAS — Universal Agentic System</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Critical inline styles for fast paint */
+    body { margin: 0; background: #0a0a0f; color: #e0e0e0; font-family: system-ui, -apple-system, sans-serif; }
+    .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+    .loading-screen h1 { color: #7c4dff; font-size: 1.5rem; }
+    .loading-screen p { color: #666; font-size: 0.85rem; margin-top: 0.5rem; }
+    .loading-bar { width: 200px; height: 3px; background: #1a1a2e; border-radius: 2px; margin-top: 1rem; overflow: hidden; }
+    .loading-bar-fill { height: 100%; width: 0%; background: #7c4dff; border-radius: 2px; transition: width 0.3s; }
+  </style>
+</head>
+<body>
+  <!-- Loading screen shown while scripts load -->
+  <div class="loading-screen" id="loadingScreen">
+    <h1>UAS</h1>
+    <p>Universal Agentic System</p>
+    <div class="loading-bar"><div class="loading-bar-fill" id="loadingBar"></div></div>
+  </div>
+
+  <!-- App shell (hidden until loaded) -->
+  <div id="app" style="display:none;">
+    <!-- Top nav -->
+    <header class="app-header">
+      <div class="app-logo">UAS</div>
+      <nav class="app-nav" id="appNav"></nav>
+    </header>
+    <!-- Screen container -->
+    <main id="screenContainer" class="screen-container"></main>
+  </div>
+
+  <!-- Platform engines (dependency order) -->
+  <script src="platform/corefab.js"></script>
+  <script src="platform/uca.js"></script>
+  <script src="platform/uscp.js"></script>
+  <script src="platform/usc.js"></script>
+  <script src="platform/sciences.js"></script>
+  <script src="platform/ucrs.js"></script>
+  <script src="platform/ucmodels.js"></script>
+  <script src="platform/ics.js"></script>
+  <script src="platform/trust-verify.js"></script>
+  <script src="platform/event-bus.js"></script>
+  <script src="platform/index.js"></script>
+
+  <!-- UAS engines -->
+  <script src="engine/trust-engine.js"></script>
+  <script src="engine/agent.js"></script>
+  <script src="engine/orchestrator.js"></script>
+
+  <!-- App controller -->
+  <script src="app.js"></script>
+
+  <!-- UI modules -->
+  <script src="ui/dashboard.js"></script>
+  <script src="ui/agents.js"></script>
+  <script src="ui/builder.js"></script>
+  <script src="ui/orchestrator.js"></script>
+  <script src="ui/history.js"></script>
+  <script src="ui/about.js"></script>
+
+  <script>
+    // Boot after all scripts loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      let progress = 0;
+      const bar = document.getElementById('loadingBar');
+      const interval = setInterval(() => {
+        progress += Math.random() * 30 + 10;
+        if (progress > 95) progress = 95;
+        bar.style.width = progress + '%';
+      }, 150);
+      window.UAS_READY = new Promise(resolve => {
+        setTimeout(() => {
+          clearInterval(interval);
+          bar.style.width = '100%';
+          setTimeout(() => {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('app').style.display = '';
+            if (window.UASApp) window.UASApp.init();
+            resolve(true);
+          }, 300);
+        }, 800);
+      });
+    });
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>

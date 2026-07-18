@@ -1,0 +1,11 @@
+{
+  "name": "UAS — Universal Agentic System",
+  "short_name": "UAS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#7c4dff",
+  "description": "Constitutional agent management system — create, configure, orchestrate sovereign agents.",
+  "icons": [],
+  "categories": ["productivity", "utilities"]
+}

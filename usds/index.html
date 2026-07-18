@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#ff6d00">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>USDS — Universal Sovereign Distribution System</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header class="app-header">
+    <div class="header-brand">
+      <span class="brand-icon">📦</span>
+      <h1 class="brand-title">USDS</h1>
+      <span class="brand-sub">Universal Sovereign Distribution</span>
+    </div>
+    <nav class="header-nav" id="mainNav">
+      <button class="nav-btn active" data-screen="dashboard">Dashboard</button>
+      <button class="nav-btn" data-screen="packages">Packages</button>
+      <button class="nav-btn" data-screen="distribute">Distribute</button>
+      <button class="nav-btn" data-screen="verify">Verify</button>
+      <button class="nav-btn" data-screen="history">History</button>
+      <button class="nav-btn" data-screen="about">About</button>
+    </nav>
+    <button class="mobile-menu" id="mobileMenu">☰</button>
+  </header>
+
+  <main class="app-main" id="appMain">
+    <section class="screen active" id="screen-dashboard"></section>
+    <section class="screen" id="screen-packages"></section>
+    <section class="screen" id="screen-distribute"></section>
+    <section class="screen" id="screen-verify"></section>
+    <section class="screen" id="screen-history"></section>
+    <section class="screen" id="screen-about"></section>
+  </main>
+
+  <footer class="app-footer">
+    <span>USDS v0.1.0 — ICore Constitutional Framework</span>
+  </footer>
+</div>
+
+<!-- Platform Engines -->
+<script src="platform/corefab.js"></script>
+<script src="platform/uca.js"></script>
+<script src="platform/uscp.js"></script>
+<script src="platform/usc.js"></script>
+<script src="platform/sciences.js"></script>
+<script src="platform/ucrs.js"></script>
+<script src="platform/ucmodels.js"></script>
+<script src="platform/ics.js"></script>
+<script src="platform/trust-verify.js"></script>
+<script src="platform/event-bus.js"></script>
+<script src="platform/index.js"></script>
+
+<!-- USDS Engines -->
+<script src="engine/package.js"></script>
+<script src="engine/signing.js"></script>
+<script src="engine/distribution.js"></script>
+<script src="engine/verification.js"></script>
+
+<!-- USDS App Controller -->
+<script src="app.js"></script>
+
+<!-- USDS UI Modules -->
+<script src="ui/dashboard.js"></script>
+<script src="ui/packages.js"></script>
+<script src="ui/distribute.js"></script>
+<script src="ui/verify.js"></script>
+<script src="ui/history.js"></script>
+<script src="ui/about.js"></script>
+</body>
+</html>
