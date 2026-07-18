@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICore Architecture</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--card:#1a1a25;--border:#2a2a3a;--accent:#6c5ce7;--accent2:#00cec9;--green:#00b894;--text:#e0e0e0;--dim:#888899;--mono:'SF Mono','Cascadia Code','Consolas',monospace;--sans:-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
+header{padding:2rem;border-bottom:1px solid var(--border);text-align:center}
+header h1{font-size:1.8rem;font-weight:700}
+header h1 span{color:var(--accent)}
+header p{color:var(--dim);margin-top:.4rem;font-size:.9rem}
+.container{max-width:900px;margin:0 auto;padding:2rem}
+.tree{position:relative;display:flex;flex-direction:column;align-items:center;gap:0}
+.tier{display:flex;flex-direction:column;align-items:center;position:relative;padding:.5rem 0}
+.tier::after{content:'';width:2px;height:24px;background:var(--border);position:absolute;bottom:-1px;left:50%}
+.tier:last-child::after{display:none}
+.node{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.7rem 1.4rem;cursor:pointer;transition:all .25s;text-align:center;position:relative;min-width:120px}
+.node:hover{border-color:var(--accent);transform:scale(1.05);z-index:2}
+.node.active{border-color:var(--accent2);box-shadow:0 0 20px rgba(0,206,201,.15)}
+.node .nname{font-family:var(--mono);font-weight:600;font-size:.9rem}
+.node .ntype{font-size:.65rem;color:var(--dim);margin-top:.15rem;text-transform:uppercase;letter-spacing:.06em}
+.siblings{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+.sibling-connector{width:1px;height:16px;background:var(--border);margin:0 auto}
+.detail-panel{margin-top:2rem;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;min-height:120px;transition:all .3s}
+.detail-panel h3{font-size:1.1rem;margin-bottom:.5rem}
+.detail-panel p{color:var(--dim);font-size:.9rem;line-height:1.7}
+.detail-panel .tag{display:inline-block;background:rgba(108,92,231,.15);color:var(--accent);font-size:.7rem;font-family:var(--mono);padding:.2rem .5rem;border-radius:4px;margin-right:.4rem;margin-top:.4rem}
+.legend{display:flex;gap:1.5rem;justify-content:center;margin-top:2rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--dim)}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+footer{text-align:center;padding:2rem;color:var(--dim);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<header>
+<h1>ICore <span>Architecture</span></h1>
+<p>Interactive constitutional hierarchy map</p>
+</header>
+<div class="container">
+<div class="tree" id="tree"></div>
+<div class="detail-panel" id="detail">
+<h3>Select a node</h3>
+<p>Click any node in the hierarchy to view its constitutional description, role, and dependencies.</p>
+</div>
+<div class="legend">
+<div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Core</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>Science</div>
+<div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Reference</div>
+<div class="legend-item"><div class="legend-dot" style="background:#fdcb6e"></div>Platform</div>
+<div class="legend-item"><div class="legend-dot" style="background:#e17055"></div>Application</div>
+</div>
+</div>
+<footer>ICore Gate Kernel v1 · Architecture Map</footer>
+<script>
+const nodes={
+Reality:{color:'var(--accent)',desc:'The substrate of all existence. The ground of truth upon which ICore is built. Reality is axiomatic — it requires no justification, only recognition.',tags:['Axiomatic','Foundational']},
+ICore:{color:'var(--accent)',desc:'The Innermost Core of trustworthy intelligence. A constitutional framework that establishes the rules, structures, and obligations for all layers above it.',tags:['Framework','Constitutional','v1.0']},
+USCP:{color:'var(--accent)',desc:'Universal Set of Core Primitives. The six foundational data types and operations: Domain, Rule, Proof, Query, Constraint, Mutation. Everything is built from these.',tags:['Primitives','6 Types','v1.0']},
+USC:{color:'var(--accent)',desc:'Universal Set of Constitutions. The governing law of ICore. Defines how primitives compose, how layers relate, and how the system evolves over time.',tags:['Governance','v2.0']},
+UCE:{color:'var(--accent2)',desc:'Universal Core Epistemology. Axioms of knowledge, belief, and truth. Defines what can be known and how knowledge is validated within ICore.',tags:['Axiom Set','Epistemology']},
+UCC:{color:'var(--accent2)',desc:'Universal Core Computation. Rules for computation, evaluation, and reduction. Ensures all operations are terminating and deterministic.',tags:['Computation','Termination']},
+UCM:{color:'var(--accent2)',desc:'Universal Core Meaning. Semantics of the framework. Maps syntax to meaning, ensuring every expression has a well-defined interpretation.',tags:['Semantics','Meaning']},
+UCL:{color:'var(--accent2)',desc:'Universal Core Logic. Formal logic layer. Inference rules, deduction, and proof theory for the ICore system.',tags:['Logic','Proof Theory']},
+UCRS:{color:'var(--green)',desc:'Universal Core Reference Standard. Canonical reference data. The authoritative source of truth for all constant values and enumerations.',tags:['Reference Data','Canonical']},
+UCModels:{color:'var(--green)',desc:'Universal Core Models. Mathematical and structural models that describe the behavior of ICore layers formally.',tags:['Models','Formal']},
+URS:{color:'var(--green)',desc:'Universal Reference System. Cross-references between all ICore components. Ensures consistency and coherence across layers.',tags:['Cross-Reference','Consistency']},
+UVS:{color:'var(--green)',desc:'Universal Versioning System. Semantic versioning and compatibility rules for all ICore specifications and implementations.',tags:['Versioning','SemVer']},
+UWA:{color:'#fdcb6e',desc:'Universal Web Application framework. Constitutional web app architecture — routing, state, rendering all governed by ICore rules.',tags:['Web','Application','Runtime']},
+UCN:{color:'#fdcb6e',desc:'Universal Core Network. Distributed communication layer. Inter-node messaging, consensus, and federation protocols.',tags:['Network','Distributed','Federation']},
+USR:{color:'#fdcb6e',desc:'Universal System Registry. Service discovery, capability advertisement, and health monitoring for ICore deployments.',tags:['Registry','Discovery','Health']},
+UCA:{color:'#fdcb6e',desc:'Universal Core Adapters. Bridge layer connecting ICore to external systems. 5 adapter domains for integration.',tags:['Adapters','Bridge','5 Domains']},
+UCD:{color:'#e17055',desc:'Universal Core Dashboard. Management interface for ICore deployments. Monitoring, configuration, and control plane.',tags:['Dashboard','Management']},
+ICS:{color:'#e17055',desc:'Internal Compliance Suite. Test harness and conformance checking. Validates implementations against constitutional specs.',tags:['Testing','Compliance','Tests']},
+Studyo:{color:'#e17055',desc:'The development environment. IDE-like interface for authoring, debugging, and deploying ICore constitutional blueprints.',tags:['IDE','Development','Authoring']}
+};
+const hierarchy=[
+{level:'Reality',type:'Substrate'},
+{level:'ICore',type:'Framework'},
+{level:'USCP',type:'Foundation'},
+{level:'USC',type:'Governance'},
+{level:['UCE','UCC','UCM','UCL'],type:'Sciences'},
+{level:['UCRS','UCModels','URS','UVS'],type:'Reference'},
+{level:['UWA','UCN','USR','UCA'],type:'Platforms'},
+{level:['UCD','ICS','Studyo'],type:'Applications'}
+];
+const tree=document.getElementById('tree');
+const detail=document.getElementById('detail');
+function showDetail(name){
+const n=nodes[name];if(!n)return;
+let tagsHtml=(n.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+detail.innerHTML=`<h3 style="color:${n.color}">${name}</h3><p>${n.desc}</p><div>${tagsHtml}</div>`;
+document.querySelectorAll('.node').forEach(el=>el.classList.remove('active'));
+document.querySelectorAll(`[data-name="${name}"]`).forEach(el=>el.classList.add('active'));
+}
+hierarchy.forEach((tier,i)=>{
+const tierEl=document.createElement('div');tierEl.className='tier';
+if(i<hierarchy.length-1){tierEl.style.paddingBottom='0'}
+if(i>0){const conn=document.createElement('div');conn.className='sibling-connector';tree.appendChild(conn)}
+if(Array.isArray(tier.level)){
+const wrap=document.createElement('div');wrap.className='siblings';
+tier.level.forEach(name=>{
+const nd=nodes[name];
+const el=document.createElement('div');el.className='node';el.dataset.name=name;
+el.innerHTML=`<div class="nname" style="color:${nd.color}">${name}</div><div class="ntype">${tier.type}</div>`;
+el.addEventListener('click',()=>showDetail(name));
+wrap.appendChild(el);
+});
+tierEl.appendChild(wrap);
+}else{
+const nd=nodes[tier.level];
+const el=document.createElement('div');el.className='node';el.dataset.name=tier.level;
+el.innerHTML=`<div class="nname" style="color:${nd.color}">${tier.level}</div><div class="ntype">${tier.type}</div>`;
+el.addEventListener('click',()=>showDetail(tier.level));
+tierEl.appendChild(el);
+}
+tree.appendChild(tierEl);
+});
+</script>
+</body>
+</html>

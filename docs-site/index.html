@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICore Documentation</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--card:#1a1a25;--border:#2a2a3a;--accent:#6c5ce7;--accent2:#00cec9;--green:#00b894;--text:#e0e0e0;--dim:#888899;--mono:'SF Mono','Cascadia Code','Consolas',monospace;--sans:-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
+header{padding:2rem;border-bottom:1px solid var(--border);text-align:center}
+header h1{font-size:1.8rem;font-weight:700}
+header h1 span{color:var(--accent)}
+header p{color:var(--dim);margin-top:.4rem;font-size:.9rem}
+.container{max-width:800px;margin:0 auto;padding:1.5rem}
+.search-box{position:relative;margin-bottom:1.5rem}
+.search-box input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem .8rem 2.5rem;color:var(--text);font-size:.9rem;font-family:var(--sans)}
+.search-box input:focus{outline:none;border-color:var(--accent)}
+.search-box::before{content:'🔍';position:absolute;left:.8rem;top:50%;transform:translateY(-50%);font-size:.9rem}
+.acc{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:.6rem;overflow:hidden;transition:border-color .2s}
+.acc.hidden{display:none}
+.acc:hover{border-color:rgba(108,92,231,.3)}
+.acc-head{padding:1rem 1.2rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
+.acc-head h3{font-size:.95rem;font-weight:600}
+.acc-head .arrow{font-size:.8rem;color:var(--dim);transition:transform .3s}
+.acc.open .acc-head .arrow{transform:rotate(90deg)}
+.acc-body{padding:0 1.2rem;max-height:0;overflow:hidden;transition:all .3s}
+.acc.open .acc-body{padding:0 1.2rem 1.2rem;max-height:2000px}
+.acc-body p{color:var(--dim);font-size:.88rem;line-height:1.7;margin-bottom:.6rem}
+.acc-body ul{list-style:none;padding:0}
+.acc-body li{padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.85rem}
+.acc-body li:last-child{border:none}
+.acc-body li span{color:var(--accent2);font-family:var(--mono);font-size:.8rem}
+.acc-body .sub-link{color:var(--dim);text-decoration:none;font-size:.82rem;display:inline-block;margin-right:1rem;margin-top:.3rem;transition:color .2s}
+.acc-body .sub-link:hover{color:var(--accent)}
+.attribution{text-align:center;padding:2rem;color:var(--dim);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+.attribution a{color:var(--accent);text-decoration:none}
+footer{text-align:center;padding:1rem;color:var(--dim);font-size:.7rem}
+</style>
+</head>
+<body>
+<header>
+<h1>ICore <span>Documentation</span></h1>
+<p>Constitutional framework documentation hub</p>
+</header>
+<div class="container">
+<div class="search-box"><input type="text" id="search" placeholder="Search documentation..." oninput="filterSections(this.value)"></div>
+<div id="sections"></div>
+</div>
+<div class="attribution">
+<p>Originated by <a href="#">ICore Constitutional Framework</a> · Gate Kernel v1</p>
+<p style="margin-top:.3rem">The Universal Set of Core Primitives (USCP) and all constituent sciences were designed as a constitutional foundation for trustworthy intelligence.</p>
+</div>
+<footer>ICore Gate Kernel v1 · Documentation Hub</footer>
+<script>
+const docs=[
+{title:'Getting Started',content:`
+<p>Welcome to the ICore ecosystem. ICore is a layered constitutional framework for building trustworthy intelligence systems. Every component — from the foundational primitives to the application platforms — operates under a unified set of constitutional rules.</p>
+<p>To begin working with ICore, understand the three core questions: <strong>What</strong> (USCP primitives define the building blocks), <strong>How</strong> (USC defines composition and governance), and <strong>Why</strong> (the Sciences provide axiomatic foundations).</p>
+<p>The framework is designed top-down from Reality and bottom-up from primitives, meeting in the middle at the USC Constitution layer.</p>`},
+{title:'Architecture Overview',content:`
+<p>The ICore architecture follows a strict constitutional hierarchy with seven layers:</p>
+<ul>
+<li><span>Reality</span> → The substrate; axiomatic ground truth</li>
+<li><span>ICore</span> → The framework itself; constitutional meta-layer</li>
+<li><span>USCP</span> → 6 Core Primitives: Domain, Rule, Proof, Query, Constraint, Mutation</li>
+<li><span>USC</span> → Constitution: governance, composition, evolution rules</li>
+<li><span>Sciences</span> → UCE · UCC · UCM · UCL (epistemology, computation, meaning, logic)</li>
+<li><span>Reference</span> → UCRS · UCModels · URS · UVS (standards, models, references, versions)</li>
+<li><span>Platforms</span> → UWA · UCN · USR · UCA (web, network, registry, adapters)</li>
+<li><span>Applications</span> → UCD · ICS · Studyo (dashboard, compliance, IDE)</li>
+</ul>`},
+{title:'Constitutional Layers',content:`
+<p>Each layer in ICore is constitutionally governed. No layer may violate the constraints of the layer below it. This creates a provable chain of trust from Reality to Application.</p>
+<ul>
+<li><span>Foundation Layer</span> — USCP + USC. Defines primitives and governance.</li>
+<li><span>Science Layer</span> — UCE/UCC/UCM/UCL. Provides axiomatic foundations.</li>
+<li><span>Reference Layer</span> — UCRS/UCModels/URS/UVS. Canonical data and models.</li>
+<li><span>Platform Layer</span> — UWA/UCN/USR/UCA. Runtime environments and bridges.</li>
+<li><span>Application Layer</span> — UCD/ICS/Studyo. End-user interfaces and tools.</li>
+</ul>`},
+{title:'USCP Primitives',content:`
+<p>The Universal Set of Core Primitives defines six fundamental building blocks:</p>
+<ul>
+<li><span>Domain</span> — A bounded context with boundaries and constraints</li>
+<li><span>Rule</span> — A behavioral law governing a domain</li>
+<li><span>Proof</span> — Formal evidence of a property within a domain</li>
+<li><span>Query</span> — A request for validated information</li>
+<li><span>Constraint</span> — An invariant that must always hold</li>
+<li><span>Mutation</span> — A state change that respects all constraints</li>
+</ul>
+<p>All six primitives are closed under composition — any combination of primitives produces another valid primitive structure.</p>`},
+{title:'USC Constitution',content:`
+<p>The Universal Set of Constitutions is the governing law of ICore. It defines:</p>
+<ul>
+<li><span>Composition Rules</span> — How primitives combine into constitutional units</li>
+<li><span>Evolution Protocol</span> — How specifications version and migrate</li>
+<li><span>Validation Framework</span> — Rules for checking implementation compliance</li>
+<li><span>Audit Procedures</span> — Constitutional audit across all layers</li>
+</ul>
+<p>The USC is itself versioned and subject to its own evolution rules — a constitutional quine that validates itself.</p>`},
+{title:'Sciences',content:`
+<p>The four sciences provide the theoretical foundations:</p>
+<ul>
+<li><span>UCE</span> — Universal Core Epistemology. What can be known and how knowledge is validated.</li>
+<li><span>UCC</span> — Universal Core Computation. Rules for termination, determinism, and evaluation.</li>
+<li><span>UCM</span> — Universal Core Meaning. Semantics mapping syntax to interpretation.</li>
+<li><span>UCL</span> — Universal Core Logic. Inference, deduction, and proof theory.</li>
+</ul>
+<p>Together, these form a complete formal system for reasoning about computation and knowledge.</p>`},
+{title:'Reference Systems',content:`
+<p>The reference systems ensure consistency and coherence:</p>
+<ul>
+<li><span>UCRS</span> — Universal Core Reference Standard. Canonical constant values.</li>
+<li><span>UCModels</span> — Universal Core Models. Formal mathematical models.</li>
+<li><span>URS</span> — Universal Reference System. Cross-references between components.</li>
+<li><span>UVS</span> — Universal Versioning System. Semantic versioning rules.</li>
+</ul>`},
+{title:'Platforms',content:`
+<p>Platform layer provides runtime environments and integration bridges:</p>
+<ul>
+<li><span>UWA</span> — Universal Web Application framework. Constitutional web app architecture.</li>
+<li><span>UCN</span> — Universal Core Network. Distributed messaging and federation.</li>
+<li><span>USR</span> — Universal System Registry. Service discovery and health monitoring.</li>
+<li><span>UCA</span> — Universal Core Adapters. Bridge to external systems (5 adapter domains: Web, Data, AI, IoT, Legacy).</li>
+</ul>`},
+{title:'Applications',content:`
+<p>End-user applications built on ICore platforms:</p>
+<ul>
+<li><span>UCD</span> — Universal Core Dashboard. Management, monitoring, and control plane.</li>
+<li><span>ICS</span> — Internal Compliance Suite. Test harness and conformance validation.</li>
+<li><span>Studyo</span> — Development environment. IDE for authoring and deploying constitutional blueprints.</li>
+</ul>`}
+];
+const sectionsEl=document.getElementById('sections');
+docs.forEach((d,i)=>{
+const acc=document.createElement('div');acc.className='acc';acc.dataset.title=d.title.toLowerCase();
+acc.innerHTML=`<div class="acc-head" onclick="toggleAcc(this)"><h3>${d.title}</h3><span class="arrow">▶</span></div><div class="acc-body">${d.content}</div>`;
+sectionsEl.appendChild(acc);
+});
+function toggleAcc(head){head.parentElement.classList.toggle('open')}
+function filterSections(q){
+const query=q.toLowerCase().trim();
+document.querySelectorAll('.acc').forEach(a=>{
+if(!query||a.dataset.title.includes(query)||a.textContent.toLowerCase().includes(query)){a.classList.remove('hidden')}
+else{a.classList.add('hidden')}
+});
+}
+// Open first section by default
+document.querySelector('.acc').classList.add('open');
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "ICore Verifier",
+  "short_name": "Verifier",
+  "version": "1.0.0",
+  "description": "ICore Constitutional Verifier — Verify trust claims against the ICore constitutional framework. Sovereign, offline-first, mobile-first.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#00e676",
+  "orientation": "portrait-primary",
+  "categories": ["utilities", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": []
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICore CodeLabs</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--card:#1a1a25;--border:#2a2a3a;--accent:#6c5ce7;--accent2:#00cec9;--green:#00b894;--yellow:#fdcb6e;--red:#e17055;--text:#e0e0e0;--dim:#888899;--code-bg:#0d0d14;--mono:'SF Mono','Cascadia Code','Consolas',monospace;--sans:-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
+header{padding:2rem;border-bottom:1px solid var(--border);text-align:center}
+header h1{font-size:1.8rem;font-weight:700}
+header h1 span{color:var(--accent)}
+header p{color:var(--dim);margin-top:.4rem;font-size:.9rem}
+.container{max-width:1000px;margin:0 auto;padding:1.5rem}
+.editor-area{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+@media(max-width:700px){.editor-area{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.panel-head{padding:.8rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.panel-head h3{font-size:.85rem;font-weight:600}
+.panel-body{padding:0}
+textarea{width:100%;min-height:320px;background:transparent;border:none;padding:1rem;color:var(--text);font-family:var(--mono);font-size:.8rem;resize:vertical;line-height:1.6}
+textarea:focus{outline:none}
+.output{padding:1rem;font-family:var(--mono);font-size:.8rem;min-height:320px;overflow-y:auto}
+.output .line{padding:.2rem 0;white-space:pre-wrap}
+.output .ok{color:var(--green)}
+.output .warn{color:var(--yellow)}
+.output .err{color:var(--red)}
+.output .info{color:var(--dim)}
+.btn-row{display:flex;gap:.8rem;margin-bottom:1.5rem;flex-wrap:wrap}
+button{background:var(--accent);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:6px;font-family:var(--sans);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+button:hover{opacity:.85}
+button.secondary{background:var(--surface);border:1px solid var(--border);color:var(--text)}
+button.secondary:hover{border-color:var(--accent)}
+.library{margin-top:1rem}
+.library h2{font-size:1.1rem;margin-bottom:1rem}
+.blueprints{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem}
+.bp{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;cursor:pointer;transition:all .2s}
+.bp:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.bp h4{font-size:.9rem;margin-bottom:.3rem}
+.bp p{font-size:.75rem;color:var(--dim)}
+.bp .tag{font-size:.65rem;font-family:var(--mono);color:var(--accent);margin-top:.3rem}
+footer{text-align:center;padding:2rem;color:var(--dim);font-size:.75rem;border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+<header>
+<h1>ICore <span>CodeLabs</span></h1>
+<p>Interactive constitutional blueprint playground</p>
+</header>
+<div class="container">
+<div class="btn-row">
+<button onclick="validate()">▶ Validate</button>
+<button class="secondary" onclick="clearAll()">Clear</button>
+<button class="secondary" onclick="formatJSON()">Format</button>
+</div>
+<div class="editor-area">
+<div class="panel">
+<div class="panel-head"><h3>📝 Blueprint Editor</h3><span style="font-size:.7rem;color:var(--dim);font-family:var(--mono)" id="charCount">0 chars</span></div>
+<div class="panel-body"><textarea id="editor" spellcheck="false" oninput="updateCount()">{\n  "blueprint": "DomainDefinition",\n  "version": "1.0",\n  "domain": {\n    "name": "UserContext",\n    "type": "domain",\n    "boundaries": ["auth", "profile"]\n  },\n  "primitives": [\n    {\n      "type": "Rule",\n      "name": "AuthRequired",\n      "expression": "access(X) -> authenticated(X)"\n    },\n    {\n      "type": "Constraint",\n      "name": "ImmutableID",\n      "invariant": "unchanged(user_id)"\n    }\n  ]\n}</textarea></div>
+</div>
+<div class="panel">
+<div class="panel-head"><h3>📊 Output</h3><span style="font-size:.7rem;color:var(--dim)" id="statusText">Ready</span></div>
+<div class="panel-body"><div class="output" id="output"><div class="line info">Welcome to ICore CodeLabs.</div><div class="line info">Type a blueprint JSON or load an example below.</div><div class="line info">Click Validate to check constitutional compliance.</div></div></div>
+</div>
+</div>
+<div class="library">
+<h2>📚 Blueprint Library</h2>
+<div class="blueprints" id="bplist"></div>
+</div>
+</div>
+<footer>ICore Gate Kernel v1 · CodeLabs Playground</footer>
+<script>
+const blueprints=[
+{name:'User Domain',desc:'Basic user context with authentication rules and identity constraints.',tag:'Foundation',json:`{\n  "blueprint": "DomainDefinition",\n  "version": "1.0",\n  "domain": {\n    "name": "UserContext",\n    "type": "domain",\n    "boundaries": ["auth", "profile"]\n  },\n  "primitives": [\n    {"type": "Rule", "name": "AuthRequired", "expression": "access(X) -> authenticated(X)"},\n    {"type": "Constraint", "name": "ImmutableID", "invariant": "unchanged(user_id)"}\n  ]\n}`},
+{name:'Data Pipeline',desc:'Constitutional data flow with mutation rules and constraint propagation.',tag:'Sciences',json:`{\n  "blueprint": "DomainDefinition",\n  "version": "1.0",\n  "domain": {\n    "name": "DataPipeline",\n    "type": "domain",\n    "boundaries": ["ingest", "transform", "store"]\n  },\n  "primitives": [\n    {"type": "Rule", "name": "SourceOfTruth", "expression": "store(X) -> authoritative(X)"},\n    {"type": "Mutation", "name": "Transform", "action": "map_reduce", "guards": ["SourceOfTruth"]},\n    {"type": "Constraint", "name": "IdempotentWrite", "invariant": "idempotent(store(X))"}\n  ]\n}`},
+{name:'Access Control',desc:'Multi-role authorization system with proof obligations and delegation.',tag:'USC',json:`{\n  "blueprint": "DomainDefinition",\n  "version": "1.0",\n  "domain": {\n    "name": "AccessControl",\n    "type": "domain",\n    "boundaries": ["roles", "permissions", "delegation"]\n  },\n  "primitives": [\n    {"type": "Rule", "name": "LeastPrivilege", "expression": "grant(R,P) -> required(P,role_of(R))"},\n    {"type": "Rule", "name": "DelegationChain", "expression": "delegates(A,B) -> subset(perm(A), perm(B))"},\n    {"type": "Proof", "name": "AuthComplete", "target": "DelegationChain", "method": "structural_induction"}\n  ]\n}`},
+{name:'Event System',desc:'Constitutional event sourcing with ordering guarantees and replay.',tag:'Platform',json:`{\n  "blueprint": "DomainDefinition",\n  "version": "1.0",\n  "domain": {\n    "name": "EventSystem",\n    "type": "domain",\n    "boundaries": ["events", "sourcing", "projection"]\n  },\n  "primitives": [\n    {"type": "Rule", "name": "TotalOrder", "expression": "event(E1,E2) -> before(E1,E2) | after(E1,E2) | concurrent(E1,E2)"},\n    {"type": "Constraint", "name": "CausalOrder", "invariant": "causal(before(E1,E2))"},\n    {"type": "Query", "name": "Replay", "select": ["events"], "where": {"range": "from_start"}},\n    {"type": "Mutation", "name": "AppendEvent", "action": "append", "guards": ["CausalOrder"]}\n  ]\n}`}
+];
+const editor=document.getElementById('editor');
+const output=document.getElementById('output');
+const bplist=document.getElementById('bplist');
+blueprints.forEach((bp,i)=>{
+const el=document.createElement('div');el.className='bp';
+el.innerHTML=`<h4>${bp.name}</h4><p>${bp.desc}</p><div class="tag">${bp.tag}</div>`;
+el.addEventListener('click',()=>{editor.value=bp.json;updateCount();output.innerHTML=`<div class="line ok">✓ Loaded blueprint: ${bp.name}</div><div class="line info">Click Validate to check compliance.</div>`;document.getElementById('statusText').textContent='Loaded'});
+bplist.appendChild(el);
+});
+function updateCount(){document.getElementById('charCount').textContent=editor.value.length+' chars'}
+function log(cls,text){const d=document.createElement('div');d.className='line '+cls;d.textContent=text;output.appendChild(d)}
+function validate(){
+output.innerHTML='';
+const raw=editor.value.trim();
+if(!raw){log('err','✗ Empty input. Enter a JSON blueprint.');document.getElementById('statusText').textContent='Empty';return}
+let obj;
+try{obj=JSON.parse(raw)}catch(e){log('err','✗ JSON Parse Error: '+e.message);document.getElementById('statusText').textContent='Parse Error';return}
+log('ok','✓ Valid JSON syntax');
+let errors=0,warnings=0;
+if(!obj.blueprint){log('err','✗ Missing required field: "blueprint"');errors++}
+else{log('ok','✓ blueprint: '+obj.blueprint)}
+if(!obj.version){log('warn','⚠ Missing "version" field');warnings++}
+else{log('ok','✓ version: '+obj.version)}
+if(!obj.domain){log('err','✗ Missing required field: "domain"');errors++}
+else{
+log('ok','✓ domain.name: '+obj.domain.name);
+if(!obj.domain.type)log('warn','⚠ domain.type missing');
+if(!Array.isArray(obj.domain.boundaries))log('warn','⚠ domain.boundaries should be an array');
+}
+if(obj.primitives){
+log('info','— Primitives: '+obj.primitives.length+' found');
+obj.primitives.forEach((p,i)=>{
+if(!p.type){log('err','✗ Primitive #'+(i+1)+': missing "type"');errors++}
+else{
+const validTypes=['Domain','Rule','Proof','Query','Constraint','Mutation'];
+if(!validTypes.includes(p.type)){log('warn','⚠ Primitive #'+(i+1)+': unknown type "'+p.type+'"');warnings++}
+else{log('ok','  ✓ #'+(i+1)+' '+p.type+': '+(p.name||'(unnamed)'))}
+}
+});
+}else{log('warn','⚠ No "primitives" array found');warnings++}
+log('info','');
+if(errors===0&&warnings===0)log('ok','🏆 BLUEPRINT CONSTITUTIONALLY COMPLIANT');
+else{log(errors>0?'err':'warn','Result: '+errors+' error(s), '+warnings+' warning(s)');}
+document.getElementById('statusText').textContent=errors===0?'✓ Compliant':'✗ '+errors+' errors';
+}
+function clearAll(){editor.value='';output.innerHTML='<div class="line info">Cleared.</div>';document.getElementById('statusText').textContent='Ready';updateCount()}
+function formatJSON(){
+try{editor.value=JSON.stringify(JSON.parse(editor.value),null,2);updateCount()}
+catch(e){log('err','Cannot format: '+e.message)}
+}
+updateCount();
+</script>
+</body>
+</html>
