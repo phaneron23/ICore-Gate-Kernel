@@ -160,8 +160,8 @@ window.USDS_App = (() => {
   // ── Refresh Screen Data ──────────────────────────
   async function refreshScreen(screen) {
     try {
-      const packages = await PackageEngine.getAllPackages();
-      const distRecords = await DistributionEngine.getAllRecords();
+      const packages = PackageEngine.getAllPackages ? await PackageEngine.getAllPackages() : [];
+      const distRecords = DistributionEngine.getAllRecords ? await DistributionEngine.getAllRecords() : [];
 
       switch (screen) {
         case 'dashboard': {
@@ -242,21 +242,30 @@ window.USDS_App = (() => {
 
     registerSW();
     setupInstallPrompt();
-
-    try {
-      await PackageEngine.init();
-      await DistributionEngine.init();
-    } catch (err) {
-      console.error('[USDS] Engine init error:', err);
-    }
-
     setupNavigation();
     setupMobileMenu();
-    wireEvents();
 
-    // Handle hash navigation or default to dashboard
-    handleHashNav();
-    if (!window.location.hash || !UI[window.location.hash.replace('#', '')]) {
+    // Init engines with timeout so UI always works
+    const engineTimeout = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Engine init timeout')), 5000));
+    try {
+      await Promise.race([
+        Promise.all([PackageEngine.init(), DistributionEngine.init()]),
+        engineTimeout
+      ]);
+      wireEvents();
+    } catch (err) {
+      console.warn('[USDS] Engine init skipped:', err.message);
+      // UI still works — nav is bound, screens will show empty state
+    }
+
+    // Handle hash navigation or default to dashboard (safe — no engine dependency)
+    try {
+      handleHashNav();
+      if (!window.location.hash || !UI[window.location.hash.replace('#', '')]) {
+        navigate('dashboard');
+      }
+    } catch(e) {
       navigate('dashboard');
     }
 
