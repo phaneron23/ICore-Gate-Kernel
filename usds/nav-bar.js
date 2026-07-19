@@ -12,6 +12,7 @@
     { slug: 'ucn',              host: 'ucn.initialcore.net',       icon: '🌐',  name: 'UCN',         color: '#ff6d00' },
     { slug: 'uca',              host: 'uca.initialcore.net',       icon: '🔌',  name: 'UCA',         color: '#d500f9' },
     { slug: 'usds',             host: 'usds.initialcore.net',      icon: '⚖️',  name: 'USDS',        color: '#ff6d00' },
+    { slug: 'ucf',              host: 'ucf.initialcore.net',       icon: '⚙️',  name: 'UCF',         color: '#00bfa5' },
     { slug: 'structure',        host: 'structure.initialcore.net', icon: '🏗️',  name: 'Structure',   color: '#00bfa5' },
     { slug: 'studio',           host: 'studio.initialcore.net',    icon: '🎨',  name: 'Studyo',      color: '#e040fb' },
     { slug: 'verifier',         host: 'verifier.initialcore.net',  icon: '🔷',  name: 'Verifier',    color: '#00e676' },

@@ -1,0 +1,50 @@
+{
+  "name": "Universal Constitutional Forge",
+  "short_name": "UCF",
+  "description": "A sovereign constitutional engineering environment — next generation forge for ICore.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0a0f",
+  "theme_color": "#00bfa5",
+  "categories": ["development", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%230a0a0f'/><polygon points='256,80 420,180 420,340 256,440 92,340 92,180' fill='none' stroke='%2300bfa5' stroke-width='16'/><polygon points='256,130 370,200 370,320 256,390 142,320 142,200' fill='none' stroke='%2300bfa5' stroke-width='8' opacity='0.4'/><text x='256' y='280' font-size='120' text-anchor='middle' fill='%2300bfa5' font-family='monospace' font-weight='bold'>⚙</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%230a0a0f'/><polygon points='256,80 420,180 420,340 256,440 92,340 92,180' fill='none' stroke='%2300bfa5' stroke-width='16'/><text x='256' y='280' font-size='120' text-anchor='middle' fill='%2300bfa5' font-family='monospace' font-weight='bold'>⚙</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Workspaces",
+      "short_name": "Workspaces",
+      "description": "Open your constitutional workspaces",
+      "url": "?view=workspaces"
+    },
+    {
+      "name": "Registry",
+      "short_name": "Registry",
+      "description": "Browse the constitutional registry",
+      "url": "?view=registry"
+    },
+    {
+      "name": "New Workspace",
+      "short_name": "New",
+      "description": "Create a new constitutional workspace",
+      "url": "?action=new-workspace"
+    }
+  ],
+  "prefer_related_applications": false
+}

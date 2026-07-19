@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#00bfa5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Universal Constitutional Forge — A sovereign constitutional engineering environment. Install as PWA.">
+<title>UCF — Universal Constitutional Forge</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%230a0a0f'/><polygon points='50,12 88,32 88,68 50,88 12,68 12,32' fill='none' stroke='%2300bfa5' stroke-width='4'/><text x='50' y='58' font-size='32' text-anchor='middle' fill='%2300bfa5' font-family='monospace' font-weight='bold'>⚙</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a25;--bd:#2a2a3a;--tx:#e0e0e0;--dm:#888899;--ac:#00bfa5;--ac2:#6c5ce7;--gn:#00e676;--rd:#ff5252;--or:#ff6d00;--mono:'SF Mono','Cascadia Code','Consolas',monospace;--sans:system-ui,-apple-system,'Segoe UI',sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);overflow-x:hidden;padding-top:44px;line-height:1.6}
+a{color:var(--ac);text-decoration:none}a:hover{text-decoration:underline}
+button{font-family:var(--mono);cursor:pointer;border:none;border-radius:8px;padding:8px 20px;font-size:.8rem;font-weight:600;transition:all .2s}
+.btn-p{background:var(--ac);color:#000}.btn-p:hover{opacity:.85}
+.btn-s{background:transparent;color:var(--ac);border:1px solid var(--ac)}.btn-s:hover{background:rgba(0,191,165,.1)}
+.btn-d{background:transparent;color:var(--rd);border:1px solid var(--rd)}.btn-d:hover{background:rgba(255,82,82,.1)}
+.btn-g{background:var(--gn);color:#000}.btn-g:hover{opacity:.85}
+input,textarea,select{background:var(--bg2);border:1px solid var(--bd);color:var(--tx);padding:8px 12px;border-radius:6px;font-family:var(--sans);font-size:.85rem;width:100%;transition:border .2s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--ac)}
+label{display:block;font-size:.75rem;color:var(--dm);margin-bottom:4px;font-family:var(--mono)}
+
+/* Header */
+.hdr{position:fixed;top:44px;left:0;right:0;z-index:100;background:rgba(10,10,15,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);padding:.6rem 1.5rem;display:flex;justify-content:space-between;align-items:center}
+.hdr h1{font-size:.95rem;font-weight:700;color:var(--ac);font-family:var(--mono)}.hdr h1 span{color:var(--dm);font-weight:400;font-size:.65rem;margin-left:.5rem}
+.hdr nav{display:flex;gap:4px;flex-wrap:wrap}
+.hdr nav button{background:transparent;color:var(--dm);padding:6px 12px;font-size:.7rem;border-radius:6px}
+.hdr nav button:hover{color:var(--tx);background:var(--bg3)}
+.hdr nav button.active{color:var(--ac);background:var(--bg3);font-weight:600}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.hdr-right .install-btn{background:var(--ac2);color:#fff;font-size:.65rem;padding:5px 10px}
+
+/* Sections */
+.sec{display:none;max-width:1100px;margin:0 auto;padding:1rem 1.5rem 4rem}
+.sec.active{display:block}
+.sec-t{font-size:1.3rem;font-weight:700;color:var(--ac);font-family:var(--mono);margin-bottom:.5rem}
+.sec-d{color:var(--dm);margin-bottom:1.5rem;font-size:.85rem}
+
+/* Cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.card{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:1.2rem;transition:all .25s;cursor:pointer}
+.card:hover{border-color:var(--ac);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,191,165,.1)}
+.card h3{font-size:.95rem;font-weight:700;color:var(--tx);margin-bottom:.3rem;font-family:var(--mono)}
+.card p{font-size:.8rem;color:var(--dm);margin-bottom:.5rem}
+.card-footer{display:flex;justify-content:space-between;align-items:center;font-size:.7rem;color:var(--dm);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--bd)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.stat{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:1rem 1.2rem;text-align:center}
+.stat .num{font-size:2rem;font-weight:800;color:var(--ac);font-family:var(--mono)}
+.stat .lbl{font-size:.7rem;color:var(--dm);text-transform:uppercase;letter-spacing:1px;margin-top:.2rem}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.65rem;font-weight:600;font-family:var(--mono)}
+.badge-engine{background:rgba(224,64,251,.15);color:#e040fb}
+.badge-spec{background:rgba(0,191,165,.15);color:var(--ac)}
+.badge-workflow{background:rgba(108,92,231,.15);color:var(--ac2)}
+.badge-policy{background:rgba(255,109,0,.15);color:var(--or)}
+.badge-doc{background:rgba(0,230,118,.15);color:var(--gn)}
+.badge-open{background:rgba(0,191,165,.15);color:var(--ac)}
+.badge-approved{background:rgba(0,230,118,.15);color:var(--gn)}
+.badge-rejected{background:rgba(255,82,82,.15);color:var(--rd)}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:1rem;border-bottom:1px solid var(--bd);padding-bottom:4px;overflow-x:auto}
+.tabs button{background:transparent;color:var(--dm);padding:8px 16px;font-size:.75rem;border-radius:6px 6px 0 0;border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button:hover{color:var(--tx)}
+.tabs button.active{color:var(--ac);border-bottom-color:var(--ac);font-weight:600}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* Items */
+.item{background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:1rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;transition:border .2s}
+.item:hover{border-color:var(--ac)}
+.item h4{font-size:.85rem;font-weight:600;font-family:var(--mono)}.item p{font-size:.75rem;color:var(--dm)}
+.item-actions{display:flex;gap:6px;align-items:center}
+.item-actions button{font-size:.65rem;padding:4px 10px}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:12px 20px;font-size:.8rem;z-index:10000;transform:translateY(100px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:var(--gn);color:var(--gn)}
+.toast.error{border-color:var(--rd);color:var(--rd)}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;justify-content:center;align-items:center;padding:1rem}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:1.5rem;width:100%;max-width:500px;max-height:80vh;overflow-y:auto}
+.modal h2{font-size:1rem;font-weight:700;color:var(--ac);font-family:var(--mono);margin-bottom:1rem}
+.modal .field{margin-bottom:1rem}
+
+/* Activity */
+.activity-item{padding:.6rem 0;border-bottom:1px solid var(--bd);font-size:.8rem;display:flex;gap:.5rem;align-items:flex-start}
+.activity-item:last-child{border-bottom:none}
+.activity-icon{width:24px;height:24px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0}
+
+/* Verify */
+.verify-check{padding:.8rem 1rem;border-radius:8px;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;font-size:.8rem}
+.verify-check.pass{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2)}
+.verify-check.fail{background:rgba(255,82,82,.08);border:1px solid rgba(255,82,82,.2)}
+.verify-check .icon{font-size:1.1rem}
+
+/* Empty */
+.empty{text-align:center;padding:3rem 1rem;color:var(--dm)}
+.empty .icon{font-size:2.5rem;margin-bottom:.5rem}
+.empty p{font-size:.85rem}
+
+/* Responsive */
+@media(max-width:700px){
+  .hdr{padding:.5rem 1rem}.hdr h1{font-size:.8rem}
+  .stats{grid-template-columns:repeat(2,1fr)}.stat .num{font-size:1.5rem}
+  .grid{grid-template-columns:1fr}
+  .sec{padding:1rem}
+}
+</style>
+</head>
+<body>
+<!-- Header -->
+<header class="hdr">
+  <h1>⚙ UCF <span>v0.1.0</span></h1>
+  <nav id="main-nav">
+    <button class="active" onclick="UCF.view('dashboard')">Dashboard</button>
+    <button onclick="UCF.view('workspaces')">Workspaces</button>
+    <button onclick="UCF.view('registry')">Registry</button>
+    <button onclick="UCF.view('settings')">Settings</button>
+  </nav>
+  <div class="hdr-right">
+    <button class="install-btn" id="install-btn" onclick="UCF.install()" style="display:none">📲 Install</button>
+  </div>
+</header>
+
+<!-- Dashboard -->
+<section id="v-dashboard" class="sec active">
+  <div style="text-align:center;padding:2rem 0 1rem">
+    <div style="font-size:2.5rem;margin-bottom:.5rem">⚙</div>
+    <h2 style="font-size:clamp(1.5rem,4vw,2.5rem);font-weight:800;color:var(--ac);font-family:var(--mono);margin-bottom:.3rem">Universal Constitutional Forge</h2>
+    <div style="color:var(--dm);font-size:.85rem">v0.1.0 — A sovereign constitutional engineering environment</div>
+    <div style="color:var(--dm);font-size:.75rem;margin-top:.5rem;font-style:italic">Simple by default. Powerful by composition. Constitutional by design. Sovereign by ownership.</div>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem">
+    <button class="btn-p" onclick="UCF.newWorkspace()">+ New Workspace</button>
+    <button class="btn-s" onclick="UCF.view('registry')">Registry</button>
+    <button class="btn-s" onclick="UCF.exportAll()">Export Data</button>
+  </div>
+  <h3 style="font-size:.85rem;color:var(--dm);font-family:var(--mono);margin-bottom:.8rem">Recent Activity</h3>
+  <div id="activity"></div>
+</section>
+
+<!-- Workspaces -->
+<section id="v-workspaces" class="sec">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <h2 class="sec-t">Workspaces</h2>
+    <button class="btn-p" onclick="UCF.newWorkspace()">+ New</button>
+  </div>
+  <div id="ws-list" class="grid"></div>
+</section>
+
+<!-- Workspace Detail -->
+<section id="v-workspace" class="sec">
+  <button class="btn-s" onclick="UCF.view('workspaces')" style="margin-bottom:1rem;font-size:.7rem">← Back to Workspaces</button>
+  <div id="ws-header"></div>
+  <div class="tabs" id="ws-tabs">
+    <button class="active" onclick="UCF.wsTab('entities')">Entities</button>
+    <button onclick="UCF.wsTab('commits')">Commits</button>
+    <button onclick="UCF.wsTab('reviews')">Reviews</button>
+    <button onclick="UCF.wsTab('attestations')">Attestations</button>
+    <button onclick="UCF.wsTab('verify')">Verify</button>
+  </div>
+  <div id="tab-entities" class="tab-content active"></div>
+  <div id="tab-commits" class="tab-content"></div>
+  <div id="tab-reviews" class="tab-content"></div>
+  <div id="tab-attestations" class="tab-content"></div>
+  <div id="tab-verify" class="tab-content"></div>
+</section>
+
+<!-- Registry -->
+<section id="v-registry" class="sec">
+  <h2 class="sec-t">Constitutional Registry</h2>
+  <div class="sec-d">All registered constitutional entities and their relationships.</div>
+  <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+    <input id="reg-search" placeholder="Search entities..." style="flex:1;min-width:200px" oninput="UCF.filterRegistry()">
+    <select id="reg-type" style="width:150px" onchange="UCF.filterRegistry()">
+      <option value="">All Types</option>
+      <option value="Engine">Engine</option>
+      <option value="Specification">Specification</option>
+      <option value="Workflow">Workflow</option>
+      <option value="Policy">Policy</option>
+      <option value="Document">Document</option>
+      <option value="Attestation">Attestation</option>
+    </select>
+  </div>
+  <div id="reg-list"></div>
+</section>
+
+<!-- Settings -->
+<section id="v-settings" class="sec">
+  <h2 class="sec-t">Settings</h2>
+  <div style="display:grid;gap:1rem;max-width:600px">
+    <div class="card" onclick="UCF.exportAll()" style="cursor:pointer">
+      <h3>📦 Export All Data</h3>
+      <p>Download all workspaces, entities, commits, and attestations as JSON.</p>
+    </div>
+    <div class="card" onclick="document.getElementById('import-input').click()" style="cursor:pointer">
+      <h3>📥 Import Data</h3>
+      <p>Import data from a previously exported JSON file.</p>
+      <input type="file" id="import-input" accept=".json" style="display:none" onchange="UCF.importData(event)">
+    </div>
+    <div class="card" onclick="UCF.install()" style="cursor:pointer">
+      <h3>📲 Install as PWA</h3>
+      <p>Install the Universal Constitutional Forge on your device.</p>
+    </div>
+    <div class="card" onclick="UCF.exportKey()" style="cursor:pointer">
+      <h3>🔑 Export Attestation Key</h3>
+      <p>Export your cryptographic attestation key (JWK format).</p>
+    </div>
+    <div class="card" onclick="document.getElementById('import-key-input').click()" style="cursor:pointer">
+      <h3>🔑 Import Attestation Key</h3>
+      <p>Import a previously exported attestation key.</p>
+      <input type="file" id="import-key-input" accept=".json" style="display:none" onchange="UCF.importKey(event)">
+    </div>
+    <div class="card" style="border-color:var(--rd);cursor:pointer" onclick="UCF.clearAll()">
+      <h3 style="color:var(--rd)">🗑 Clear All Data</h3>
+      <p>Delete all workspaces, entities, and attestations. This cannot be undone.</p>
+    </div>
+    <div style="text-align:center;padding:2rem;color:var(--dm);font-size:.75rem;font-family:var(--mono)">
+      Universal Constitutional Forge v0.1.0<br>
+      Constitutional by design. Sovereign by ownership.<br>
+      IndexedDB storage. Web Crypto attestation. PWA offline.
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)UCF.closeModal()">
+  <div class="modal" id="modal-body"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="nav-bar.js"></script>
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// Universal Constitutional Forge v0.1.0 — All-in-one PWA
+// Storage: IndexedDB | Crypto: Web Crypto API | UI: Vanilla JS
+// ═══════════════════════════════════════════════════════════════
+
+window.UCF = (() => {
+
+// ── IndexedDB Layer ────────────────────────────────────────
+const DB_NAME = 'UCF';
+const DB_VER = 1;
+let db;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      const stores = ['workspaces','entities','commits','reviews','attestations','registry'];
+      stores.forEach(name => {
+        if (!d.objectStoreNames.contains(name)) {
+          const s = d.createObjectStore(name, { keyPath: 'id' });
+          if (name === 'workspaces') s.createIndex('name','name');
+          if (name === 'entities') s.createIndex('workspace','workspace');
+          if (name === 'commits') s.createIndex('workspace','workspace');
+          if (name === 'reviews') s.createIndex('workspace','workspace');
+          if (name === 'attestations') s.createIndex('workspace','workspace');
+          if (name === 'registry') s.createIndex('type','type');
+        }
+      });
+    };
+    req.onsuccess = e => { db = e.target.result; resolve(db); };
+    req.onerror = e => reject(e.target.error);
+  });
+}
+
+function dbAll(store) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store,'readonly');
+    const s = tx.objectStore(store);
+    const req = s.getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbGet(store, id) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store,'readonly');
+    const req = tx.objectStore(store).get(id);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbPut(store, item) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store,'readwrite');
+    const req = tx.objectStore(store).put(item);
+    req.onsuccess = () => resolve(item);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbDelete(store, id) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store,'readwrite');
+    const req = tx.objectStore(store).delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbClear(store) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store,'readwrite');
+    const req = tx.objectStore(store).clear();
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random()*16|0;
+    return (c==='x'?r:(r&0x3|0x8)).toString(16);
+  });
+}
+
+// ── Crypto Layer ───────────────────────────────────────────
+let cryptoKey = null;
+const KEY_STORE = 'ucf-keys';
+
+async function getKey() {
+  if (cryptoKey) return cryptoKey;
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(KEY_STORE, 'readonly');
+    const req = tx.objectStore(KEY_STORE).get('attestation');
+    req.onsuccess = async () => {
+      if (req.result) {
+        cryptoKey = await crypto.subtle.importKey('jwk', req.result.jwk,
+          { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign','verify']);
+        resolve(cryptoKey);
+      } else {
+        cryptoKey = await crypto.subtle.generateKey(
+          { name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign','verify']);
+        const jwk = await crypto.subtle.exportKey('jwk', cryptoKey);
+        const tx2 = db.transaction(KEY_STORE, 'readwrite');
+        tx2.objectStore(KEY_STORE).put({ id: 'attestation', jwk, created: new Date().toISOString() });
+        resolve(cryptoKey);
+      }
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function signData(data) {
+  const key = await getKey();
+  const encoded = new TextEncoder().encode(JSON.stringify(data));
+  const hash = await crypto.subtle.digest('SHA-256', encoded);
+  const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, key, hash);
+  return { hash: bufToHex(hash), signature: bufToHex(sig) };
+}
+
+async function verifySig(data, hash, signature) {
+  try {
+    const key = await getKey();
+    const encoded = new TextEncoder().encode(JSON.stringify(data));
+    const computed = await crypto.subtle.digest('SHA-256', encoded);
+    if (bufToHex(computed) !== hash) return false;
+    return await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, key,
+      hexToBuf(signature), computed);
+  } catch { return false; }
+}
+
+function bufToHex(buf) { return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join(''); }
+function hexToBuf(hex) { const b = new Uint8Array(hex.length/2); for(let i=0;i<hex.length;i+=2) b[i/2]=parseInt(hex.substr(i,2),16); return b; }
+
+// ── Toast ──────────────────────────────────────────────────
+function toast(msg, type='success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast ' + type + ' show';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── Modal ──────────────────────────────────────────────────
+function modal(html) {
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+// ── Navigation ─────────────────────────────────────────────
+let currentView = 'dashboard';
+let currentWs = null;
+let currentWsTab = 'entities';
+
+function view(name) {
+  currentView = name;
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById('v-' + name);
+  if (sec) sec.classList.add('active');
+  document.querySelectorAll('#main-nav button').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase() === name);
+  });
+  if (name === 'dashboard') loadDashboard();
+  else if (name === 'workspaces') loadWorkspaces();
+  else if (name === 'registry') loadRegistry();
+}
+
+// ── Dashboard ──────────────────────────────────────────────
+async function loadDashboard() {
+  const [ws, ent, rev, att, reg] = await Promise.all([
+    dbAll('workspaces'), dbAll('entities'), dbAll('reviews'), dbAll('attestations'), dbAll('registry')
+  ]);
+  document.getElementById('stats').innerHTML = [
+    { n: ws.length, l: 'Workspaces' },
+    { n: ent.length, l: 'Entities' },
+    { n: rev.length, l: 'Reviews' },
+    { n: att.length, l: 'Attestations' },
+    { n: reg.length, l: 'Registry' },
+  ].map(s => `<div class="stat"><div class="num">${s.n}</div><div class="lbl">${s.l}</div></div>`).join('');
+
+  // Activity feed
+  const all = [
+    ...ws.map(w => ({ icon: '📁', msg: `Workspace "${w.name}" created`, time: w.created })),
+    ...ent.map(e => ({ icon: '📦', msg: `Entity "${e.name}" added`, time: e.created })),
+    ...rev.map(r => ({ icon: '📝', msg: `Review "${r.title}" ${r.status}`, time: r.created })),
+    ...att.map(a => ({ icon: '🔏', msg: `Attestation ${a.type} created`, time: a.created })),
+  ].sort((a,b) => new Date(b.time)-new Date(a.time)).slice(0, 10);
+
+  document.getElementById('activity').innerHTML = all.length === 0
+    ? '<div class="empty"><div class="icon">⚙</div><p>No activity yet. Create a workspace to get started.</p></div>'
+    : all.map(a => `<div class="activity-item"><div class="activity-icon">${a.icon}</div><div>${a.msg}<br><small style="color:var(--dm)">${timeAgo(a.time)}</small></div></div>`).join('');
+}
+
+// ── Workspaces ─────────────────────────────────────────────
+async function loadWorkspaces() {
+  const ws = await dbAll('workspaces');
+  const ent = await dbAll('entities');
+  const el = document.getElementById('ws-list');
+  if (ws.length === 0) {
+    el.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="icon">📁</div><p>No workspaces yet. Create your first constitutional workspace.</p></div>';
+    return;
+  }
+  el.innerHTML = ws.map(w => {
+    const count = ent.filter(e => e.workspace === w.id).length;
+    return `<div class="card" onclick="UCF.openWorkspace('${w.id}')">
+      <h3>${esc(w.name)}</h3>
+      <p>${esc(w.description || 'No description')}</p>
+      <div class="card-footer">
+        <span class="badge badge-${w.type==='source'?'engine':w.type==='spec'?'spec':'workflow'}">${w.type}</span>
+        <span>${count} entities · ${timeAgo(w.created)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function newWorkspace() {
+  modal(`<h2>New Workspace</h2>
+    <form onsubmit="UCF.createWorkspace(event)">
+      <div class="field"><label>Name</label><input id="m-ws-name" required placeholder="e.g., ICore Platform"></div>
+      <div class="field"><label>Description</label><textarea id="m-ws-desc" rows="2" placeholder="Brief description"></textarea></div>
+      <div class="field"><label>Type</label><select id="m-ws-type"><option value="source">Source</option><option value="spec">Specification</option><option value="workflow">Workflow</option></select></div>
+      <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem">
+        <button type="button" class="btn-s" onclick="UCF.closeModal()">Cancel</button>
+        <button type="submit" class="btn-p">Create</button>
+      </div>
+    </form>`);
+}
+
+async function createWorkspace(e) {
+  e.preventDefault();
+  const ws = {
+    id: uuid(),
+    name: document.getElementById('m-ws-name').value.trim(),
+    description: document.getElementById('m-ws-desc').value.trim(),
+    type: document.getElementById('m-ws-type').value,
+    created: new Date().toISOString(),
+  };
+  await dbPut('workspaces', ws);
+  closeModal();
+  toast('Workspace created!');
+  loadWorkspaces();
+}
+
+async function openWorkspace(id) {
+  currentWs = await dbGet('workspaces', id);
+  if (!currentWs) return toast('Workspace not found','error');
+  document.getElementById('ws-header').innerHTML = `
+    <h2 class="sec-t">${esc(currentWs.name)}</h2>
+    <div style="color:var(--dm);font-size:.85rem;margin-bottom:.5rem">${esc(currentWs.description||'')}</div>
+    <div style="margin-bottom:1rem"><span class="badge badge-${currentWs.type==='source'?'engine':currentWs.type==='spec'?'spec':'workflow'}">${currentWs.type}</span>
+    <span style="font-size:.7rem;color:var(--dm);margin-left:.5rem">Created ${timeAgo(currentWs.created)}</span></div>`;
+  view('workspace');
+  wsTab('entities');
+}
+
+function wsTab(name) {
+  currentWsTab = name;
+  document.querySelectorAll('#ws-tabs button').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === name));
+  document.querySelectorAll('#v-workspace .tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name)?.classList.add('active');
+  if (name === 'entities') loadEntities();
+  else if (name === 'commits') loadCommits();
+  else if (name === 'reviews') loadReviews();
+  else if (name === 'attestations') loadAttestations();
+  else if (name === 'verify') runVerification();
+}
+
+// ── Entities ───────────────────────────────────────────────
+async function loadEntities() {
+  const all = await dbAll('entities');
+  const ents = all.filter(e => e.workspace === currentWs.id);
+  const el = document.getElementById('tab-entities');
+  el.innerHTML = `<div style="margin-bottom:1rem"><button class="btn-p" onclick="UCF.newEntity()">+ New Entity</button></div>` +
+    (ents.length === 0 ? '<div class="empty"><div class="icon">📦</div><p>No entities yet. Add constitutional entities to this workspace.</p></div>'
+    : ents.map(e => `<div class="item">
+        <div><h4>${esc(e.name)}</h4><p><span class="badge badge-${typeBadge(e.type)}">${e.type}</span> · ${timeAgo(e.created)}</p></div>
+        <div class="item-actions">
+          <button class="btn-s" onclick="UCF.attestEntity('${e.id}')">🔏 Attest</button>
+          <button class="btn-d" onclick="UCF.deleteEntity('${e.id}')">✕</button>
+        </div>
+      </div>`).join(''));
+}
+
+function newEntity() {
+  modal(`<h2>New Entity</h2>
+    <form onsubmit="UCF.createEntity(event)">
+      <div class="field"><label>Name</label><input id="m-ent-name" required placeholder="e.g., USR Engine"></div>
+      <div class="field"><label>Type</label><select id="m-ent-type">
+        <option value="Engine">Engine</option><option value="Specification">Specification</option>
+        <option value="Workflow">Workflow</option><option value="Policy">Policy</option>
+        <option value="Document">Document</option><option value="Agent">Agent</option>
+      </select></div>
+      <div class="field"><label>Description</label><textarea id="m-ent-desc" rows="2"></textarea></div>
+      <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem">
+        <button type="button" class="btn-s" onclick="UCF.closeModal()">Cancel</button>
+        <button type="submit" class="btn-p">Create</button>
+      </div>
+    </form>`);
+}
+
+async function createEntity(e) {
+  e.preventDefault();
+  const ent = {
+    id: uuid(),
+    workspace: currentWs.id,
+    name: document.getElementById('m-ent-name').value.trim(),
+    type: document.getElementById('m-ent-type').value,
+    description: document.getElementById('m-ent-desc').value.trim(),
+    created: new Date().toISOString(),
+  };
+  await dbPut('entities', ent);
+  // Auto-register in registry
+  await dbPut('registry', { ...ent, relationships: [] });
+  closeModal();
+  toast('Entity created & registered!');
+  loadEntities();
+}
+
+async function deleteEntity(id) {
+  if (!confirm('Delete this entity?')) return;
+  await dbDelete('entities', id);
+  await dbDelete('registry', id);
+  toast('Entity deleted');
+  loadEntities();
+}
+
+async function attestEntity(id) {
+  const ent = await dbGet('entities', id);
+  if (!ent) return;
+  const { hash, signature } = await signData(ent);
+  const att = {
+    id: uuid(), workspace: currentWs.id, entityId: id,
+    type: 'entity-integrity', hash, signature,
+    created: new Date().toISOString(), status: 'valid',
+  };
+  await dbPut('attestations', att);
+  toast('Entity attested! 🔏');
+}
+
+// ── Commits ────────────────────────────────────────────────
+async function loadCommits() {
+  const all = await dbAll('commits');
+  const commits = all.filter(c => c.workspace === currentWs.id).sort((a,b) => new Date(b.time)-new Date(a.time));
+  const el = document.getElementById('tab-commits');
+  el.innerHTML = `<div style="margin-bottom:1rem"><button class="btn-p" onclick="UCF.newCommit()">+ New Commit</button></div>` +
+    (commits.length === 0 ? '<div class="empty"><div class="icon">📝</div><p>No commits yet. Create a commit to track changes.</p></div>'
+    : commits.map(c => `<div class="item">
+        <div><h4 style="color:var(--ac)">${esc(c.hash.substring(0,12))}</h4><p>${esc(c.message)}<br><small style="color:var(--dm)">${timeAgo(c.time)}</small></p></div>
+      </div>`).join(''));
+}
+
+function newCommit() {
+  modal(`<h2>New Commit</h2>
+    <form onsubmit="UCF.createCommit(event)">
+      <div class="field"><label>Message</label><input id="m-cm-msg" required placeholder="What changed?"></div>
+      <div class="field"><label>Changes (JSON array, optional)</label><textarea id="m-cm-changes" rows="3" placeholder='[{"path":"file.js","action":"create"}]'></textarea></div>
+      <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem">
+        <button type="button" class="btn-s" onclick="UCF.closeModal()">Cancel</button>
+        <button type="submit" class="btn-g">Commit</button>
+      </div>
+    </form>`);
+}
+
+async function createCommit(e) {
+  e.preventDefault();
+  const all = await dbAll('commits');
+  const wsCommits = all.filter(c => c.workspace === currentWs.id).sort((a,b) => new Date(b.time)-new Date(a.time));
+  const parent = wsCommits.length > 0 ? wsCommits[0].hash : null;
+  const data = {
+    workspace: currentWs.id,
+    message: document.getElementById('m-cm-msg').value.trim(),
+    changes: document.getElementById('m-cm-changes').value.trim() || '[]',
+    parent, time: new Date().toISOString(),
+  };
+  const { hash } = await signData(data);
+  await dbPut('commits', { id: uuid(), ...data, hash });
+  closeModal();
+  toast('Committed! ' + hash.substring(0,12));
+  loadCommits();
+}
+
+// ── Reviews ────────────────────────────────────────────────
+async function loadReviews() {
+  const all = await dbAll('reviews');
+  const revs = all.filter(r => r.workspace === currentWs.id);
+  const el = document.getElementById('tab-reviews');
+  el.innerHTML = `<div style="margin-bottom:1rem"><button class="btn-p" onclick="UCF.newReview()">+ New Review</button></div>` +
+    (revs.length === 0 ? '<div class="empty"><div class="icon">📝</div><p>No reviews yet. Start a constitutional review.</p></div>'
+    : revs.map(r => `<div class="item">
+        <div><h4>${esc(r.title)}</h4><p><span class="badge badge-${r.status}">${r.status}</span> · ${timeAgo(r.created)}</p></div>
+        <div class="item-actions">
+          ${r.status==='open'?`<button class="btn-g" onclick="UCF.approveReview('${r.id}')">✓</button><button class="btn-d" onclick="UCF.rejectReview('${r.id}')">✕</button>`:''}
+        </div>
+      </div>`).join(''));
+}
+
+function newReview() {
+  modal(`<h2>New Review</h2>
+    <form onsubmit="UCF.createReview(event)">
+      <div class="field"><label>Title</label><input id="m-rv-title" required placeholder="Review title"></div>
+      <div class="field"><label>Description</label><textarea id="m-rv-desc" rows="2" placeholder="Review details"></textarea></div>
+      <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem">
+        <button type="button" class="btn-s" onclick="UCF.closeModal()">Cancel</button>
+        <button type="submit" class="btn-p">Create</button>
+      </div>
+    </form>`);
+}
+
+async function createReview(e) {
+  e.preventDefault();
+  await dbPut('reviews', {
+    id: uuid(), workspace: currentWs.id,
+    title: document.getElementById('m-rv-title').value.trim(),
+    description: document.getElementById('m-rv-desc').value.trim(),
+    status: 'open', created: new Date().toISOString(),
+  });
+  closeModal();
+  toast('Review created!');
+  loadReviews();
+}
+
+async function approveReview(id) {
+  const r = await dbGet('reviews', id);
+  r.status = 'approved'; r.resolved = new Date().toISOString();
+  await dbPut('reviews', r);
+  toast('Review approved ✓');
+  loadReviews();
+}
+
+async function rejectReview(id) {
+  const r = await dbGet('reviews', id);
+  r.status = 'rejected'; r.resolved = new Date().toISOString();
+  await dbPut('reviews', r);
+  toast('Review rejected');
+  loadReviews();
+}
+
+// ── Attestations ───────────────────────────────────────────
+async function loadAttestations() {
+  const all = await dbAll('attestations');
+  const atts = all.filter(a => a.workspace === currentWs.id);
+  const el = document.getElementById('tab-attestations');
+  el.innerHTML = atts.length === 0
+    ? '<div class="empty"><div class="icon">🔏</div><p>No attestations yet. Attest entities to prove integrity.</p></div>'
+    : atts.map(a => `<div class="item">
+        <div><h4 style="color:var(--ac)">${a.type}</h4><p>Hash: ${esc(a.hash.substring(0,16))}...<br><small>${timeAgo(a.created)}</small></p></div>
+        <span class="badge badge-${a.status==='valid'?'approved':'rejected'}">${a.status}</span>
+      </div>`).join('');
+}
+
+// ── Verification ───────────────────────────────────────────
+async function runVerification() {
+  const el = document.getElementById('tab-verify');
+  const wsEnt = (await dbAll('entities')).filter(e => e.workspace === currentWs.id);
+  const wsCommits = (await dbAll('commits')).filter(c => c.workspace === currentWs.id);
+  const wsAtts = (await dbAll('attestations')).filter(a => a.workspace === currentWs.id);
+
+  // Check 1: Entity count
+  const hasEntities = wsEnt.length > 0;
+  // Check 2: Commit chain integrity
+  let chainValid = true;
+  for (let i = 1; i < wsCommits.length; i++) {
+    if (wsCommits[i].parent !== wsCommits[i-1].hash) { chainValid = false; break; }
+  }
+  // Check 3: Attestations valid
+  let attsValid = true;
+  for (const a of wsAtts) {
+    if (a.status !== 'valid') { attsValid = false; break; }
+  }
+  // Check 4: Registry consistency
+  const reg = await dbAll('registry');
+  const regConsistent = wsEnt.every(e => reg.some(r => r.id === e.id));
+
+  const checks = [
+    { pass: hasEntities, label: 'Has entities', detail: `${wsEnt.length} constitutional entity(s)` },
+    { pass: chainValid, label: 'Commit chain integrity', detail: wsCommits.length <= 1 ? 'Single or no commits' : `${wsCommits.length} commits, chain valid` },
+    { pass: attsValid, label: 'Attestations valid', detail: `${wsAtts.length} attestation(s)` },
+    { pass: regConsistent, label: 'Registry consistency', detail: 'All entities registered' },
+  ];
+  const valid = checks.every(c => c.pass);
+
+  el.innerHTML = `<div style="margin-bottom:1rem;padding:1rem;border-radius:8px;background:${valid?'rgba(0,230,118,.08)':'rgba(255,82,82,.08)'};border:1px solid ${valid?'rgba(0,230,118,.2)':'rgba(255,82,82,.2)'}">
+    <strong style="color:${valid?'var(--gn)':'var(--rd)'}">${valid?'✓ Workspace passes all checks':'✗ Some checks failed'}</strong></div>
+    ${checks.map(c => `<div class="verify-check ${c.pass?'pass':'fail'}"><span class="icon">${c.pass?'✓':'✗'}</span><div><strong>${c.label}</strong><div style="color:var(--dm);font-size:.75rem">${c.detail}</div></div></div>`).join('')}`;
+}
+
+// ── Registry ───────────────────────────────────────────────
+async function loadRegistry() {
+  const reg = await dbAll('registry');
+  const el = document.getElementById('reg-list');
+  if (reg.length === 0) {
+    el.innerHTML = '<div class="empty"><div class="icon">📋</div><p>Registry is empty. Entities are auto-registered when created.</p></div>';
+    return;
+  }
+  renderRegistry(reg);
+}
+
+async function filterRegistry() {
+  const reg = await dbAll('registry');
+  const q = document.getElementById('reg-search').value.toLowerCase();
+  const t = document.getElementById('reg-type').value;
+  const filtered = reg.filter(e =>
+    (!q || e.name.toLowerCase().includes(q) || (e.description||'').toLowerCase().includes(q)) &&
+    (!t || e.type === t)
+  );
+  renderRegistry(filtered);
+}
+
+function renderRegistry(items) {
+  document.getElementById('reg-list').innerHTML = items.map(e => `
+    <div class="item">
+      <div><h4>${esc(e.name)}</h4><p><span class="badge badge-${typeBadge(e.type)}">${e.type}</span>
+        · ${(e.relationships||[]).length} relationship(s) · ${timeAgo(e.created)}</p></div>
+    </div>`).join('');
+}
+
+// ── Settings ───────────────────────────────────────────────
+async function exportAll() {
+  const data = {};
+  for (const store of ['workspaces','entities','commits','reviews','attestations','registry']) {
+    data[store] = await dbAll(store);
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `ucf-export-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  toast('Data exported!');
+}
+
+async function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    for (const store of ['workspaces','entities','commits','reviews','attestations','registry']) {
+      if (data[store]) for (const item of data[store]) await dbPut(store, item);
+    }
+    toast('Data imported!');
+    loadDashboard();
+  } catch (err) { toast('Import failed: ' + err.message, 'error'); }
+  e.target.value = '';
+}
+
+async function clearAll() {
+  if (!confirm('⚠️ This will delete ALL data. This cannot be undone. Continue?')) return;
+  if (!confirm('Are you absolutely sure?')) return;
+  for (const store of ['workspaces','entities','commits','reviews','attestations','registry']) await dbClear(store);
+  toast('All data cleared');
+  loadDashboard();
+}
+
+async function exportKey() {
+  const key = await getKey();
+  const jwk = await crypto.subtle.exportKey('jwk', key);
+  const blob = new Blob([JSON.stringify(jwk, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ucf-attestation-key.json';
+  a.click();
+  toast('Key exported!');
+}
+
+async function importKey(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const jwk = JSON.parse(await file.text());
+    cryptoKey = await crypto.subtle.importKey('jwk', jwk,
+      { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign','verify']);
+    const tx = db.transaction(KEY_STORE, 'readwrite');
+    tx.objectStore(KEY_STORE).put({ id: 'attestation', jwk, imported: new Date().toISOString() });
+    toast('Key imported!');
+  } catch (err) { toast('Key import failed: ' + err.message, 'error'); }
+  e.target.value = '';
+}
+
+// ── PWA Install ────────────────────────────────────────────
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-btn').style.display = 'block';
+});
+
+function install() {
+  if (!deferredPrompt) {
+    toast('Use browser menu to install', 'error');
+    return;
+  }
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r => {
+    if (r.outcome === 'accepted') toast('UCF installed!');
+    deferredPrompt = null;
+  });
+}
+
+// ── Utilities ──────────────────────────────────────────────
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function timeAgo(t) {
+  if (!t) return '';
+  const d = Date.now() - new Date(t).getTime();
+  const m = Math.floor(d / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + 'm ago';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h ago';
+  return Math.floor(h / 24) + 'd ago';
+}
+function typeBadge(t) {
+  const m = { Engine:'engine', Specification:'spec', Workflow:'workflow', Policy:'policy', Document:'doc', Attestation:'engine', Agent:'engine' };
+  return m[t] || 'doc';
+}
+
+// ── Init ───────────────────────────────────────────────────
+async function init() {
+  await openDB();
+  // Ensure key store exists
+  if (!db.objectStoreNames.contains(KEY_STORE)) {
+    // Need to upgrade — recreate DB
+    indexedDB.deleteDatabase(DB_NAME);
+    await openDB();
+  }
+  await getKey();
+  loadDashboard();
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  }
+}
+
+// Escape closes modal
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+init();
+
+return { view, newWorkspace, createWorkspace, openWorkspace, wsTab,
+  newEntity, createEntity, deleteEntity, attestEntity,
+  newCommit, createCommit,
+  newReview, createReview, approveReview, rejectReview,
+  exportAll, importData, clearAll, exportKey, importKey,
+  filterRegistry, install, closeModal };
+
+})();
+</script>
+</body>
+</html>
