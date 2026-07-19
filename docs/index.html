@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6c5ce7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Official documentation for the ICore Constitutional Computing Platform">
+<title>ICore Documentation</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a0a0f'/><text x='50' y='68' font-size='40' text-anchor='middle' fill='%236c5ce7' font-family='monospace' font-weight='bold'>DOC</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a25;--bd:#2a2a3a;--tx:#e0e0e0;--dm:#888899;--ac:#6c5ce7;--ac2:#00bfa5;--gn:#00e676;--code-bg:#0d1117;--mono:'SF Mono','Cascadia Code','Consolas',monospace;--sans:-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);display:flex;min-height:100vh}
+a{color:var(--ac);text-decoration:none}a:hover{text-decoration:underline}
+
+/* Sidebar */
+.side{width:260px;background:var(--bg2);border-right:1px solid var(--bd);position:fixed;top:0;bottom:0;overflow-y:auto;padding:1rem 0;z-index:50;transition:transform .3s}
+.side h1{font-size:1rem;font-weight:700;color:var(--ac);padding:0 1.2rem .8rem;font-family:var(--mono);border-bottom:1px solid var(--bd);margin-bottom:.5rem}
+.side h1 span{color:var(--dm);font-weight:400;font-size:.65rem;display:block;margin-top:.2rem}
+.side .grp{margin-bottom:.5rem}
+.side .grp-t{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dm);padding:.4rem 1.2rem;font-weight:600}
+.side .link{display:block;padding:.35rem 1.2rem .35rem 1.6rem;font-size:.8rem;color:var(--dm);transition:all .15s;border-left:2px solid transparent}
+.side .link:hover,.side .link.act{color:var(--ac);background:rgba(108,92,231,.05);border-left-color:var(--ac);text-decoration:none}
+.side .link.sub{padding-left:2rem;font-size:.75rem}
+
+/* Main */
+.main{margin-left:260px;flex:1;padding:2rem 3rem;max-width:900px}
+.main h2{font-size:1.5rem;font-weight:700;color:var(--ac);margin:2.5rem 0 .8rem;padding-top:1rem;border-top:1px solid var(--bd)}
+.main h2:first-child{border-top:none;margin-top:0}
+.main h3{font-size:1.1rem;font-weight:600;color:var(--tx);margin:1.5rem 0 .5rem}
+.main h4{font-size:.95rem;font-weight:600;color:var(--ac2);margin:1.2rem 0 .4rem}
+.main p{font-size:.9rem;line-height:1.7;color:var(--tx);margin-bottom:.8rem}
+.main ul,.main ol{margin:.5rem 0 1rem 1.5rem;font-size:.9rem;line-height:1.7}
+.main li{margin-bottom:.3rem}
+.main strong{color:var(--ac2)}
+.main code{background:var(--code-bg);padding:2px 6px;border-radius:4px;font-family:var(--mono);font-size:.82rem;color:var(--ac2)}
+.main pre{background:var(--code-bg);border:1px solid var(--bd);border-radius:8px;padding:1rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.6;color:var(--tx)}
+.main pre code{background:none;padding:0;color:inherit}
+
+/* Tables */
+.main table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.82rem}
+.main th{background:var(--bg3);color:var(--ac);text-align:left;padding:.5rem .8rem;border:1px solid var(--bd);font-family:var(--mono)}
+.main td{padding:.5rem .8rem;border:1px solid var(--bd)}
+.main tr:hover{background:rgba(108,92,231,.03)}
+
+/* Callout */
+.call{background:rgba(108,92,231,.08);border-left:3px solid var(--ac);padding:.8rem 1rem;border-radius:0 6px 6px 0;margin:1rem 0;font-size:.85rem}
+.call-w{background:rgba(255,193,7,.08);border-left-color:#ffc107}
+.call a{font-weight:600}
+
+/* Top bar */
+.topbar{position:fixed;top:0;left:260px;right:0;height:50px;background:rgba(10,10,15,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 2rem;z-index:40}
+.topbar .filter{background:var(--bg3);border:1px solid var(--bd);color:var(--tx);padding:6px 12px;border-radius:6px;font-size:.8rem;font-family:var(--mono);width:250px;outline:none}
+.topbar .filter:focus{border-color:var(--ac)}
+.topbar .ib{margin-left:auto}
+.ib{background:var(--ac);color:#000;border:none;padding:5px 14px;border-radius:6px;cursor:pointer;font-family:var(--mono);font-size:.7rem;font-weight:600}.ib:hover{opacity:.85}
+
+/* Hamburger */
+.ham{display:none;position:fixed;top:.6rem;left:1rem;z-index:60;background:var(--bg2);border:1px solid var(--bd);color:var(--tx);width:36px;height:36px;border-radius:6px;cursor:pointer;font-size:1.1rem}
+
+@media(max-width:768px){
+.side{transform:translateX(-100%)}.side.open{transform:translateX(0)}
+.main{margin-left:0;padding:3.5rem 1.2rem 2rem}
+.topbar{left:0;padding:0 1rem}.topbar .filter{width:140px}
+.ham{display:flex;align-items:center;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<button class="ham" onclick="document.querySelector('.side').classList.toggle('open')">☰</button>
+
+<nav class="side" id="sidebar">
+<h1>ICore Docs <span>Constitutional Computing Platform</span></h1>
+<div class="grp"><div class="grp-t">Getting Started</div><a class="link act" href="#overview">Overview</a><a class="link" href="#quickstart">Quick Start</a></div>
+<div class="grp"><div class="grp-t">Architecture</div><a class="link" href="#stack">Constitutional Stack</a><a class="link sub" href="#l0">Layer 0 — ICore</a><a class="link sub" href="#l1">Layer 1 — USCP</a><a class="link sub" href="#l2">Layer 2 — USC</a><a class="link sub" href="#l3">Layer 3 — Sciences</a><a class="link sub" href="#l4">Layer 4 — UCE/UCM/UCL/UVS</a><a class="link sub" href="#l5">Layer 5 — Reference Systems</a><a class="link sub" href="#l55">Layer 5.5 — UWA + UCN</a><a class="link sub" href="#l6">Layer 6 — USR + UCA</a></div>
+<div class="grp"><div class="grp-t">Domains</div><a class="link" href="#usr">USR — Sovereign Runtime</a><a class="link" href="#uwa">UWA — Workspace Adapter</a><a class="link" href="#ucn">UCN — Constitutional Networking</a><a class="link" href="#uca">UCA — Constitutional Adapters</a><a class="link" href="#usds">USDS — Distribution System</a></div>
+<div class="grp"><div class="grp-t">Reference</div><a class="link" href="#conformance">Conformance Tests</a><a class="link" href="#api-ref">API Reference</a></div>
+</nav>
+
+<div class="topbar"><input class="filter" placeholder="Filter docs..." id="filter"><button class="ib" onclick="installPWA()">📱 Install</button></div>
+
+<main class="main" id="content">
+
+<h2 id="overview">Overview</h2>
+<p><strong>ICore</strong> (InitialCore) is the constitutional computing platform originated by <strong>Sir Collins</strong> (access1@tutamail.com). It is a layered architecture where every component answers six constitutional questions: What exists? Who acts? What relates? What constrains? What transforms? What verifies?</p>
+<p>ICore is <strong>not</strong> an operating system — it is a constitutional computing platform. The distinction matters: ICore defines the principles and structure that govern computational sovereignty, not the implementation of a specific runtime.</p>
+
+<div class="call">💡 <strong>Key Principle:</strong> ICore is offline-first, zero-dependency, and event-driven. Every domain is a standalone PWA installable to your home screen.</div>
+
+<h3>Core Principles</h3>
+<ul>
+<li><strong>Sovereignty:</strong> No external dependencies, no cloud trust required</li>
+<li><strong>Offline-First:</strong> Every PWA works without network connectivity</li>
+<li><strong>Constitutional:</strong> Every layer is defined by formal axioms and primitives</li>
+<li><strong>Verifiable:</strong> 50+ conformance tests across all domains</li>
+<li><strong>Event-Driven:</strong> CustomEvent architecture for inter-component communication</li>
+</ul>
+
+<h3>Platform Domains</h3>
+<table>
+<tr><th>Domain</th><th>URL</th><th>Purpose</th></tr>
+<tr><td>USR</td><td><a href="https://usr.initialcore.net">usr.initialcore.net</a></td><td>Universal Sovereign Runtime — execution layer</td></tr>
+<tr><td>UWA</td><td><a href="https://uwa.initialcore.net">uwa.initialcore.net</a></td><td>Universal Workspace Adapter — component layer</td></tr>
+<tr><td>UCN</td><td><a href="https://ucn.initialcore.net">ucn.initialcore.net</a></td><td>Universal Constitutional Networking — communication layer</td></tr>
+<tr><td>UCA</td><td><a href="https://uca.initialcore.net">uca.initialcore.net</a></td><td>Universal Constitutional Adapters — boundary layer</td></tr>
+<tr><td>USDS</td><td><a href="https://usds.initialcore.net">usds.initialcore.net</a></td><td>Sovereign Distribution System — distribution layer</td></tr>
+<tr><td>Verifier</td><td><a href="https://verifier.initialcore.net">verifier.initialcore.net</a></td><td>Trust Verification Engine</td></tr>
+<tr><td>Studyo</td><td><a href="https://studio.initialcore.net">studio.initialcore.net</a></td><td>Constitutional Visual Studio</td></tr>
+<tr><td>Workflow</td><td><a href="https://wfengine.initialcore.net">wfengine.initialcore.net</a></td><td>Workflow Orchestration</td></tr>
+</table>
+
+<h2 id="quickstart">Quick Start</h2>
+<ol>
+<li><strong>Install a PWA</strong> — Visit any domain and tap "Install" to add to your home screen</li>
+<li><strong>Run Conformance Tests</strong> — Each domain has a built-in conformance test suite</li>
+<li><strong>Create Artifacts</strong> — Use USDS to create, sign, and distribute constitutional packages</li>
+<li><strong>Verify</strong> — Use the Verifier to check trust chains and conformance claims</li>
+</ol>
+
+<h2 id="stack">Constitutional Stack</h2>
+<p>The ICore constitutional stack is a layered architecture where each layer depends only on layers below it. Dependencies flow downward — never upward.</p>
+
+<pre><code>┌─────────────────────────────────────────────────┐
+│  Layer 6.1  UCA (Adapters)        🔌           │
+│  Layer 6    USR (Runtime)         ⚡           │
+│  Layer 5.5  UWA + UCN            🧩🌐         │
+│  Layer 5    Reference Systems                  │
+│  Layer 4    UCE · UCM · UCL · UVS              │
+│  Layer 3    Reference Sciences                 │
+│  Layer 2    USC (Constitution Language)         │
+│  Layer 1    USCP (Core Primitives)              │
+│  Layer 0    ICore (Constitution)                │
+└─────────────────────────────────────────────────┘</code></pre>
+
+<h3 id="l0">Layer 0 — ICore (Constitution)</h3>
+<p>The root of the entire platform. ICore defines the constitutional principles that all layers must uphold. It is the source of authority — everything traces to Layer 0.</p>
+
+<h3 id="l1">Layer 1 — USCP (Core Primitives)</h3>
+<p>The six core primitives that answer the six constitutional questions:</p>
+<table>
+<tr><th>Primitive</th><th>Question</th><th>Description</th></tr>
+<tr><td>Existence</td><td>What exists?</td><td>Defines what can exist in the constitutional space</td></tr>
+<tr><td>Identity</td><td>Who acts?</td><td>Defines authorized actors and their capabilities</td></tr>
+<tr><td>Relationship</td><td>What relates?</td><td>Defines how entities relate to each other</td></tr>
+<tr><td>Constraint</td><td>What constrains?</td><td>Defines invariants that cannot be violated</td></tr>
+<tr><td>Transformation</td><td>What transforms?</td><td>Defines how state changes are authorized</td></tr>
+<tr><td>Verification</td><td>What verifies?</td><td>Defines how claims are validated</td></tr>
+</table>
+
+<h3 id="l2">Layer 2 — USC (Constitution Language)</h3>
+<p>The formal language for expressing constitutional rules. USC provides the syntax and semantics for writing axioms, constraints, and assertions.</p>
+
+<h3 id="l3">Layer 3 — Reference Sciences</h3>
+<p>Mathematics, logic, information theory, and cryptography provide the theoretical foundation.</p>
+
+<h3 id="l4">Layer 4 — UCE · UCM · UCL · UVS</h3>
+<p>Upper-level constructs: Universal Constitutional Execution (UCE), Universal Constitutional Models (UCM), Universal Constitutional Languages (UCL), and Universal Verification Sciences (UVS).</p>
+
+<h3 id="l5">Layer 5 — Reference Systems</h3>
+<p>Communication, data, and computation systems that provide the substrate for constitutional operations.</p>
+
+<h3 id="l55">Layer 5.5 — UWA + UCN</h3>
+<p><strong>UWA</strong> (Universal Workspace Adapter) defines workspace components and their lifecycle. <strong>UCN</strong> (Universal Constitutional Networking) defines how constitutional nodes communicate and synchronize.</p>
+
+<h3 id="l6">Layer 6 — USR + UCA</h3>
+<p><strong>USR</strong> (Universal Sovereign Runtime) is the execution layer — identity, execution, constraints, isolation, attestation, and orchestration. <strong>UCA</strong> (Universal Constitutional Adapters) bridges constitutional boundaries to external systems.</p>
+
+<h2 id="usr">USR — Universal Sovereign Runtime</h2>
+<p><strong>Purpose:</strong> Execute constitutional operations under sovereign authority.</p>
+<p><strong>Live:</strong> <a href="https://usr.initialcore.net">usr.initialcore.net</a></p>
+<h4>Engines</h4>
+<ul>
+<li><strong>Identity Engine (C1)</strong> — <code>declare()</code>, <code>register()</code>, <code>verify()</code></li>
+<li><strong>Execution Engine (C2)</strong> — <code>execute()</code>, <code>getHistory()</code></li>
+<li><strong>Constraints Engine (C3)</strong> — <code>enforce()</code>, <code>test()</code></li>
+<li><strong>Isolation Engine (C4)</strong> — <code>requestCapability()</code>, <code>revokeCapability()</code>, <code>checkCapability()</code></li>
+<li><strong>Attestation Engine (C5)</strong> — <code>attest()</code>, <code>verify()</code>, <code>verifyChain()</code></li>
+<li><strong>Orchestration Engine (C6)</strong> — <code>start()</code>, <code>suspend()</code>, <code>resume()</code>, <code>terminate()</code></li>
+</ul>
+<h4>Conformance Tests</h4>
+<p>USR-01 through USR-15 (15 tests, Critical/Major/Minor categories)</p>
+
+<h2 id="uwa">UWA — Universal Workspace Adapter</h2>
+<p><strong>Purpose:</strong> Define workspace components and their lifecycle.</p>
+<p><strong>Live:</strong> <a href="https://uwa.initialcore.net">uwa.initialcore.net</a></p>
+<h4>Engines</h4>
+<ul>
+<li><strong>Component Engine</strong> — <code>create()</code>, <code>declare()</code>, <code>validate()</code>, <code>initialize()</code>, <code>start()</code>, <code>suspend()</code>, <code>resume()</code>, <code>terminate()</code></li>
+<li><strong>Event Engine</strong> — <code>emit()</code>, <code>consume()</code></li>
+<li><strong>Execution Engine</strong> — <code>execute()</code></li>
+<li><strong>Composition Engine</strong> — <code>addEdge()</code>, <code>getChildren()</code>, <code>validate()</code></li>
+<li><strong>Workspace Runtime</strong> — <code>createComponent()</code>, <code>executeEvent()</code>, <code>compose()</code></li>
+</ul>
+<h4>Conformance Tests</h4>
+<p>UWA-01 through UWA-10 (10 tests)</p>
+
+<h2 id="ucn">UCN — Universal Constitutional Networking</h2>
+<p><strong>Purpose:</strong> Define how constitutional nodes communicate and synchronize.</p>
+<p><strong>Live:</strong> <a href="https://ucn.initialcore.net">ucn.initialcore.net</a></p>
+<h4>Engines</h4>
+<ul>
+<li><strong>Node Engine</strong> — <code>createNode()</code>, <code>extendNetwork()</code>, <code>activateNetwork()</code>, <code>revoke()</code></li>
+<li><strong>Discovery Engine</strong> — <code>advertise()</code>, <code>query()</code></li>
+<li><strong>Communication Engine</strong> — <code>createEvent()</code>, <code>verifyEvent()</code></li>
+<li><strong>Sync Engine</strong> — <code>initState()</code>, <code>createDelta()</code>, <code>applyDelta()</code></li>
+<li><strong>Trust Engine</strong> — <code>addAnchor()</code>, <code>assertTrust()</code>, <code>revokeTrust()</code></li>
+<li><strong>Network Runtime</strong> — <code>joinNetwork()</code>, <code>getStatus()</code></li>
+</ul>
+<h4>Conformance Tests</h4>
+<p>UCN-01 through UCN-13 (13 tests)</p>
+
+<h2 id="uca">UCA — Universal Constitutional Adapters</h2>
+<p><strong>Purpose:</strong> Bridge constitutional boundaries to external systems while maintaining sovereignty.</p>
+<p><strong>Live:</strong> <a href="https://uca.initialcore.net">uca.initialcore.net</a></p>
+<h4>Engines</h4>
+<ul>
+<li><strong>Adapter Engine</strong> — <code>register()</code>, <code>unregister()</code>, <code>replace()</code></li>
+<li><strong>Naming Engine</strong> — <code>registerMapping()</code>, <code>resolve()</code>, <code>verify()</code></li>
+<li><strong>Serialization Engine</strong> — <code>serialize()</code>, <code>deserialize()</code>, <code>verifyRoundtrip()</code></li>
+<li><strong>Execution Adapter</strong> — <code>execute()</code>, <code>sandboxCheck()</code></li>
+<li><strong>Storage Adapter</strong> — <code>store()</code>, <code>retrieve()</code>, <code>verifyIntegrity()</code></li>
+<li><strong>Communication Adapter</strong> — <code>send()</code>, <code>verifySource()</code></li>
+<li><strong>Boundary Runtime</strong> — <code>getStatus()</code></li>
+</ul>
+<h4>Conformance Tests</h4>
+<p>UCA-01 through UCA-12 (12 tests)</p>
+
+<h2 id="usds">USDS — Sovereign Distribution System</h2>
+<p><strong>Purpose:</strong> Distribute constitutional software with verified authenticity, integrity, and provenance.</p>
+<p><strong>Live:</strong> <a href="https://usds.initialcore.net">usds.initialcore.net</a></p>
+<h4>Engines</h4>
+<ul>
+<li><strong>Package Engine</strong> — <code>create()</code>, <code>extract()</code></li>
+<li><strong>Signing Engine</strong> — <code>sign()</code>, <code>verify()</code></li>
+<li><strong>Distribution Engine</strong> — <code>transfer()</code>, <code>track()</code></li>
+<li><strong>Verification Engine</strong> — <code>verify()</code>, <code>verifyChain()</code></li>
+</ul>
+
+<h2 id="conformance">Conformance Tests</h2>
+<p>ICS v0.2.0 — The ICore Conformance Suite validates internal consistency across all domains.</p>
+
+<div class="call call-w">⚠️ <strong>Claim Discipline:</strong> Self-conformance (C3) certifies internal consistency only. It does NOT constitute independent validation, scientific proof, or universal establishment. The strongest honest claim is: "The ICore specification passed its own defined conformance suite."</div>
+
+<h3>Test Summary</h3>
+<table>
+<tr><th>Domain</th><th>Tests</th><th>Range</th><th>Categories</th></tr>
+<tr><td>USR</td><td>15</td><td>USR-01 → USR-15</td><td>Critical, Major, Minor</td></tr>
+<tr><td>UWA</td><td>10</td><td>UWA-01 → UWA-10</td><td>Critical, Major, Minor</td></tr>
+<tr><td>UCN</td><td>13</td><td>UCN-01 → UCN-13</td><td>Critical, Major, Minor</td></tr>
+<tr><td>UCA</td><td>12</td><td>UCA-01 → UCA-12</td><td>Critical, Major, Minor</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>50</strong></td><td></td><td></td></tr>
+</table>
+
+<h3>Weak vs Strong Claims</h3>
+<ul>
+<li><strong>Weak claim:</strong> All 57 tests pass (63% with v0.2.0 differentiating)</li>
+<li><strong>Strong claim:</strong> 54/57 real validation tests pass (94.7% — engine differentiates)</li>
+</ul>
+
+<h2 id="api-ref">API Reference</h2>
+<p>Full method documentation for all 28 engines across 5 domains.</p>
+<p>→ <a href="https://api.initialcore.net">View API Reference at api.initialcore.net</a></p>
+
+<div class="call">📖 <strong>Originated by Sir Collins</strong> (access1@tutamail.com) — Constitutional Computing Platform v0.1.0</div>
+
+</main>
+
+<script>
+if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+
+let dp;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
+function installPWA(){if(dp){dp.prompt();dp.then(r=>{dp=null;});}}
+
+// Sidebar active state
+const links=document.querySelectorAll('.side .link');
+const sections=document.querySelectorAll('.main h2[id], .main h3[id]');
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('act'));const id=e.target.id;const link=document.querySelector(`.side .link[href="#${id}"]`);if(link)link.classList.add('act');}});},{threshold:.3,rootMargin:'-60px 0px -60% 0px'});
+sections.forEach(s=>obs.observe(s));
+
+// Filter
+document.getElementById('filter').addEventListener('input',e=>{
+const q=e.target.value.toLowerCase();
+links.forEach(l=>{l.style.display=l.textContent.toLowerCase().includes(q)?'':'none';});
+});
+
+// Close sidebar on mobile link click
+links.forEach(l=>l.addEventListener('click',()=>{
+if(window.innerWidth<=768)document.querySelector('.side').classList.remove('open');
+}));
+</script>
+</body>
+</html>
