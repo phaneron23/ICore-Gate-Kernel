@@ -10,40 +10,35 @@
 <meta name="apple-mobile-web-app-title" content="UCR">
 <link rel="manifest" href="manifest.json">
 <style>
-:root{--bg:#0a0a0f;--sf:#12121a;--bd:#1e1e2e;--tx:#e0e0e0;--dm:#666;--ac:#00bfa5;--gn:#00e676;--rd:#ff5252;--or:#ffa726}
+:root{--bg:#0a0a0f;--sf:#12121a;--bd:#1e1e2e;--tx:#e0e0e0;--dm:#666;--ac:#00bfa5;--gn:#00e676;--rd:#ff5252;--or:#ffa726;--bl:#42a5f5}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--tx);font-family:-apple-system,'Segoe UI',Roboto,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px}
-.wrap{width:100%;max-width:520px}
-.head{text-align:center;margin-bottom:20px}
-.head h1{font-size:1.3rem;font-weight:700;color:var(--ac);margin-bottom:4px}
-.head p{font-size:.8rem;color:var(--dm)}
-.card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
-.card h2{font-size:.9rem;font-weight:600;margin-bottom:10px;color:var(--tx)}
-.row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);font-size:.8rem}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:16px}
+.wrap{max-width:520px;margin:0 auto}
+.head{text-align:center;margin-bottom:16px}
+.head h1{font-size:1.2rem;font-weight:700;color:var(--ac);margin-bottom:2px}
+.head p{font-size:.75rem;color:var(--dm)}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h2{font-size:.85rem;font-weight:600;margin-bottom:8px;color:var(--tx)}
+.row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--bd);font-size:.8rem}
 .row:last-child{border-bottom:none}
 .row .label{color:var(--dm)}
 .row .val{font-family:monospace;font-size:.75rem}
 .val.ok{color:var(--gn)}.val.warn{color:var(--or)}.val.err{color:var(--rd)}
-.site-list{margin-top:8px}
-.site-item{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);font-size:.8rem}
-.site-item:last-child{border-bottom:none}
-.site-name{font-weight:600;color:var(--tx)}
-.site-links{display:flex;gap:8px}
-.site-links a{font-size:.7rem;padding:2px 6px;border-radius:4px;text-decoration:none;font-family:monospace}
-.link-custom{background:var(--bd);color:var(--tx)}
-.link-pages{background:#1a237e;color:#90caf9}
-.link-custom:hover,.link-pages:hover{opacity:.8}
 .btn{background:var(--ac);color:#000;border:none;padding:12px 20px;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;width:100%;transition:opacity .2s}
 .btn:hover{opacity:.9}
 .btn:disabled{background:var(--bd);color:var(--dm);cursor:not-allowed}
 .btn.done{background:var(--gn)}
-.log{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:10px;margin-top:12px;font-family:monospace;font-size:.72rem;max-height:220px;overflow-y:auto;white-space:pre-wrap;line-height:1.4}
+.site{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bd);font-size:.8rem}
+.site:last-child{border-bottom:none}
+.site-name{font-weight:600;min-width:70px}
+.site-links{display:flex;gap:6px}
+.site-links a{font-size:.7rem;padding:3px 8px;border-radius:5px;text-decoration:none;font-weight:600;display:inline-block}
+.link-p{background:#1a237e;color:#90caf9}
+.link-c{background:var(--bd);color:var(--tx)}
+.link-p:active,.link-c:active{opacity:.7}
+.log{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:10px;margin-top:12px;font-family:monospace;font-size:.72rem;max-height:200px;overflow-y:auto;white-space:pre-wrap;line-height:1.4}
 .log .ok{color:var(--gn)}.log .err{color:var(--rd)}.log .info{color:var(--dm)}.log .h{color:var(--ac);font-weight:700}
-.tabs{display:flex;gap:4px;margin-bottom:12px}
-.tab{flex:1;padding:8px;text-align:center;font-size:.8rem;font-weight:600;border-radius:8px;cursor:pointer;background:var(--sf);border:1px solid var(--bd);color:var(--dm)}
-.tab.active{background:var(--ac);color:#000;border-color:var(--ac)}
-.tab-content{display:none}.tab-content.active{display:block}
-.foot{text-align:center;margin-top:12px;font-size:.7rem;color:var(--dm)}
+.foot{text-align:center;margin-top:14px;font-size:.65rem;color:var(--dm)}
 </style>
 </head>
 <body>
@@ -53,125 +48,91 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,'Segoe UI',R
     <p>ICore constitutional platform</p>
   </div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="showTab('reset')">Reset</div>
-    <div class="tab" onclick="showTab('sites')">All Sites</div>
+  <div class="card">
+    <h2>Storage Status</h2>
+    <div class="row"><span class="label">Service Workers</span><span class="val" id="sw">—</span></div>
+    <div class="row"><span class="label">Cache Storage</span><span class="val" id="cc">—</span></div>
+    <div class="row"><span class="label">LocalStorage</span><span class="val" id="ls">—</span></div>
+    <div class="row"><span class="label">IndexedDB</span><span class="val" id="db">—</span></div>
   </div>
 
-  <!-- RESET TAB -->
-  <div class="tab-content active" id="tab-reset">
-    <div class="card">
-      <h2>Current State</h2>
-      <div class="row"><span class="label">Service Workers</span><span class="val" id="swCount">—</span></div>
-      <div class="row"><span class="label">Cache Storage</span><span class="val" id="cacheCount">—</span></div>
-      <div class="row"><span class="label">LocalStorage</span><span class="val" id="lsCount">—</span></div>
-      <div class="row"><span class="label">IndexedDB</span><span class="val" id="dbCount">—</span></div>
-    </div>
-    <button class="btn" id="resetBtn" onclick="resetAll()">Reset Everything</button>
-    <div class="log" id="log"></div>
-  </div>
+  <button class="btn" id="resetBtn" onclick="resetAll()">Reset Everything</button>
+  <div class="log" id="log"></div>
 
-  <!-- SITES TAB -->
-  <div class="tab-content" id="tab-sites">
-    <div class="card">
-      <h2>ICore Platform — All Sites</h2>
-      <p style="font-size:.75rem;color:var(--dm);margin-bottom:8px">If a custom domain fails, use the Pages URL.</p>
-      <div class="site-list" id="siteList"></div>
-    </div>
+  <div class="card" style="margin-top:16px">
+    <h2>All ICore Sites</h2>
+    <p style="font-size:.7rem;color:var(--dm);margin-bottom:6px">Tap Pages if a custom domain fails.</p>
+    <div id="sites"></div>
   </div>
 
   <div class="foot">ICore Constitutional Platform · Sir Collins</div>
 </div>
 
 <script>
-var SITES=[
-  {name:"Landing",custom:"initialcore.net",pages:"icore-landing-3uc.pages.dev",hash:"8a944f9f"},
-  {name:"USR",custom:"usr.initialcore.net",pages:"usr-site.pages.dev",hash:"6ba7a41c"},
-  {name:"UWA",custom:"uwa.initialcore.net",pages:"uwa-3uc.pages.dev",hash:"ff0ea9f7"},
-  {name:"UCN",custom:"ucn.initialcore.net",pages:"ucn-3uc.pages.dev",hash:"e784959c"},
-  {name:"UCA",custom:"uca.initialcore.net",pages:"uca-3uc.pages.dev",hash:"65b4bf8f"},
-  {name:"USDS",custom:"usds.initialcore.net",pages:"usds-3uc.pages.dev",hash:"a2bcb22a"},
-  {name:"Structure",custom:"structure.initialcore.net",pages:"structure-3uc.pages.dev",hash:"2d8777c1"},
-  {name:"Studyo",custom:"studio.initialcore.net",pages:"studyo-3uc-aln.pages.dev",hash:"f6b9d553"},
-  {name:"Verifier",custom:"verifier.initialcore.net",pages:"verifier-3uc.pages.dev",hash:"909adee7"},
-  {name:"Workflow",custom:"wfengine.initialcore.net",pages:"workflow-engine-3uc.pages.dev",hash:"87b0eb0f"},
-  {name:"Docs",custom:"docs.initialcore.net",pages:"docs-3uc.pages.dev",hash:"a3f7e2c1"},
-  {name:"API",custom:"api.initialcore.net",pages:"api-3uc.pages.dev",hash:"7297ea43"},
-  {name:"UCR",custom:"reset.initialcore.net",pages:"reset-3uc.pages.dev",hash:"1684e456"}
+var S=[
+["Landing","initialcore.net","8a944f9f.icore-landing-3uc.pages.dev"],
+["USR","usr.initialcore.net","6ba7a41c.usr-site.pages.dev"],
+["UWA","uwa.initialcore.net","ff0ea9f7.uwa-3uc.pages.dev"],
+["UCN","ucn.initialcore.net","e784959c.ucn-3uc.pages.dev"],
+["UCA","uca.initialcore.net","65b4bf8f.uca-3uc.pages.dev"],
+["USDS","usds.initialcore.net","a2bcb22a.usds-3uc.pages.dev"],
+["Structure","structure.initialcore.net","2d8777c1.structure-3uc.pages.dev"],
+["Studyo","studio.initialcore.net","f6b9d553.studyo-3uc-aln.pages.dev"],
+["Verifier","verifier.initialcore.net","909adee7.verifier-3uc.pages.dev"],
+["Workflow","wfengine.initialcore.net","87b0eb0f.workflow-engine-3uc.pages.dev"],
+["Docs","docs.initialcore.net","a3f7e2c1.docs-3uc.pages.dev"],
+["API","api.initialcore.net","7297ea43.api-3uc.pages.dev"],
+["UCR","reset.initialcore.net","50e21fbe.reset-3uc.pages.dev"]
 ];
 
-function el(id){return document.getElementById(id)}
-
-function showTab(name){
-  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active")});
-  document.querySelectorAll(".tab-content").forEach(function(t){t.classList.remove("active")});
-  event.target.classList.add("active");
-  el("tab-"+name).classList.add("active");
-}
-
-// Build site list
-function buildSiteList(){
-  var list=el("siteList");
-  SITES.forEach(function(s){
-    var item=document.createElement("div");
-    item.className="site-item";
-    item.innerHTML='<span class="site-name">'+s.name+'</span>'
-      +'<span class="site-links">'
-      +'<a class="link-pages" href="https://'+s.hash+'.'+s.pages+'/" target="_blank">Pages</a>'
-      +'<a class="link-custom" href="https://'+s.custom+'/" target="_blank">'+s.custom.replace(".initialcore.net","")+'</a>'
-      +'</span>';
-    list.appendChild(item);
-  });
-}
-
-function log(msg,cls){
-  cls=cls||"info";
+function log(m,c){
+  c=c||"info";
   var s=document.createElement("span");
-  s.className=cls;
-  s.textContent=msg;
-  el("log").appendChild(s);
-  el("log").appendChild(document.createTextNode("\n"));
-  el("log").scrollTop=el("log").scrollHeight;
+  s.className=c;
+  s.textContent=m;
+  var l=document.getElementById("log");
+  l.appendChild(s);
+  l.appendChild(document.createTextNode("\n"));
+  l.scrollTop=l.scrollHeight;
 }
+function sv(id,t,c){var e=document.getElementById(id);e.textContent=t;if(c)e.className="val "+c}
 
-function setVal(id,txt,cls){
-  var e=el(id);
-  e.textContent=txt;
-  if(cls)e.className="val "+cls;
+function buildSites(){
+  var d=document.getElementById("sites");
+  S.forEach(function(s){
+    var row=document.createElement("div");
+    row.className="site";
+    row.innerHTML='<span class="site-name">'+s[0]+'</span>'
+      +'<span class="site-links">'
+      +'<a class="link-p" href="https://'+s[2]+'/" target="_blank">Pages</a>'
+      +'<a class="link-c" href="https://'+s[1]+'/" target="_blank">'+s[1].replace(".initialcore.net","")+'</a>'
+      +'</span>';
+    d.appendChild(row);
+  });
 }
 
 async function scan(){
   var sw=0;
-  if(navigator.serviceWorker){
-    var r=await navigator.serviceWorker.getRegistrations();
-    sw=r.length;
-  }
-  setVal("swCount",sw+" registered",sw?"warn":"ok");
+  if(navigator.serviceWorker){var r=await navigator.serviceWorker.getRegistrations();sw=r.length;}
+  sv("sw",sw+" registered",sw?"warn":"ok");
 
   var cc=0;
-  if(window.caches){
-    var n=await caches.keys();
-    cc=n.length;
-  }
-  setVal("cacheCount",cc+" entries",cc?"warn":"ok");
+  if(window.caches){var n=await caches.keys();cc=n.length;}
+  sv("cc",cc+" entries",cc?"warn":"ok");
 
-  var ls=localStorage.length;
-  setVal("lsCount",ls+" items",ls?"warn":"ok");
+  sv("ls",localStorage.length+" items",localStorage.length?"warn":"ok");
 
   var dbs=0;
-  if(indexedDB&&indexedDB.databases){
-    try{var d=await indexedDB.databases();dbs=d.length;}catch(e){}
-  }
-  setVal("dbCount",dbs+" databases",dbs?"warn":"ok");
+  if(indexedDB&&indexedDB.databases){try{var d=await indexedDB.databases();dbs=d.length;}catch(e){}}
+  sv("db",dbs+" databases",dbs?"warn":"ok");
 }
 
 async function resetAll(){
-  var btn=el("resetBtn");
+  var btn=document.getElementById("resetBtn");
   btn.disabled=true;
   btn.textContent="Clearing...";
   log("=== Universal Cache Reset ===","h");
 
-  // 1. Service Workers
   var swN=0;
   if(navigator.serviceWorker){
     var regs=await navigator.serviceWorker.getRegistrations();
@@ -182,7 +143,6 @@ async function resetAll(){
   }
   log("Service Workers: "+swN+" unregistered","h");
 
-  // 2. Cache Storage
   var cN=0;
   if(window.caches){
     var keys=await caches.keys();
@@ -193,12 +153,10 @@ async function resetAll(){
   }
   log("Caches: "+cN+" deleted","h");
 
-  // 3. LocalStorage
   var lN=localStorage.length;
   try{localStorage.clear();}catch(e){}
   log("LocalStorage: "+lN+" items cleared","h");
 
-  // 4. IndexedDB
   var dN=0;
   if(indexedDB&&indexedDB.databases){
     try{
@@ -210,28 +168,16 @@ async function resetAll(){
   }
   log("IndexedDB: "+dN+" databases cleared","h");
 
-  // 5. Cookies
-  var cK=document.cookie.split(";");
-  if(cK.length>0&&cK[0]!==""){
-    document.cookie.split(";").forEach(function(c){
-      var n=c.split("=")[0].trim();
-      document.cookie=n+"=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-    });
-    log("Cookies: cleared","h");
-  }
-
   log("");
   log("=== ALL CLEAR ===","ok");
-  log("");
-  log("Use the Sites tab to revisit all ICore domains.","info");
-  log("If custom domains fail, use Pages URLs.","info");
+  log("Visit sites below. Use Pages if custom domains fail.","info");
 
   await scan();
   btn.textContent="Done";
   btn.className="btn done";
 }
 
-buildSiteList();
+buildSites();
 scan();
 </script>
 </body>
