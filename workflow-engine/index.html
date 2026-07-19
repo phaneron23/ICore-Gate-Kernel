@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#00e676">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Workflow Engine">
   <meta name="description" content="ICore Constitutional Workflow Engine — First UCD Derivative">
   <title>ICore Workflow Engine</title>
   <link rel="manifest" href="/manifest.json">
@@ -26,10 +29,9 @@
             <div class="header-subtitle">ICore UCD Module</div>
           </div>
         </div>
-        <a href="https://app.initialcore.net" class="btn btn-secondary"
-           style="width:auto; padding:6px 12px; font-size:0.7rem; text-decoration:none;">
-          🔷 Studyo
-        </a>
+        <button id="install-btn" class="btn btn-secondary" onclick="App.installPWA()" style="width:auto; padding: 8px 16px; font-size: 0.8rem;">
+          📱 Install
+        </button>
       </div>
     </header>
 

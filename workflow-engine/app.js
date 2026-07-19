@@ -20,6 +20,7 @@ const App = {
     this.setupNavigation();
     this.setupOffline();
     this.registerServiceWorker();
+    this.setupInstall();
     this.navigate('dashboard');
 
     // Log platform availability
@@ -308,10 +309,55 @@ const App = {
   // ─── Utilities ───────────────────────────────────────────────────
 
   registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js').catch(() => {});
-    }
-  },
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+        }
+      },
+
+      // ─── PWA Install ────────────────────────────────────────
+      deferredInstallPrompt: null,
+
+      setupInstall() {
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          this.deferredInstallPrompt = e;
+          const btn = document.getElementById('install-btn');
+          if (btn) btn.style.display = 'inline-flex';
+        });
+
+        window.addEventListener('appinstalled', () => {
+          this.deferredInstallPrompt = null;
+          const btn = document.getElementById('install-btn');
+          if (btn) { btn.textContent = '✅ Installed'; btn.style.display = 'none'; }
+        });
+      },
+
+      async installPWA() {
+        if (!this.deferredInstallPrompt) {
+          this.showInstallGuide();
+          return;
+        }
+        this.deferredInstallPrompt.prompt();
+        const { outcome } = await this.deferredInstallPrompt.userChoice;
+        this.deferredInstallPrompt = null;
+        const btn = document.getElementById('install-btn');
+        if (btn) btn.style.display = 'none';
+      },
+
+      showInstallGuide() {
+        const overlay = document.createElement('div');
+        overlay.id = 'install-overlay';
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+        overlay.innerHTML = '<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;max-width:400px;width:100%;">' +
+          '<h3 style="margin:0 0 16px;color:var(--text);">📱 Install Workflow Engine</h3>' +
+          '<p style="color:var(--dim);margin-bottom:16px;font-size:0.9rem;">Add to your home screen for offline access.</p>' +
+          '<ul style="color:var(--text);padding-left:20px;margin-bottom:16px;font-size:0.85rem;line-height:1.8;">' +
+          '<li><strong>Chrome/Edge:</strong> Tap ⋮ → "Install app"</li>' +
+          '<li><strong>Safari:</strong> Tap Share → "Add to Home Screen"</li>' +
+          '<li><strong>Firefox:</strong> Tap ⋮ → "Install"</li></ul>' +
+          '<button onclick="document.getElementById('install-overlay').remove()" style="background:var(--accent);color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:0.9rem;">Got it</button></div>';
+        document.body.appendChild(overlay);
+      },
 
   setupOffline() {
     const banner = document.getElementById('offline-banner');
