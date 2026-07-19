@@ -1,0 +1,178 @@
+{
+  "@context": {
+    "@version": "1.1",
+    "@vocab": "https://initialcore.net/context/v1#",
+    "icore": "https://initialcore.net/context/v1#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "ConstitutionalEntity": "icore:ConstitutionalEntity",
+    "ConstitutionalEngine": {
+      "@id": "icore:ConstitutionalEngine",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Runtime": {
+      "@id": "icore:Runtime",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Specification": {
+      "@id": "icore:Specification",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Verification": {
+      "@id": "icore:Verification",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Attestation": {
+      "@id": "icore:Attestation",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Workflow": {
+      "@id": "icore:Workflow",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Event": {
+      "@id": "icore:Event",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Identity": {
+      "@id": "icore:Identity",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Policy": {
+      "@id": "icore:Policy",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Constraint": {
+      "@id": "icore:Constraint",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Capability": {
+      "@id": "icore:Capability",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Adapter": {
+      "@id": "icore:Adapter",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Workspace": {
+      "@id": "icore:Workspace",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Agent": {
+      "@id": "icore:Agent",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Tool": {
+      "@id": "icore:Tool",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Knowledge": {
+      "@id": "icore:Knowledge",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Document": {
+      "@id": "icore:Document",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Project": {
+      "@id": "icore:Project",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "Provenance": {
+      "@id": "icore:Provenance",
+      "@subPropertyOf": "icore:ConstitutionalEntity"
+    },
+    "implements": {
+      "@id": "icore:implements",
+      "@type": "@id"
+    },
+    "defines": {
+      "@id": "icore:defines",
+      "@type": "@id"
+    },
+    "invokes": {
+      "@id": "icore:invokes",
+      "@type": "@id"
+    },
+    "emits": {
+      "@id": "icore:emits",
+      "@type": "@id"
+    },
+    "produces": {
+      "@id": "icore:produces",
+      "@type": "@id"
+    },
+    "generates": {
+      "@id": "icore:generates",
+      "@type": "@id"
+    },
+    "attests": {
+      "@id": "icore:attests",
+      "@type": "@id"
+    },
+    "adapts": {
+      "@id": "icore:adapts",
+      "@type": "@id"
+    },
+    "transports": {
+      "@id": "icore:transports",
+      "@type": "@id"
+    },
+    "distributes": {
+      "@id": "icore:distributes",
+      "@type": "@id"
+    },
+    "presents": {
+      "@id": "icore:presents",
+      "@type": "@id"
+    },
+    "conforms": {
+      "@id": "icore:conforms",
+      "@type": "@id"
+    },
+    "validates": {
+      "@id": "icore:validates",
+      "@type": "@id"
+    },
+    "trustLevel": {
+      "@id": "icore:trustLevel",
+      "@type": "xsd:string"
+    },
+    "version": {
+      "@id": "icore:version",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "icore:status",
+      "@type": "xsd:string"
+    },
+    "timestamp": {
+      "@id": "icore:timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "evidence": {
+      "@id": "icore:evidence"
+    },
+    "result": {
+      "@id": "icore:result",
+      "@type": "xsd:string"
+    },
+    "score": {
+      "@id": "icore:score",
+      "@type": "xsd:decimal"
+    },
+    "hash": {
+      "@id": "icore:hash",
+      "@type": "xsd:string"
+    },
+    "engine": {
+      "@id": "icore:engine",
+      "@type": "@id"
+    },
+    "subsystem": {
+      "@id": "icore:subsystem",
+      "@type": "xsd:string"
+    }
+  }
+}
