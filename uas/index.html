@@ -49,8 +49,13 @@
   <script src="platform/event-bus.js"></script>
   <script src="platform/index.js"></script>
 
-  <!-- UAS engines -->
+  <!-- UAS engines (dependency order: policy before action, sovereignty before all) -->
+  <script src="engine/policy.js"></script>
+  <script src="engine/sovereignty.js"></script>
   <script src="engine/trust-engine.js"></script>
+  <script src="engine/perception.js"></script>
+  <script src="engine/action.js"></script>
+  <script src="engine/communication.js"></script>
   <script src="engine/agent.js"></script>
   <script src="engine/orchestrator.js"></script>
 

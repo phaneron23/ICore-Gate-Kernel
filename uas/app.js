@@ -105,6 +105,11 @@ window.UASApp = (() => {
   let orchestrator = null;
   let trustEngine = null;
   let runtime = null;
+  let policyEngine = null;
+  let perceptionEngine = null;
+  let actionExecutor = null;
+  let communicationLayer = null;
+  let sovereigntyEnforcer = null;
 
   // ─── Navigation ──────────────────────────────────────────────────────
 
@@ -187,9 +192,16 @@ window.UASApp = (() => {
     if (window.CoreFab && CoreFab.executeBlueprint) {
       runtime = new CoreFab.UsrRuntime ? new CoreFab.UsrRuntime() : null;
     }
+
+    // New engines (dependency order: policy → sovereignty → trust → perception/action/comms → agent)
+    policyEngine = new window.UASPolicyEngine.PolicyEngine();
+    sovereigntyEnforcer = new window.UASSovereigntyEnforcer.SovereigntyEnforcer();
+    trustEngine = new window.UASTrustEngine.TrustEngine();
+    perceptionEngine = new window.UASPerceptionEngine.PerceptionEngine({ buffer: { maxSize: 200 } });
+    actionExecutor = new window.UASActionExecutor.ActionExecutor({ policyEngine });
+    communicationLayer = new window.UASCommunicationLayer.CommunicationLayer({ policyEngine });
     registry = new window.UASAgentEngine.AgentRegistry();
     orchestrator = new window.UASOrchestrator.Orchestrator();
-    trustEngine = new window.UASTrustEngine.TrustEngine();
 
     // Load saved agents from IndexedDB
     try {
@@ -257,7 +269,7 @@ window.UASApp = (() => {
       });
     }
 
-    // Expose utilities for UI modules
+    // Expose utilities and engines for UI modules
     window.UASUtils = {
       dbPut,
       dbGet,
@@ -266,7 +278,12 @@ window.UASApp = (() => {
       dbQuery,
       addLog,
       showToast,
-      navigate
+      navigate,
+      policyEngine,
+      sovereigntyEnforcer,
+      perceptionEngine,
+      actionExecutor,
+      communicationLayer
     };
 
     // Initial render

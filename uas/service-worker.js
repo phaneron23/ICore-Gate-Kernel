@@ -1,5 +1,5 @@
 // UAS Service Worker — Cache-first offline strategy
-const CACHE_NAME = 'uas-v1';
+const CACHE_NAME = 'uas-v2';
 const PRE_CACHE_URLS = [
   '/',
   '/index.html',
@@ -9,6 +9,11 @@ const PRE_CACHE_URLS = [
   '/engine/agent.js',
   '/engine/orchestrator.js',
   '/engine/trust-engine.js',
+  '/engine/policy.js',
+  '/engine/sovereignty.js',
+  '/engine/perception.js',
+  '/engine/action.js',
+  '/engine/communication.js',
   '/ui/dashboard.js',
   '/ui/agents.js',
   '/ui/builder.js',
