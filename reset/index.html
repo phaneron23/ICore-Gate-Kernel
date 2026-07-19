@@ -25,56 +25,104 @@ button:disabled{background:#333;color:#666;cursor:not-allowed}
 <div class="log" id="log"></div>
 </div>
 <script>
-var SUBDOMAINS=[
+var DOMAINS=[
   "initialcore.net","usr.initialcore.net","uwa.initialcore.net",
   "ucn.initialcore.net","uca.initialcore.net","usds.initialcore.net",
   "structure.initialcore.net","studio.initialcore.net","verifier.initialcore.net",
   "wfengine.initialcore.net","docs.initialcore.net","api.initialcore.net"
 ];
-function log(msg,cls){
-  cls=cls||"info";
-  var l=document.getElementById("log");
-  l.innerHTML=l.innerHTML+"<span class=""+cls+"">"+msg+"</span>\n";
-  l.scrollTop=l.scrollHeight;
+
+function log(msg, cls) {
+  cls = cls || "info";
+  var el = document.getElementById("log");
+  var span = document.createElement("span");
+  span.className = cls;
+  span.textContent = msg;
+  el.appendChild(span);
+  el.appendChild(document.createTextNode("\n"));
+  el.scrollTop = el.scrollHeight;
 }
-async function resetAll(){
-  var btn=document.getElementById("resetBtn");
-  btn.disabled=true;btn.textContent="Clearing...";
-  
+
+async function resetAll() {
+  var btn = document.getElementById("resetBtn");
+  btn.disabled = true;
+  btn.textContent = "Clearing...";
+
+  // Step 1: Unregister all service workers
   log("--- Unregistering service workers ---");
-  if("serviceWorker" in navigator){
-    var regs=await navigator.serviceWorker.getRegistrations();
-    for(var i=0;i<regs.length;i++){
-      try{await regs[i].unregister();log("  OK: "+regs[i].scope,"ok");}
-      catch(e){log("  FAIL: "+regs[i].scope+" -- "+e.message,"err");}
+  if ("serviceWorker" in navigator) {
+    var regs = await navigator.serviceWorker.getRegistrations();
+    for (var i = 0; i < regs.length; i++) {
+      try {
+        await regs[i].unregister();
+        log("  OK: " + regs[i].scope, "ok");
+      } catch (e) {
+        log("  FAIL: " + regs[i].scope + " -- " + e.message, "err");
+      }
     }
-    if(regs.length===0)log("  No service workers registered");
+    if (regs.length === 0) log("  No service workers registered");
   }
-  
-  log("\n--- Clearing caches ---");
-  if("caches" in window){
-    var names=await caches.keys();
-    for(var j=0;j<names.length;j++){
-      try{await caches.delete(names[j]);log("  OK: "+names[j],"ok");}
-      catch(e){log("  FAIL: "+names[j],"err");}
+
+  // Step 2: Clear all caches
+  log("");
+  log("--- Clearing caches ---");
+  if ("caches" in window) {
+    var names = await caches.keys();
+    for (var j = 0; j < names.length; j++) {
+      try {
+        await caches.delete(names[j]);
+        log("  OK: " + names[j], "ok");
+      } catch (e) {
+        log("  FAIL: " + names[j], "err");
+      }
     }
-    if(names.length===0)log("  No caches found");
+    if (names.length === 0) log("  No caches found");
   }
-  
-  log("\n--- Clearing localStorage ---");
-  try{
-    var count=localStorage.length;
+
+  // Step 3: Clear localStorage
+  log("");
+  log("--- Clearing localStorage ---");
+  try {
+    var count = localStorage.length;
     localStorage.clear();
-    log("  OK: cleared "+count+" items","ok");
-  }catch(e){log("  FAIL: "+e.message,"err");}
-  
-  log("\n--- All caches cleared ---","ok");
-  log("\nNow visit each site fresh:","info");
-  SUBDOMAINS.forEach(function(d){log("  -> https://"+d+"/","info");});
-  log("\nTip: In Brave, also check Shields -> Advanced","info");
-  
-  btn.textContent="Done -- Visit Sites Now";
-  btn.style.background="#00e676";
+    log("  OK: cleared " + count + " items", "ok");
+  } catch (e) {
+    log("  FAIL: " + e.message, "err");
+  }
+
+  // Step 4: Clear IndexedDB
+  log("");
+  log("--- Clearing IndexedDB ---");
+  if (indexedDB && indexedDB.databases) {
+    try {
+      var dbs = await indexedDB.databases();
+      for (var k = 0; k < dbs.length; k++) {
+        if (dbs[k].name) {
+          indexedDB.deleteDatabase(dbs[k].name);
+          log("  OK: deleted " + dbs[k].name, "ok");
+        }
+      }
+      if (dbs.length === 0) log("  No databases found");
+    } catch (e) {
+      log("  Skipped: " + e.message, "info");
+    }
+  } else {
+    log("  Not supported in this browser", "info");
+  }
+
+  // Done
+  log("");
+  log("=== ALL CACHES CLEARED ===", "ok");
+  log("");
+  log("Now visit each site fresh:", "info");
+  DOMAINS.forEach(function(d) {
+    log("  -> https://" + d + "/", "info");
+  });
+  log("");
+  log("Tip: In Brave, also check Shields -> Advanced", "info");
+
+  btn.textContent = "Done -- Visit Sites Now";
+  btn.style.background = "#00e676";
 }
 </script>
 </body>
