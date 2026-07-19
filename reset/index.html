@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICore — Reset Cache</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#e0e0e0;font-family:-apple-system,'Segoe UI',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.card{background:#12121a;border:1px solid #2a2a3a;border-radius:12px;padding:32px;max-width:500px;width:100%}
+h1{color:#00bfa5;font-size:1.5rem;margin-bottom:8px}
+p{color:#888;font-size:0.9rem;margin-bottom:20px}
+button{background:#00bfa5;color:#000;border:none;padding:12px 24px;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;width:100%;margin-bottom:10px}
+button:hover{opacity:0.9}
+button:disabled{background:#333;color:#666;cursor:not-allowed}
+.log{background:#0a0a0f;border:1px solid #1e1e2e;border-radius:8px;padding:12px;margin-top:16px;font-family:monospace;font-size:0.8rem;max-height:300px;overflow-y:auto;white-space:pre-wrap}
+.ok{color:#00e676}.err{color:#ff5252}.info{color:#888}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>ICore Cache Reset</h1>
+<p>This clears all old service worker caches and unregisters workers across all ICore subdomains.</p>
+<button id="resetBtn" onclick="resetAll()">Reset All Caches</button>
+<div class="log" id="log"></div>
+</div>
+<script>
+var SUBDOMAINS=[
+  "initialcore.net","usr.initialcore.net","uwa.initialcore.net",
+  "ucn.initialcore.net","uca.initialcore.net","usds.initialcore.net",
+  "structure.initialcore.net","studio.initialcore.net","verifier.initialcore.net",
+  "wfengine.initialcore.net","docs.initialcore.net","api.initialcore.net"
+];
+function log(msg,cls){
+  cls=cls||"info";
+  var l=document.getElementById("log");
+  l.innerHTML=l.innerHTML+"<span class=""+cls+"">"+msg+"</span>\n";
+  l.scrollTop=l.scrollHeight;
+}
+async function resetAll(){
+  var btn=document.getElementById("resetBtn");
+  btn.disabled=true;btn.textContent="Clearing...";
+  
+  log("--- Unregistering service workers ---");
+  if("serviceWorker" in navigator){
+    var regs=await navigator.serviceWorker.getRegistrations();
+    for(var i=0;i<regs.length;i++){
+      try{await regs[i].unregister();log("  OK: "+regs[i].scope,"ok");}
+      catch(e){log("  FAIL: "+regs[i].scope+" -- "+e.message,"err");}
+    }
+    if(regs.length===0)log("  No service workers registered");
+  }
+  
+  log("\n--- Clearing caches ---");
+  if("caches" in window){
+    var names=await caches.keys();
+    for(var j=0;j<names.length;j++){
+      try{await caches.delete(names[j]);log("  OK: "+names[j],"ok");}
+      catch(e){log("  FAIL: "+names[j],"err");}
+    }
+    if(names.length===0)log("  No caches found");
+  }
+  
+  log("\n--- Clearing localStorage ---");
+  try{
+    var count=localStorage.length;
+    localStorage.clear();
+    log("  OK: cleared "+count+" items","ok");
+  }catch(e){log("  FAIL: "+e.message,"err");}
+  
+  log("\n--- All caches cleared ---","ok");
+  log("\nNow visit each site fresh:","info");
+  SUBDOMAINS.forEach(function(d){log("  -> https://"+d+"/","info");});
+  log("\nTip: In Brave, also check Shields -> Advanced","info");
+  
+  btn.textContent="Done -- Visit Sites Now";
+  btn.style.background="#00e676";
+}
+</script>
+</body>
+</html>
