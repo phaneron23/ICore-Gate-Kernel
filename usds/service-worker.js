@@ -29,6 +29,7 @@ const PRECACHE_URLS = [
   './platform/ics.js',
   './platform/trust-verify.js',
   './platform/event-bus.js',
+  './platform/context-engine.js',
   './platform/index.js',
   // UI Modules
   './ui/dashboard.js',

@@ -43,6 +43,7 @@
   <script src="platform/ics.js"></script>
   <script src="platform/trust-verify.js"></script>
   <script src="platform/event-bus.js"></script>
+  <script src="platform/context-engine.js"></script>
   <script src="platform/index.js"></script>
 
   <!-- UAS engines -->
@@ -319,6 +320,83 @@
         `Count=2 allowed: ${r1.allowed} | Count=5 allowed: ${r2.allowed}`);
     } catch (e) {
       addResult('UAS-15', 'Goal Boundedness', 'Major', false, e.message);
+    }
+
+    // ── CTX-01: Context Loading ────────────────────────────────────
+    try {
+      const ctx = window.ICoreContext;
+      const engine = ctx ? new ctx.ContextEngine() : null;
+      const loaded = engine ? await engine.load() : false;
+      const stats = engine ? engine.getStats() : {};
+      addResult('CTX-01', 'Context Engine Loading', 'Critical',
+        loaded && stats.classes >= 19 && stats.totalTerms >= 42,
+        `Loaded: ${loaded} | Classes: ${stats.classes} | Properties: ${stats.properties} | DataProps: ${stats.dataProperties} | Total: ${stats.totalTerms}`);
+    } catch (e) {
+      addResult('CTX-01', 'Context Engine Loading', 'Critical', false, e.message);
+    }
+
+    // ── CTX-02: Entity Creation ────────────────────────────────────
+    try {
+      const ctx = window.ICoreContext;
+      const engine = new ctx.ContextEngine();
+      engine.loadSync();
+      const entity = engine.createEntity('Agent', {
+        name: 'TestAgent',
+        description: 'JSON-LD test agent',
+        trustLevel: 'Unverified'
+      });
+      const valid = entity['@context'] && entity['@type'] === 'icore:Agent' && entity['@id'].startsWith('https://initialcore.net/context/v1#');
+      addResult('CTX-02', 'Entity Creation (JSON-LD)', 'Critical', valid,
+        `Type: ${entity['@type']} | IRI: ${entity['@id'].substring(0, 50)}... | Context: ${entity['@context']}`);
+    } catch (e) {
+      addResult('CTX-02', 'Entity Creation (JSON-LD)', 'Critical', false, e.message);
+    }
+
+    // ── CTX-03: Serialization Round-Trip ───────────────────────────
+    try {
+      const ctx = window.ICoreContext;
+      const engine = new ctx.ContextEngine();
+      engine.loadSync();
+      const plain = { id: 'agent-001', name: 'RoundTrip', status: 'Active', score: 0.85 };
+      const jsonld = engine.toJSON_LD(plain, 'Agent');
+      const back = engine.fromJSON_LD(jsonld);
+      const roundTrip = back.name === 'RoundTrip' && back.status === 'Active' && back.score === 0.85;
+      addResult('CTX-03', 'Serialization Round-Trip', 'Critical', roundTrip,
+        `Plain→JSON-LD→Plain: name=${back.name} status=${back.status} score=${back.score}`);
+    } catch (e) {
+      addResult('CTX-03', 'Serialization Round-Trip', 'Critical', false, e.message);
+    }
+
+    // ── CTX-04: Entity Validation ──────────────────────────────────
+    try {
+      const ctx = window.ICoreContext;
+      const engine = new ctx.ContextEngine();
+      engine.loadSync();
+      const validEntity = engine.createEntity('Attestation', { hash: 'abc123' });
+      const invalidEntity = { foo: 'bar' };  // No @context, @type, @id
+      const r1 = engine.validate(validEntity);
+      const r2 = engine.validate(invalidEntity);
+      addResult('CTX-04', 'Entity Validation', 'Critical',
+        r1.valid && !r2.valid && r2.errors.length >= 2,
+        `Valid entity: ${r1.valid} (${r1.errors.length} errors) | Invalid entity: ${r2.valid} (${r2.errors.length} errors)`);
+    } catch (e) {
+      addResult('CTX-04', 'Entity Validation', 'Critical', false, e.message);
+    }
+
+    // ── CTX-05: Semantic Linking ───────────────────────────────────
+    try {
+      const ctx = window.ICoreContext;
+      const engine = new ctx.ContextEngine();
+      engine.loadSync();
+      const agent = engine.createEntity('Agent', { name: 'LinkTest' });
+      const policy = engine.createEntity('Policy', { name: 'ConstitutionalPolicy' });
+      engine.link(agent['@id'], 'conforms', policy['@id']);
+      const linked = engine.getLinked(agent['@id'], 'conforms');
+      addResult('CTX-05', 'Semantic Linking', 'Major',
+        linked.length === 1 && linked[0]['@id'] === policy['@id'],
+        `Agent linked to ${linked.length} Policy via 'conforms' | Target: ${linked[0]?.['@id']?.substring(0, 40)}...`);
+    } catch (e) {
+      addResult('CTX-05', 'Semantic Linking', 'Major', false, e.message);
     }
 
     // ── Final Summary ──────────────────────────────────────────────

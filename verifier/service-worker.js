@@ -20,6 +20,7 @@ const PRECACHE_ASSETS = [
   './platform/ics.js',
   './platform/trust-verify.js',
   './platform/event-bus.js',
+  './platform/context-engine.js',
   './platform/index.js',
   './ui/home.js',
   './ui/results.js',

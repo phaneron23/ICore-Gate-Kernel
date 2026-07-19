@@ -193,6 +193,12 @@ window.UASApp = (() => {
       runtime = new CoreFab.UsrRuntime ? new CoreFab.UsrRuntime() : null;
     }
 
+    // Context engine (JSON-LD vocabulary)
+    const contextEngine = window.ICoreContext
+      ? new window.ICoreContext.ContextEngine()
+      : null;
+    if (contextEngine) await contextEngine.load();
+
     // New engines (dependency order: policy → sovereignty → trust → perception/action/comms → agent)
     policyEngine = new window.UASPolicyEngine.PolicyEngine();
     sovereigntyEnforcer = new window.UASSovereigntyEnforcer.SovereigntyEnforcer();
@@ -283,7 +289,8 @@ window.UASApp = (() => {
       sovereigntyEnforcer,
       perceptionEngine,
       actionExecutor,
-      communicationLayer
+      communicationLayer,
+      contextEngine
     };
 
     // Initial render
