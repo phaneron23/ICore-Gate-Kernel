@@ -12,7 +12,7 @@
 <style>
 :root{--bg:#0a0a0f;--sf:#12121a;--bd:#1e1e2e;--tx:#e0e0e0;--dm:#666;--ac:#00bfa5;--gn:#00e676;--rd:#ff5252;--or:#ffa726;--bl:#42a5f5}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--tx);font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:16px}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,\'Segoe UI\',Roboto,sans-serif;padding:16px}
 .wrap{max-width:520px;margin:0 auto}
 .head{text-align:center;margin-bottom:16px}
 .head h1{font-size:1.2rem;font-weight:700;color:var(--ac);margin-bottom:2px}
@@ -50,10 +50,10 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,'Segoe UI',R
 
   <div class="card">
     <h2>Storage Status</h2>
-    <div class="row"><span class="label">Service Workers</span><span class="val" id="sw">—</span></div>
-    <div class="row"><span class="label">Cache Storage</span><span class="val" id="cc">—</span></div>
-    <div class="row"><span class="label">LocalStorage</span><span class="val" id="ls">—</span></div>
-    <div class="row"><span class="label">IndexedDB</span><span class="val" id="db">—</span></div>
+    <div class="row"><span class="label">Service Workers</span><span class="val" id="sw">\u2014</span></div>
+    <div class="row"><span class="label">Cache Storage</span><span class="val" id="cc">\u2014</span></div>
+    <div class="row"><span class="label">LocalStorage</span><span class="val" id="ls">\u2014</span></div>
+    <div class="row"><span class="label">IndexedDB</span><span class="val" id="db">\u2014</span></div>
   </div>
 
   <button class="btn" id="resetBtn" onclick="resetAll()">Reset Everything</button>
@@ -65,7 +65,7 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,'Segoe UI',R
     <div id="sites"></div>
   </div>
 
-  <div class="foot">ICore Constitutional Platform · Sir Collins</div>
+  <div class="foot">ICore Constitutional Platform \u00b7 Sir Collins</div>
 </div>
 
 <script>
@@ -82,103 +82,20 @@ var S=[
 ["Workflow","wfengine.initialcore.net","87b0eb0f.workflow-engine-3uc.pages.dev"],
 ["Docs","docs.initialcore.net","a3f7e2c1.docs-3uc.pages.dev"],
 ["API","api.initialcore.net","7297ea43.api-3uc.pages.dev"],
-["UCR","reset.initialcore.net","50e21fbe.reset-3uc.pages.dev"]
+["Context","context.initialcore.net","9dc3fecf.context-3uc.pages.dev"],
+["UCR","reset.initialcore.net","4c4e7ff9.reset-3uc.pages.dev"]
 ];
 
-function log(m,c){
-  c=c||"info";
-  var s=document.createElement("span");
-  s.className=c;
-  s.textContent=m;
-  var l=document.getElementById("log");
-  l.appendChild(s);
-  l.appendChild(document.createTextNode("\n"));
-  l.scrollTop=l.scrollHeight;
-}
-function sv(id,t,c){var e=document.getElementById(id);e.textContent=t;if(c)e.className="val "+c}
+function log(m,c){c=c||"info";var s=document.createElement("span");s.className=c;s.textContent=m;var l=document.getElementById("log");l.appendChild(s);l.appendChild(document.createTextNode("\n"));l.scrollTop=l.scrollHeight;}
+function sv(id,t,c){var e=document.getElementById(id);e.textContent=t;if(c)e.className="val "+c;}
 
-function buildSites(){
-  var d=document.getElementById("sites");
-  S.forEach(function(s){
-    var row=document.createElement("div");
-    row.className="site";
-    row.innerHTML='<span class="site-name">'+s[0]+'</span>'
-      +'<span class="site-links">'
-      +'<a class="link-p" href="https://'+s[2]+'/" target="_blank">Pages</a>'
-      +'<a class="link-c" href="https://'+s[1]+'/" target="_blank">'+s[1].replace(".initialcore.net","")+'</a>'
-      +'</span>';
-    d.appendChild(row);
-  });
-}
+function buildSites(){var d=document.getElementById("sites");S.forEach(function(s){var row=document.createElement("div");row.className="site";row.innerHTML=\'<span class="site-name">\'+s[0]+\'</span>\'+\'<span class="site-links">\'+\'<a class="link-p" href="https://\'+s[2]+\'/" target="_blank">Pages</a>\'+\'<a class="link-c" href="https://\'+s[1]+\'/" target="_blank">\'+s[1].replace(".initialcore.net","")+\'</a>\'+\'</span>\';d.appendChild(row);});}
 
-async function scan(){
-  var sw=0;
-  if(navigator.serviceWorker){var r=await navigator.serviceWorker.getRegistrations();sw=r.length;}
-  sv("sw",sw+" registered",sw?"warn":"ok");
+async function scan(){var sw=0;if(navigator.serviceWorker){var r=await navigator.serviceWorker.getRegistrations();sw=r.length;}sv("sw",sw+" registered",sw?"warn":"ok");var cc=0;if(window.caches){var n=await caches.keys();cc=n.length;}sv("cc",cc+" entries",cc?"warn":"ok");sv("ls",localStorage.length+" items",localStorage.length?"warn":"ok");var dbs=0;if(indexedDB&&indexedDB.databases){try{var d=await indexedDB.databases();dbs=d.length;}catch(e){}}sv("db",dbs+" databases",dbs?"warn":"ok");}
 
-  var cc=0;
-  if(window.caches){var n=await caches.keys();cc=n.length;}
-  sv("cc",cc+" entries",cc?"warn":"ok");
+async function resetAll(){var btn=document.getElementById("resetBtn");btn.disabled=true;btn.textContent="Clearing...";log("=== Universal Cache Reset ===","h");var swN=0;if(navigator.serviceWorker){var regs=await navigator.serviceWorker.getRegistrations();for(var i=0;i<regs.length;i++){try{await regs[i].unregister();swN++;log("  SW removed: "+regs[i].scope,"ok");}catch(e){log("  SW fail: "+e.message,"err");}}}log("Service Workers: "+swN+" unregistered","h");var cN=0;if(window.caches){var keys=await caches.keys();for(var j=0;j<keys.length;j++){try{await caches.delete(keys[j]);cN++;log("  Cache deleted: "+keys[j],"ok");}catch(e){log("  Cache fail: "+keys[j],"err");}}}log("Caches: "+cN+" deleted","h");var lN=localStorage.length;try{localStorage.clear();}catch(e){}log("LocalStorage: "+lN+" items cleared","h");var dN=0;if(indexedDB&&indexedDB.databases){try{var dbs=await indexedDB.databases();for(var k=0;k<dbs.length;k++){if(dbs[k].name){indexedDB.deleteDatabase(dbs[k].name);dN++;log("  DB deleted: "+dbs[k].name,"ok");}}}catch(e){}}log("IndexedDB: "+dN+" databases cleared","h");log("");log("=== ALL CLEAR ===","ok");log("Visit sites below. Use Pages if custom domains fail.","info");await scan();btn.textContent="Done";btn.className="btn done";}
 
-  sv("ls",localStorage.length+" items",localStorage.length?"warn":"ok");
-
-  var dbs=0;
-  if(indexedDB&&indexedDB.databases){try{var d=await indexedDB.databases();dbs=d.length;}catch(e){}}
-  sv("db",dbs+" databases",dbs?"warn":"ok");
-}
-
-async function resetAll(){
-  var btn=document.getElementById("resetBtn");
-  btn.disabled=true;
-  btn.textContent="Clearing...";
-  log("=== Universal Cache Reset ===","h");
-
-  var swN=0;
-  if(navigator.serviceWorker){
-    var regs=await navigator.serviceWorker.getRegistrations();
-    for(var i=0;i<regs.length;i++){
-      try{await regs[i].unregister();swN++;log("  SW removed: "+regs[i].scope,"ok");}
-      catch(e){log("  SW fail: "+e.message,"err");}
-    }
-  }
-  log("Service Workers: "+swN+" unregistered","h");
-
-  var cN=0;
-  if(window.caches){
-    var keys=await caches.keys();
-    for(var j=0;j<keys.length;j++){
-      try{await caches.delete(keys[j]);cN++;log("  Cache deleted: "+keys[j],"ok");}
-      catch(e){log("  Cache fail: "+keys[j],"err");}
-    }
-  }
-  log("Caches: "+cN+" deleted","h");
-
-  var lN=localStorage.length;
-  try{localStorage.clear();}catch(e){}
-  log("LocalStorage: "+lN+" items cleared","h");
-
-  var dN=0;
-  if(indexedDB&&indexedDB.databases){
-    try{
-      var dbs=await indexedDB.databases();
-      for(var k=0;k<dbs.length;k++){
-        if(dbs[k].name){indexedDB.deleteDatabase(dbs[k].name);dN++;log("  DB deleted: "+dbs[k].name,"ok");}
-      }
-    }catch(e){}
-  }
-  log("IndexedDB: "+dN+" databases cleared","h");
-
-  log("");
-  log("=== ALL CLEAR ===","ok");
-  log("Visit sites below. Use Pages if custom domains fail.","info");
-
-  await scan();
-  btn.textContent="Done";
-  btn.className="btn done";
-}
-
-buildSites();
-scan();
+buildSites();scan();
 </script>
 </body>
 </html>
