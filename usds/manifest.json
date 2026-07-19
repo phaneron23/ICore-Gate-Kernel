@@ -1,11 +1,50 @@
 {
-  "name": "USDS — Universal Sovereign Distribution",
+  "name": "USDS — Universal Sovereign Distribution System",
   "short_name": "USDS",
-  "start_url": "/",
+  "description": "Constitutional Distribution Management — Package, Sign, Distribute, and Verify Constitutional Software. ICore Framework v0.1.0",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#0a0a0f",
   "theme_color": "#ff6d00",
-  "description": "Constitutional Distribution Management System — Package, Sign, Distribute, and Verify Constitutional Software.",
-  "orientation": "any",
-  "icons": []
+  "categories": ["productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "id": "usds-pwa-v0.1.0",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "url": "./index.html#dashboard",
+      "description": "View USDS dashboard and stats"
+    },
+    {
+      "name": "Create Package",
+      "short_name": "New Pkg",
+      "url": "./index.html#packages",
+      "description": "Create a new constitutional package"
+    },
+    {
+      "name": "Verify",
+      "short_name": "Verify",
+      "url": "./index.html#verify",
+      "description": "Verify a package's integrity"
+    }
+  ]
 }

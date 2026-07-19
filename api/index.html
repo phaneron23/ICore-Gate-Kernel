@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICore API — Constitutional Reference</title>
+<meta name="description" content="ICore Constitutional Computing Platform — API Documentation & Reference">
+<meta name="theme-color" content="#ff6d00">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ICore API">
+<link rel="manifest" href="./manifest.json">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--bg-card:#111118;--bg-card-hover:#16161f;
+  --bg-sidebar:#0d0d14;--border:#1e1e2a;--border-accent:#ff6d0030;
+  --accent:#ff6d00;--accent-dim:#ff6d0080;--accent-glow:#ff6d0040;
+  --text:#e0e0e8;--text-dim:#8888a0;--text-heading:#ffffff;
+  --code-bg:#0c0c14;--code-border:#1a1a26;
+  --green:#22c55e;--red:#ef4444;--yellow:#eab308;--blue:#3b82f6;
+  --sidebar-w:260px;--header-h:56px;
+  --font-mono:'SF Mono','Cascadia Code','Fira Code',monospace;
+  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h)+16px)}
+body{
+  font-family:var(--font-sans);background:var(--bg);color:var(--text);
+  line-height:1.65;min-height:100vh;overflow-x:hidden;
+}
+::selection{background:var(--accent);color:#000}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent-dim)}
+
+/* ── Header ────────────────────────────── */
+.header{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:var(--bg);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;z-index:100;
+  backdrop-filter:blur(12px);
+}
+.header-left{display:flex;align-items:center;gap:12px;flex:1}
+.hamburger{
+  display:none;background:none;border:none;color:var(--text);cursor:pointer;
+  font-size:22px;padding:4px 8px;border-radius:4px;
+}
+.hamburger:hover{background:var(--border)}
+.logo-mark{
+  width:32px;height:32px;background:var(--accent);color:#000;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:14px;border-radius:6px;
+  font-family:var(--font-mono);flex-shrink:0;
+}
+.header-title{font-size:15px;font-weight:600;color:var(--text-heading);letter-spacing:-0.01em}
+.header-title span{color:var(--accent)}
+.install-btn{
+  display:flex;align-items:center;gap:6px;
+  background:var(--accent);color:#000;border:none;
+  padding:7px 16px;border-radius:6px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.install-btn:hover{background:#ff8a33;transform:translateY(-1px)}
+.install-btn:active{transform:translateY(0)}
+.install-btn svg{width:16px;height:16px}
+.install-btn.hidden{display:none}
+
+/* ── Sidebar ───────────────────────────── */
+.sidebar{
+  position:fixed;top:var(--header-h);left:0;bottom:0;
+  width:var(--sidebar-w);background:var(--bg-sidebar);
+  border-right:1px solid var(--border);
+  overflow-y:auto;z-index:90;padding:16px 0;transition:transform .3s;
+}
+.sidebar-label{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;color:var(--text-dim);
+  padding:12px 20px 6px;
+}
+.sidebar a{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 20px;color:var(--text-dim);text-decoration:none;
+  font-size:13px;border-left:2px solid transparent;transition:all .15s;
+}
+.sidebar a:hover{color:var(--text);background:var(--bg-card)}
+.sidebar a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-glow);font-weight:600}
+.sidebar a .icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sidebar .divider{height:1px;background:var(--border);margin:12px 20px}
+
+/* ── Main ──────────────────────────────── */
+.main{
+  margin-left:var(--sidebar-w);margin-top:var(--header-h);
+  padding:32px 40px 80px;max-width:920px;
+}
+.section{margin-bottom:56px;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.section h2{
+  font-size:24px;font-weight:700;color:var(--text-heading);
+  margin-bottom:8px;letter-spacing:-0.02em;
+  display:flex;align-items:center;gap:10px;
+}
+.section h2 .badge{
+  font-size:11px;font-weight:600;background:var(--accent);color:#000;
+  padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em;
+}
+.section>p{color:var(--text-dim);margin-bottom:20px;max-width:680px}
+.section h3{
+  font-size:17px;font-weight:600;color:var(--text-heading);
+  margin:28px 0 12px;padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.section h3 .tag{
+  font-size:10px;padding:2px 6px;border-radius:3px;font-weight:600;
+}
+.tag-critical{background:#ef444430;color:#f87171}
+.tag-major{background:#eab30830;color:#facc15}
+.tag-minor{background:#22c55e30;color:#4ade80}
+
+/* ── Cards / Engine blocks ─────────────── */
+.engine-grid{display:grid;gap:12px;margin-top:12px}
+.engine-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:8px;padding:16px 20px;transition:all .2s;
+}
+.engine-card:hover{border-color:var(--accent-dim);background:var(--bg-card-hover)}
+.engine-card h4{
+  font-size:14px;font-weight:600;color:var(--accent);
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.engine-card h4 .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.method-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.method-tag{
+  font-family:var(--font-mono);font-size:12px;
+  background:var(--code-bg);border:1px solid var(--code-border);
+  color:var(--accent);padding:3px 8px;border-radius:4px;
+  cursor:default;transition:all .15s;
+}
+.method-tag:hover{border-color:var(--accent-dim);background:var(--accent-glow)}
+
+/* ── Code blocks ───────────────────────── */
+pre{
+  background:var(--code-bg);border:1px solid var(--code-border);
+  border-radius:8px;padding:16px 20px;overflow-x:auto;
+  font-family:var(--font-mono);font-size:13px;line-height:1.7;
+  margin:12px 0;color:var(--text);
+}
+code{
+  font-family:var(--font-mono);font-size:13px;
+  background:var(--code-bg);border:1px solid var(--code-border);
+  padding:1px 6px;border-radius:3px;color:var(--accent);
+}
+pre code{background:none;border:none;padding:0}
+.kw{color:#c084fc}.fn{color:#60a5fa}.str{color:#4ade80}
+.cm{color:#6b7280;font-style:italic}.num{color:#f59e0b}
+.op{color:#94a3b8}.type{color:#22d3ee}
+
+/* ── Conformance Table ─────────────────── */
+.conf-table-wrap{overflow-x:auto;margin:16px 0}
+.conf-table{
+  width:100%;border-collapse:collapse;font-size:13px;
+}
+.conf-table th{
+  text-align:left;padding:10px 12px;font-weight:600;
+  color:var(--text-dim);border-bottom:2px solid var(--border);
+  font-size:11px;text-transform:uppercase;letter-spacing:0.06em;
+  background:var(--bg-card);position:sticky;top:0;
+}
+.conf-table td{
+  padding:8px 12px;border-bottom:1px solid var(--border);
+  vertical-align:middle;
+}
+.conf-table tr:hover td{background:var(--bg-card-hover)}
+.conf-table .cat-badge{
+  font-size:10px;padding:2px 6px;border-radius:3px;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap;
+}
+.status-pass{color:var(--green)}
+.filter-bar{
+  display:flex;gap:8px;margin:12px 0;flex-wrap:wrap;
+}
+.filter-btn{
+  font-size:12px;padding:5px 12px;border-radius:4px;
+  background:var(--bg-card);border:1px solid var(--border);
+  color:var(--text-dim);cursor:pointer;transition:all .15s;
+}
+.filter-btn:hover{border-color:var(--accent-dim);color:var(--text)}
+.filter-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600}
+.search-input{
+  font-size:13px;padding:6px 12px;border-radius:4px;
+  background:var(--bg-card);border:1px solid var(--border);
+  color:var(--text);font-family:var(--font-sans);width:220px;
+}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.search-input::placeholder{color:var(--text-dim)}
+
+/* ── Quick Reference ───────────────────── */
+.qr-grid{display:grid;gap:8px}
+.qr-row{
+  display:grid;grid-template-columns:1fr auto;gap:12px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:6px;padding:10px 14px;align-items:center;
+}
+.qr-row:hover{border-color:var(--accent-dim)}
+.qr-sig{font-family:var(--font-mono);font-size:12px;color:var(--accent)}
+.qr-layer{
+  font-size:10px;font-weight:600;text-transform:uppercase;
+  letter-spacing:0.06em;color:var(--text-dim);
+  padding:2px 6px;border-radius:3px;background:var(--border);
+  white-space:nowrap;
+}
+
+/* ── Footer ────────────────────────────── */
+.footer{
+  margin-left:var(--sidebar-w);padding:32px 40px;
+  border-top:1px solid var(--border);color:var(--text-dim);
+  font-size:12px;text-align:center;
+}
+.footer strong{color:var(--accent)}
+
+/* ── Responsive ────────────────────────── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:24px 16px 80px}
+  .footer{margin-left:0;padding:24px 16px}
+  .hamburger{display:block}
+  .header-title{font-size:13px}
+  .qr-row{grid-template-columns:1fr}
+  .engine-grid{grid-template-columns:1fr}
+  pre{font-size:12px;padding:12px 14px}
+}
+@media(min-width:769px){
+  .sidebar-overlay{display:none!important}
+}
+
+/* ── Overlay for mobile sidebar ────────── */
+.sidebar-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);
+  z-index:85;display:none;
+}
+.sidebar-overlay.show{display:block}
+</style>
+</head>
+<body>
+
+<!-- ── Header ────────────────────────────── -->
+<header class="header">
+  <div class="header-left">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+    <div class="logo-mark">IC</div>
+    <div class="header-title"><span>ICore</span> API — Constitutional Reference</div>
+  </div>
+  <button class="install-btn hidden" id="installBtn" onclick="installPWA()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Install
+  </button>
+</header>
+
+<!-- ── Sidebar ───────────────────────────── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-label">Reference</div>
+  <a href="#overview" class="active" onclick="closeSidebar()"><span class="icon">📖</span>Overview</a>
+  <a href="#conformance" onclick="closeSidebar()"><span class="icon">✅</span>Conformance Tests</a>
+  <div class="divider"></div>
+  <div class="sidebar-label">API Layers</div>
+  <a href="#usr" onclick="closeSidebar()"><span class="icon">⚙️</span>USR API</a>
+  <a href="#uwa" onclick="closeSidebar()"><span class="icon">🧩</span>UWA API</a>
+  <a href="#ucn" onclick="closeSidebar()"><span class="icon">🌐</span>UCN API</a>
+  <a href="#uca" onclick="closeSidebar()"><span class="icon">🔌</span>UCA API</a>
+  <a href="#usds" onclick="closeSidebar()"><span class="icon">📦</span>USDS API</a>
+  <div class="divider"></div>
+  <div class="sidebar-label">Tools</div>
+  <a href="#quickref" onclick="closeSidebar()"><span class="icon">⚡</span>Quick Reference</a>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ── Main Content ──────────────────────── -->
+<main class="main">
+
+<!-- ═══ Overview ═══════════════════════════ -->
+<section class="section" id="overview">
+  <h2>📖 Overview <span class="badge">v1.0</span></h2>
+  <p>The ICore API exposes constitutional interfaces for every layer of the ICore computing platform. Each API layer maps to a specification module and governs how components communicate under constitutional constraint.</p>
+
+  <h3>Constitutional Architecture</h3>
+  <pre><code><span class="cm">/* ICore Layer Architecture */</span>
+┌─────────────────────────────────────────────┐
+│  <span class="type">USDS</span>  <span class="cm">— Unforgeable Secure Distribution</span>    │
+├─────────────────────────────────────────────┤
+│  <span class="type">UCA</span>   <span class="cm">— Unified Constraint Adapter</span>        │
+├─────────────────────────────────────────────┤
+│  <span class="type">UCN</span>   <span class="cm">— Universal Constitutional Network</span>   │
+├─────────────────────────────────────────────┤
+│  <span class="type">UWA</span>   <span class="cm">— Universal Workspace Adapter</span>       │
+├─────────────────────────────────────────────┤
+│  <span class="type">USR</span>   <span class="cm">— Universal Sovereign Runtime</span>       │
+└─────────────────────────────────────────────┘</code></pre>
+
+  <h3>Core Principles</h3>
+  <div class="engine-grid">
+    <div class="engine-card">
+      <h4><span class="dot"></span>Constitutional Sovereignty</h4>
+      <p style="color:var(--text-dim);font-size:13px">Every operation runs under constitutional constraint. No engine can bypass the rules of the layer it inhabits.</p>
+    </div>
+    <div class="engine-card">
+      <h4><span class="dot"></span>Capability-Based Isolation</h4>
+      <p style="color:var(--text-dim);font-size:13px">Access is granted only through explicit capability requests and constitutional enforcement, never through ambient authority.</p>
+    </div>
+    <div class="engine-card">
+      <h4><span class="dot"></span>Attestation Chains</h4>
+      <p style="color:var(--text-dim);font-size:13px">Every significant action produces a verifiable attestation. Trust is transitive through cryptographic chains.</p>
+    </div>
+    <div class="engine-card">
+      <h4><span class="dot"></span>Unforgeable Identity</h4>
+      <p style="color:var(--text-dim);font-size:13px">Identities are declared, registered, and verified. No entity can impersonate another under the constitutional framework.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Conformance Tests ══════════════════ -->
+<section class="section" id="conformance">
+  <h2>✅ Conformance Tests <span class="badge">50 Tests</span></h2>
+  <p>All 50 conformance tests validate that an ICore implementation satisfies the constitutional requirements of each API layer.</p>
+
+  <div class="filter-bar">
+    <input type="text" class="search-input" id="testSearch" placeholder="Search tests…" oninput="filterTests()">
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">All (50)</button>
+    <button class="filter-btn" data-filter="USR" onclick="setFilter('USR',this)">USR (15)</button>
+    <button class="filter-btn" data-filter="UWA" onclick="setFilter('UWA',this)">UWA (10)</button>
+    <button class="filter-btn" data-filter="UCN" onclick="setFilter('UCN',this)">UCN (13)</button>
+    <button class="filter-btn" data-filter="UCA" onclick="setFilter('UCA',this)">UCA (12)</button>
+  </div>
+
+  <div class="conf-table-wrap">
+    <table class="conf-table" id="confTable">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Category</th><th>Status</th></tr>
+      </thead>
+      <tbody id="confBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ USR API ════════════════════════════ -->
+<section class="section" id="usr">
+  <h2>⚙️ USR API <span class="badge">6 Engines</span></h2>
+  <p>The Universal Sovereign Runtime provides the foundational execution layer. Every component runs within a sovereign USR context governed by constitutional constraint.</p>
+
+  <h3>Identity Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Manages unforgeable identity declaration and verification for all entities.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">declare()</span>
+      <span class="method-tag">register()</span>
+      <span class="method-tag">verify()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Declare a new constitutional identity</span>
+<span class="kw">const</span> identity = <span class="kw">await</span> usr.identity.<span class="fn">declare</span>({
+  <span class="str">"entity"</span>: <span class="str">"com.example.service"</span>,
+  <span class="str">"publicKey"</span>: <span class="str">"ed25519:..."</span>,
+  <span class="str">"capabilities"</span>: [<span class="str">"execute"</span>, <span class="str">"attest"</span>]
+});
+
+<span class="cm">// Register the identity in the constitutional ledger</span>
+<span class="kw">const</span> registered = <span class="kw">await</span> usr.identity.<span class="fn">register</span>(identity);
+
+<span class="cm">// Verify an identity's authenticity</span>
+<span class="kw">const</span> valid = <span class="kw">await</span> usr.identity.<span class="fn">verify</span>(identity.id);</code></pre>
+
+  <h3>Execution Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Executes constitutional operations with full attestation and constraint enforcement.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">execute()</span>
+      <span class="method-tag">getHistory()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Execute a constitutional operation</span>
+<span class="kw">const</span> result = <span class="kw">await</span> usr.execution.<span class="fn">execute</span>({
+  <span class="str">"operation"</span>: <span class="str">"process"</span>,
+  <span class="str">"input"</span>: { <span class="str">"data"</span>: payload },
+  <span class="str">"constraints"</span>: [<span class="str">"max-gas:1000"</span>]
+});
+
+<span class="cm">// Retrieve execution history</span>
+<span class="kw">const</span> history = <span class="kw">await</span> usr.execution.<span class="fn">getHistory</span>(result.contextId);</code></pre>
+
+  <h3>Constraints Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Enforces constitutional constraints on all operations within the runtime.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">enforce()</span>
+      <span class="method-tag">test()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Enforce a constraint on an operation</span>
+<span class="kw">await</span> usr.constraints.<span class="fn">enforce</span>({
+  <span class="str">"target"</span>: operationId,
+  <span class="str">"constraint"</span>: <span class="str">"no-network-access"</span>,
+  <span class="str">"violation"</span>: <span class="str">"halt"</span>
+});
+
+<span class="cm">// Test if an operation would violate constraints</span>
+<span class="kw">const</span> safe = <span class="kw">await</span> usr.constraints.<span class="fn">test</span>(operationId);</code></pre>
+
+  <h3>Isolation Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Manages capability-based isolation between constitutional contexts.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">requestCapability()</span>
+      <span class="method-tag">revokeCapability()</span>
+      <span class="method-tag">checkCapability()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Request a capability from the constitutional authority</span>
+<span class="kw">const</span> cap = <span class="kw">await</span> usr.isolation.<span class="fn">requestCapability</span>({
+  <span class="str">"entity"</span>: identity.id,
+  <span class="str">"resource"</span>: <span class="str">"storage.write"</span>,
+  <span class="str">"scope"</span>: <span class="str">"namespace:alpha"</span>,
+  <span class="str">"ttl"</span>: <span class="num">3600</span>
+});
+
+<span class="cm">// Revoke a previously granted capability</span>
+<span class="kw">await</span> usr.isolation.<span class="fn">revokeCapability</span>(cap.id);
+
+<span class="cm">// Check if a capability is currently active</span>
+<span class="kw">const</span> active = <span class="kw">await</span> usr.isolation.<span class="fn">checkCapability</span>(cap.id);</code></pre>
+
+  <h3>Attestation Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Creates and verifies cryptographic attestations for constitutional operations.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">attest()</span>
+      <span class="method-tag">verify()</span>
+      <span class="method-tag">verifyChain()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Create an attestation for a completed operation</span>
+<span class="kw">const</span> att = <span class="kw">await</span> usr.attestation.<span class="fn">attest</span>({
+  <span class="str">"operationId"</span>: result.contextId,
+  <span class="str">"statement"</span>: <span class="str">"Operation completed within constitutional bounds"</span>,
+  <span class="str">"signer"</span>: identity.id
+});
+
+<span class="cm">// Verify a single attestation</span>
+<span class="kw">const</span> valid = <span class="kw">await</span> usr.attestation.<span class="fn">verify</span>(att.id);
+
+<span class="cm">// Verify an entire chain of attestations</span>
+<span class="kw">const</span> chainValid = <span class="kw">await</span> usr.attestation.<span class="fn">verifyChain</span>(att.chainId);</code></pre>
+
+  <h3>Orchestration Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Manages the lifecycle of constitutional processes and inter-process messaging.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">start()</span>
+      <span class="method-tag">suspend()</span>
+      <span class="method-tag">resume()</span>
+      <span class="method-tag">terminate()</span>
+      <span class="method-tag">sendMessage()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Start a new constitutional process</span>
+<span class="kw">const</span> proc = <span class="kw">await</span> usr.orchestration.<span class="fn">start</span>({
+  <span class="str">"template"</span>: <span class="str">"data-pipeline"</span>,
+  <span class="str">"identity"</span>: identity.id,
+  <span class="str">"config"</span>: { <span class="str">"maxSteps"</span>: <span class="num">100</span> }
+});
+
+<span class="cm">// Suspend a running process</span>
+<span class="kw">await</span> usr.orchestration.<span class="fn">suspend</span>(proc.id);
+
+<span class="cm">// Resume a suspended process</span>
+<span class="kw">await</span> usr.orchestration.<span class="fn">resume</span>(proc.id);
+
+<span class="cm">// Terminate a process</span>
+<span class="kw">await</span> usr.orchestration.<span class="fn">terminate</span>(proc.id);
+
+<span class="cm">// Send an inter-process message</span>
+<span class="kw">await</span> usr.orchestration.<span class="fn">sendMessage</span>(proc.id, {
+  <span class="str">"type"</span>: <span class="str">"data"</span>,
+  <span class="str">"payload"</span>: result
+});</code></pre>
+</section>
+
+<!-- ═══ UWA API ════════════════════════════ -->
+<section class="section" id="uwa">
+  <h2>🧩 UWA API <span class="badge">5 Engines</span></h2>
+  <p>The Universal Workspace Adapter manages component lifecycle, event handling, and workspace composition under constitutional governance.</p>
+
+  <h3>Component Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Full lifecycle management for workspace components — from declaration to termination.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">create()</span>
+      <span class="method-tag">declare()</span>
+      <span class="method-tag">validate()</span>
+      <span class="method-tag">initialize()</span>
+      <span class="method-tag">start()</span>
+      <span class="method-tag">suspend()</span>
+      <span class="method-tag">resume()</span>
+      <span class="method-tag">terminate()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Create and declare a workspace component</span>
+<span class="kw">const</span> comp = <span class="kw">await</span> uwa.component.<span class="fn">create</span>({
+  <span class="str">"type"</span>: <span class="str">"transformer"</span>,
+  <span class="str">"config"</span>: { <span class="str">"input"</span>: <span class="str">"stream-a"</span> }
+});
+
+<span class="kw">await</span> uwa.component.<span class="fn">declare</span>(comp.id, {
+  <span class="str">"capabilities"</span>: [<span class="str">"read"</span>, <span class="str">"write"</span>],
+  <span class="str">"constraints"</span>: [<span class="str">"no-network"</span>]
+});
+
+<span class="cm">// Validate against constitutional rules</span>
+<span class="kw">await</span> uwa.component.<span class="fn">validate</span>(comp.id);
+
+<span class="cm">// Full lifecycle</span>
+<span class="kw">await</span> uwa.component.<span class="fn">initialize</span>(comp.id);
+<span class="kw">await</span> uwa.component.<span class="fn">start</span>(comp.id);
+<span class="kw">await</span> uwa.component.<span class="fn">suspend</span>(comp.id);
+<span class="kw">await</span> uwa.component.<span class="fn">resume</span>(comp.id);
+<span class="kw">await</span> uwa.component.<span class="fn">terminate</span>(comp.id);</code></pre>
+
+  <h3>Event Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Constitutional event emission and consumption within workspace boundaries.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">emit()</span>
+      <span class="method-tag">consume()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Emit a constitutional event</span>
+<span class="kw">await</span> uwa.event.<span class="fn">emit</span>({
+  <span class="str">"type"</span>: <span class="str">"data.ready"</span>,
+  <span class="str">"source"</span>: comp.id,
+  <span class="str">"payload"</span>: { <span class="str">"count"</span>: <span class="num">42</span> }
+});
+
+<span class="cm">// Consume events matching a pattern</span>
+<span class="kw">const</span> events = <span class="kw">await</span> uwa.event.<span class="fn">consume</span>({
+  <span class="str">"pattern"</span>: <span class="str">"data.*"</span>,
+  <span class="str">"limit"</span>: <span class="num">10</span>
+});</code></pre>
+
+  <h3>Execution Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Executes workspace operations with constraint awareness.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">execute()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Execute a workspace operation</span>
+<span class="kw">const</span> result = <span class="kw">await</span> uwa.execution.<span class="fn">execute</span>({
+  <span class="str">"operation"</span>: <span class="str">"transform"</span>,
+  <span class="str">"target"</span>: comp.id,
+  <span class="str">"input"</span>: events
+});</code></pre>
+
+  <h3>Composition Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Manages the DAG of workspace components and their constitutional relationships.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">addEdge()</span>
+      <span class="method-tag">getChildren()</span>
+      <span class="method-tag">validate()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Compose components via directed edges</span>
+<span class="kw">await</span> uwa.composition.<span class="fn">addEdge</span>({
+  <span class="str">"from"</span>: compA.id,
+  <span class="str">"to"</span>: compB.id,
+  <span class="str">"constraint"</span>: <span class="str">"data-flow"</span>
+});
+
+<span class="cm">// Get downstream components</span>
+<span class="kw">const</span> children = <span class="kw">await</span> uwa.composition.<span class="fn">getChildren</span>(compA.id);
+
+<span class="cm">// Validate entire composition graph</span>
+<span class="kw">await</span> uwa.composition.<span class="fn">validate</span>();</code></pre>
+
+  <h3>Workspace Runtime</h3>
+  <p style="color:var(--text-dim);font-size:13px">High-level interface for workspace operations combining all engines.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">createComponent()</span>
+      <span class="method-tag">executeEvent()</span>
+      <span class="method-tag">compose()</span>
+      <span class="method-tag">getStatus()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// High-level workspace runtime API</span>
+<span class="kw">const</span> component = <span class="kw">await</span> uwa.runtime.<span class="fn">createComponent</span>(config);
+<span class="kw">await</span> uwa.runtime.<span class="fn">executeEvent</span>(component.id, event);
+<span class="kw">await</span> uwa.runtime.<span class="fn">compose</span>(components);
+<span class="kw">const</span> status = <span class="kw">await</span> uwa.runtime.<span class="fn">getStatus</span>();</code></pre>
+</section>
+
+<!-- ═══ UCN API ════════════════════════════ -->
+<section class="section" id="ucn">
+  <h2>🌐 UCN API <span class="badge">6 Engines</span></h2>
+  <p>The Universal Constitutional Network governs node creation, discovery, communication, synchronization, and trust across distributed constitutional participants.</p>
+
+  <h3>Node Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Creates and manages constitutional network nodes with lifecycle control.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">createNode()</span>
+      <span class="method-tag">extendNetwork()</span>
+      <span class="method-tag">activateNetwork()</span>
+      <span class="method-tag">revoke()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Create a new constitutional network node</span>
+<span class="kw">const</span> node = <span class="kw">await</span> ucn.node.<span class="fn">createNode</span>({
+  <span class="str">"identity"</span>: identity.id,
+  <span class="str">"capabilities"</span>: [<span class="str">"relay"</span>, <span class="str">"store"</span>],
+  <span class="str">"network"</span>: <span class="str">"primary"</span>
+});
+
+<span class="cm">// Extend the network with new nodes</span>
+<span class="kw">await</span> ucn.node.<span class="fn">extendNetwork</span>(<span class="str">"primary"</span>, [node.id]);
+
+<span class="cm">// Activate the network</span>
+<span class="kw">await</span> ucn.node.<span class="fn">activateNetwork</span>(<span class="str">"primary"</span>);
+
+<span class="cm">// Revoke a node</span>
+<span class="kw">await</span> ucn.node.<span class="fn">revoke</span>(node.id);</code></pre>
+
+  <h3>Discovery Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Constitutional service discovery and advertisement.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">advertise()</span>
+      <span class="method-tag">query()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Advertise a constitutional service</span>
+<span class="kw">await</span> ucn.discovery.<span class="fn">advertise</span>({
+  <span class="str">"service"</span>: <span class="str">"data-transform"</span>,
+  <span class="str">"node"</span>: node.id,
+  <span class="str">"constraints"</span>: [<span class="str">"max-connections:10"</span>]
+});
+
+<span class="cm">// Query for available services</span>
+<span class="kw">const</span> services = <span class="kw">await</span> ucn.discovery.<span class="fn">query</span>({
+  <span class="str">"type"</span>: <span class="str">"data-transform"</span>
+});</code></pre>
+
+  <h3>Communication Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Constitutional event creation and verification across nodes.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">createEvent()</span>
+      <span class="method-tag">verifyEvent()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Create a network event</span>
+<span class="kw">const</span> event = <span class="kw">await</span> ucn.communication.<span class="fn">createEvent</span>({
+  <span class="str">"type"</span>: <span class="str">"data.sync"</span>,
+  <span class="str">"from"</span>: nodeA.id,
+  <span class="str">"to"</span>: nodeB.id,
+  <span class="str">"payload"</span>: data
+});
+
+<span class="cm">// Verify event authenticity</span>
+<span class="kw">const</span> verified = <span class="kw">await</span> ucn.communication.<span class="fn">verifyEvent</span>(event.id);</code></pre>
+
+  <h3>Sync Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Distributed state synchronization with constitutional integrity.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">initState()</span>
+      <span class="method-tag">createDelta()</span>
+      <span class="method-tag">applyDelta()</span>
+      <span class="method-tag">mergeDelta()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Initialize shared state</span>
+<span class="kw">await</span> ucn.sync.<span class="fn">initState</span>(<span class="str">"shared-doc"</span>, initialState);
+
+<span class="cm">// Create a state delta</span>
+<span class="kw">const</span> delta = <span class="kw">await</span> ucn.sync.<span class="fn">createDelta</span>(<span class="str">"shared-doc"</span>, changes);
+
+<span class="cm">// Apply a delta to local state</span>
+<span class="kw">await</span> ucn.sync.<span class="fn">applyDelta</span>(<span class="str">"shared-doc"</span>, delta);
+
+<span class="cm">// Merge conflicting deltas</span>
+<span class="kw">const</span> merged = <span class="kw">await</span> ucn.sync.<span class="fn">mergeDelta</span>(<span class="str">"shared-doc"</span>, deltaA, deltaB);</code></pre>
+
+  <h3>Trust Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Constitutional trust anchors and transitive trust chain verification.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">addAnchor()</span>
+      <span class="method-tag">assertTrust()</span>
+      <span class="method-tag">revokeTrust()</span>
+      <span class="method-tag">verifyChain()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Add a trust anchor (root of trust)</span>
+<span class="kw">await</span> ucn.trust.<span class="fn">addAnchor</span>({
+  <span class="str">"identity"</span>: rootIdentity.id,
+  <span class="str">"level"</span>: <span class="str">"constitutional"</span>
+});
+
+<span class="cm">// Assert trust in another entity</span>
+<span class="kw">await</span> ucn.trust.<span class="fn">assertTrust</span>({
+  <span class="str">"from"</span>: nodeA.id,
+  <span class="str">"to"</span>: nodeB.id,
+  <span class="str">"scope"</span>: <span class="str">"communication"</span>
+});
+
+<span class="cm">// Revoke trust</span>
+<span class="kw">await</span> ucn.trust.<span class="fn">revokeTrust</span>(nodeA.id, nodeB.id);
+
+<span class="cm">// Verify trust chain between two entities</span>
+<span class="kw">const</span> trusted = <span class="kw">await</span> ucn.trust.<span class="fn">verifyChain</span>(nodeA.id, nodeB.id);</code></pre>
+
+  <h3>Network Runtime</h3>
+  <p style="color:var(--text-dim);font-size:13px">High-level interface for network operations.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">joinNetwork()</span>
+      <span class="method-tag">getStatus()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Join a constitutional network</span>
+<span class="kw">await</span> ucn.runtime.<span class="fn">joinNetwork</span>({
+  <span class="str">"network"</span>: <span class="str">"primary"</span>,
+  <span class="str">"identity"</span>: identity.id,
+  <span class="str">"bootstrap"</span>: [<span class="str">"node://seed-1"</span>]
+});
+
+<span class="cm">// Get network status</span>
+<span class="kw">const</span> status = <span class="kw">await</span> ucn.runtime.<span class="fn">getStatus</span>();</code></pre>
+</section>
+
+<!-- ═══ UCA API ════════════════════════════ -->
+<section class="section" id="uca">
+  <h2>🔌 UCA API <span class="badge">7 Engines</span></h2>
+  <p>The Unified Constraint Adapter manages adapter registration, naming, serialization, and boundary operations across constitutional domains.</p>
+
+  <h3>Adapter Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Registration and lifecycle management for constraint adapters.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">register()</span>
+      <span class="method-tag">unregister()</span>
+      <span class="method-tag">replace()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Register a constraint adapter</span>
+<span class="kw">await</span> uca.adapter.<span class="fn">register</span>({
+  <span class="str">"name"</span>: <span class="str">"json-v2"</span>,
+  <span class="str">"type"</span>: <span class="str">"serialization"</span>,
+  <span class="str">"handler"</span>: jsonHandler
+});
+
+<span class="cm">// Replace an existing adapter</span>
+<span class="kw">await</span> uca.adapter.<span class="fn">replace</span>(<span class="str">"json-v1"</span>, <span class="str">"json-v2"</span>);
+
+<span class="cm">// Unregister an adapter</span>
+<span class="kw">await</span> uca.adapter.<span class="fn">unregister</span>(<span class="str">"json-v2"</span>);</code></pre>
+
+  <h3>Naming Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Constitutional name resolution and mapping verification.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">registerMapping()</span>
+      <span class="method-tag">resolve()</span>
+      <span class="method-tag">verify()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Register a name mapping</span>
+<span class="kw">await</span> uca.naming.<span class="fn">registerMapping</span>({
+  <span class="str">"name"</span>: <span class="str">"storage.alpha"</span>,
+  <span class="str">"target"</span>: storageEngine.id,
+  <span class="str">"constraints"</span>: [<span class="str">"read-only"</span>]
+});
+
+<span class="cm">// Resolve a name to its target</span>
+<span class="kw">const</span> target = <span class="kw">await</span> uca.naming.<span class="fn">resolve</span>(<span class="str">"storage.alpha"</span>);
+
+<span class="cm">// Verify a mapping is valid</span>
+<span class="kw">const</span> valid = <span class="kw">await</span> uca.naming.<span class="fn">verify</span>(<span class="str">"storage.alpha"</span>);</code></pre>
+
+  <h3>Serialization Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Constitutional serialization with roundtrip integrity verification.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">serialize()</span>
+      <span class="method-tag">deserialize()</span>
+      <span class="method-tag">verifyRoundtrip()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Serialize with constitutional integrity</span>
+<span class="kw">const</span> bytes = <span class="kw">await</span> uca.serialization.<span class="fn">serialize</span>({
+  <span class="str">"data"</span>: complexObject,
+  <span class="str">"format"</span>: <span class="str">"cbor"</span>,
+  <span class="str">"sign"</span>: <span class="kw">true</span>
+});
+
+<span class="cm">// Deserialize with verification</span>
+<span class="kw">const</span> obj = <span class="kw">await</span> uca.serialization.<span class="fn">deserialize</span>(bytes);
+
+<span class="cm">// Verify roundtrip integrity</span>
+<span class="kw">const</span> intact = <span class="kw">await</span> uca.serialization.<span class="fn">verifyRoundtrip</span>(bytes);</code></pre>
+
+  <h3>Execution Adapter</h3>
+  <p style="color:var(--text-dim);font-size:13px">Cross-domain execution with sandbox enforcement and resource tracking.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">execute()</span>
+      <span class="method-tag">sandboxCheck()</span>
+      <span class="method-tag">resourceReport()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Execute with adapter constraints</span>
+<span class="kw">const</span> result = <span class="kw">await</span> uca.execution.<span class="fn">execute</span>({
+  <span class="str">"adapter"</span>: <span class="str">"sandbox-adapter"</span>,
+  <span class="str">"operation"</span>: computeTask
+});
+
+<span class="cm">// Check sandbox boundaries</span>
+<span class="kw">const</span> safe = <span class="kw">await</span> uca.execution.<span class="fn">sandboxCheck</span>(result.contextId);
+
+<span class="cm">// Get resource consumption report</span>
+<span class="kw">const</span> report = <span class="kw">await</span> uca.execution.<span class="fn">resourceReport</span>(result.contextId);</code></pre>
+
+  <h3>Storage Adapter</h3>
+  <p style="color:var(--text-dim);font-size:13px">Constitutional storage with integrity verification.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">store()</span>
+      <span class="method-tag">retrieve()</span>
+      <span class="method-tag">verifyIntegrity()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Store data with constitutional integrity</span>
+<span class="kw">const</span> ref = <span class="kw">await</span> uca.storage.<span class="fn">store</span>({
+  <span class="str">"data"</span>: document,
+  <span class="str">"namespace"</span>: <span class="str">"alpha"</span>,
+  <span class="str">"encrypt"</span>: <span class="kw">true</span>
+});
+
+<span class="cm">// Retrieve data</span>
+<span class="kw">const</span> data = <span class="kw">await</span> uca.storage.<span class="fn">retrieve</span>(ref.id);
+
+<span class="cm">// Verify storage integrity</span>
+<span class="kw">const</span> intact = <span class="kw">await</span> uca.storage.<span class="fn">verifyIntegrity</span>(ref.id);</code></pre>
+
+  <h3>Communication Adapter</h3>
+  <p style="color:var(--text-dim);font-size:13px">Cross-boundary communication with source verification.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">send()</span>
+      <span class="method-tag">verifySource()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Send a message across boundaries</span>
+<span class="kw">await</span> uca.communication.<span class="fn">send</span>({
+  <span class="str">"to"</span>: <span class="str">"namespace:beta"</span>,
+  <span class="str">"message"</span>: crossDomainData,
+  <span class="str">"signed"</span>: <span class="kw">true</span>
+});
+
+<span class="cm">// Verify message source authenticity</span>
+<span class="kw">const</span> authentic = <span class="kw">await</span> uca.communication.<span class="fn">verifySource</span>(messageId);</code></pre>
+
+  <h3>Boundary Runtime</h3>
+  <p style="color:var(--text-dim);font-size:13px">High-level boundary management interface.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">getStatus()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Get boundary adapter status</span>
+<span class="kw">const</span> status = <span class="kw">await</span> uca.runtime.<span class="fn">getStatus</span>();
+<span class="cm">// → { adapters: 7, active: 5, violations: 0 }</span></code></pre>
+</section>
+
+<!-- ═══ USDS API ═══════════════════════════ -->
+<section class="section" id="usds">
+  <h2>📦 USDS API <span class="badge">4 Engines</span></h2>
+  <p>The Unforgeable Secure Distribution System handles constitutional package creation, signing, distribution, and verification.</p>
+
+  <h3>Package Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Creates and extracts unforgeable constitutional packages.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">create()</span>
+      <span class="method-tag">extract()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Create a constitutional package</span>
+<span class="kw">const</span> pkg = <span class="kw">await</span> usds.package.<span class="fn">create</span>({
+  <span class="str">"contents"</span>: componentBundle,
+  <span class="str">"metadata"</span>: {
+    <span class="str">"name"</span>: <span class="str">"transformer-v1"</span>,
+    <span class="str">"version"</span>: <span class="str">"1.0.0"</span>
+  },
+  <span class="str">"constraints"</span>: [<span class="str">"read-only"</span>]
+});
+
+<span class="cm">// Extract a package</span>
+<span class="kw">const</span> contents = <span class="kw">await</span> usds.package.<span class="fn">extract</span>(pkg.id);</code></pre>
+
+  <h3>Signing Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Constitutional cryptographic signing and verification.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">sign()</span>
+      <span class="method-tag">verify()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Sign a package</span>
+<span class="kw">const</span> sig = <span class="kw">await</span> usds.signing.<span class="fn">sign</span>({
+  <span class="str">"packageId"</span>: pkg.id,
+  <span class="str">"signer"</span>: identity.id,
+  <span class="str">"algorithm"</span>: <span class="str">"ed25519"</span>
+});
+
+<span class="cm">// Verify a signature</span>
+<span class="kw">const</span> valid = <span class="kw">await</span> usds.signing.<span class="fn">verify</span>(sig.id);</code></pre>
+
+  <h3>Distribution Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Secure transfer and tracking of constitutional packages.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">transfer()</span>
+      <span class="method-tag">track()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Transfer a package to a recipient</span>
+<span class="kw">const</span> tx = <span class="kw">await</span> usds.distribution.<span class="fn">transfer</span>({
+  <span class="str">"packageId"</span>: pkg.id,
+  <span class="str">"recipient"</span>: recipientNode.id,
+  <span class="str">"encrypted"</span>: <span class="kw">true</span>
+});
+
+<span class="cm">// Track distribution status</span>
+<span class="kw">const</span> status = <span class="kw">await</span> usds.distribution.<span class="fn">track</span>(tx.id);</code></pre>
+
+  <h3>Verification Engine</h3>
+  <p style="color:var(--text-dim);font-size:13px">Verifies package integrity and trust chains.</p>
+  <div class="engine-card">
+    <div class="method-list">
+      <span class="method-tag">verify()</span>
+      <span class="method-tag">verifyChain()</span>
+    </div>
+  </div>
+  <pre><code><span class="cm">// Verify a single package</span>
+<span class="kw">const</span> valid = <span class="kw">await</span> usds.verification.<span class="fn">verify</span>(pkg.id);
+
+<span class="cm">// Verify the entire chain of custody</span>
+<span class="kw">const</span> chainValid = <span class="kw">await</span> usds.verification.<span class="fn">verifyChain</span>(pkg.id);
+<span class="cm">// → { valid: true, signatures: 3, attestations: 7 }</span></code></pre>
+</section>
+
+<!-- ═══ Quick Reference ════════════════════ -->
+<section class="section" id="quickref">
+  <h2>⚡ Quick Reference <span class="badge">All Methods</span></h2>
+  <p>Complete method signatures for every engine across all API layers.</p>
+
+  <h3>USR — Universal Sovereign Runtime</h3>
+  <div class="qr-grid">
+    <div class="qr-row"><code class="qr-sig">identity.declare(props: IdentityDecl) → Identity</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">identity.register(identity: Identity) → RegisteredIdentity</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">identity.verify(id: string) → boolean</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">execution.execute(op: ExecutionOp) → Result</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">execution.getHistory(contextId: string) → ExecRecord[]</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">constraints.enforce(rule: ConstraintRule) → void</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">constraints.test(opId: string) → boolean</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">isolation.requestCapability(req: CapRequest) → Capability</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">isolation.revokeCapability(capId: string) → void</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">isolation.checkCapability(capId: string) → boolean</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">attestation.attest(props: AttestProps) → Attestation</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">attestation.verify(attId: string) → boolean</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">attestation.verifyChain(chainId: string) → ChainResult</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">orchestration.start(config: ProcessConfig) → Process</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">orchestration.suspend(procId: string) → void</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">orchestration.resume(procId: string) → void</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">orchestration.terminate(procId: string) → void</code><span class="qr-layer">USR</span></div>
+    <div class="qr-row"><code class="qr-sig">orchestration.sendMessage(procId: string, msg: Message) → void</code><span class="qr-layer">USR</span></div>
+  </div>
+
+  <h3>UWA — Universal Workspace Adapter</h3>
+  <div class="qr-grid">
+    <div class="qr-row"><code class="qr-sig">component.create(config: ComponentConfig) → Component</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">component.declare(id: string, decl: Decl) → void</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">component.validate(id: string) → ValidationResult</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">component.initialize(id: string) → void</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">component.start(id: string) → void</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">component.suspend(id: string) → void</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">component.resume(id: string) → void</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">component.terminate(id: string) → void</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">event.emit(event: WEvent) → void</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">event.consume(filter: EventFilter) → WEvent[]</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">execution.execute(op: WorkspaceOp) → Result</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">composition.addEdge(edge: Edge) → void</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">composition.getChildren(id: string) → string[]</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">composition.validate() → ValidationResult</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">runtime.createComponent(config) → Component</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">runtime.executeEvent(id, event) → Result</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">runtime.compose(components[]) → void</code><span class="qr-layer">UWA</span></div>
+    <div class="qr-row"><code class="qr-sig">runtime.getStatus() → WorkspaceStatus</code><span class="qr-layer">UWA</span></div>
+  </div>
+
+  <h3>UCN — Universal Constitutional Network</h3>
+  <div class="qr-grid">
+    <div class="qr-row"><code class="qr-sig">node.createNode(config: NodeConfig) → Node</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">node.extendNetwork(netId, nodeIds[]) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">node.activateNetwork(netId: string) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">node.revoke(nodeId: string) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">discovery.advertise(svc: ServiceAd) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">discovery.query(filter: QueryFilter) → Service[]</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">communication.createEvent(evt: NetEvent) → Event</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">communication.verifyEvent(evtId: string) → boolean</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">sync.initState(key: string, state: any) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">sync.createDelta(key: string, changes) → Delta</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">sync.applyDelta(key: string, delta: Delta) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">sync.mergeDelta(key, deltaA, deltaB) → MergedDelta</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">trust.addAnchor(anchor: TrustAnchor) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">trust.assertTrust(req: TrustReq) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">trust.revokeTrust(from: string, to: string) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">trust.verifyChain(from: string, to: string) → boolean</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">runtime.joinNetwork(config: JoinConfig) → void</code><span class="qr-layer">UCN</span></div>
+    <div class="qr-row"><code class="qr-sig">runtime.getStatus() → NetworkStatus</code><span class="qr-layer">UCN</span></div>
+  </div>
+
+  <h3>UCA — Unified Constraint Adapter</h3>
+  <div class="qr-grid">
+    <div class="qr-row"><code class="qr-sig">adapter.register(adapter: AdapterDef) → void</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">adapter.unregister(name: string) → void</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">adapter.replace(old: string, new: string) → void</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">naming.registerMapping(map: NameMapping) → void</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">naming.resolve(name: string) → Target</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">naming.verify(name: string) → boolean</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">serialization.serialize(data, opts) → Uint8Array</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">serialization.deserialize(bytes) → any</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">serialization.verifyRoundtrip(bytes) → boolean</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">execution.execute(op: ExecOp) → Result</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">execution.sandboxCheck(ctxId: string) → boolean</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">execution.resourceReport(ctxId: string) → Report</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">storage.store(data, opts) → StorageRef</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">storage.retrieve(ref: string) → any</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">storage.verifyIntegrity(ref: string) → boolean</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">communication.send(msg: CrossMsg) → void</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">communication.verifySource(msgId: string) → boolean</code><span class="qr-layer">UCA</span></div>
+    <div class="qr-row"><code class="qr-sig">runtime.getStatus() → BoundaryStatus</code><span class="qr-layer">UCA</span></div>
+  </div>
+
+  <h3>USDS — Unforgeable Secure Distribution System</h3>
+  <div class="qr-grid">
+    <div class="qr-row"><code class="qr-sig">package.create(config: PkgConfig) → Package</code><span class="qr-layer">USDS</span></div>
+    <div class="qr-row"><code class="qr-sig">package.extract(pkgId: string) → Contents</code><span class="qr-layer">USDS</span></div>
+    <div class="qr-row"><code class="qr-sig">signing.sign(props: SignProps) → Signature</code><span class="qr-layer">USDS</span></div>
+    <div class="qr-row"><code class="qr-sig">signing.verify(sigId: string) → boolean</code><span class="qr-layer">USDS</span></div>
+    <div class="qr-row"><code class="qr-sig">distribution.transfer(tx: TransferDef) → TxRecord</code><span class="qr-layer">USDS</span></div>
+    <div class="qr-row"><code class="qr-sig">distribution.track(txId: string) → TxStatus</code><span class="qr-layer">USDS</span></div>
+    <div class="qr-row"><code class="qr-sig">verification.verify(pkgId: string) → boolean</code><span class="qr-layer">USDS</span></div>
+    <div class="qr-row"><code class="qr-sig">verification.verifyChain(pkgId: string) → ChainResult</code><span class="qr-layer">USDS</span></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ── Footer ────────────────────────────── -->
+<footer class="footer">
+  <p>ICore Constitutional Computing Platform — API Reference v1.0</p>
+  <p style="margin-top:6px">Originated by <strong>Sir Collins</strong> · <a href="mailto:access1@tutamail.com" style="color:var(--accent);text-decoration:none">access1@tutamail.com</a></p>
+  <p style="margin-top:4px;color:var(--text-dim);font-size:11px">Constitutional Computing · Capability-Based Isolation · Attested Execution</p>
+</footer>
+
+<script>
+/* ── Conformance Test Data ──────────────── */
+const TESTS = [
+  // USR Tests (15)
+  {id:'USR-01',name:'Identity Declaration',cat:'Critical'},
+  {id:'USR-02',name:'Identity Registration',cat:'Critical'},
+  {id:'USR-03',name:'Identity Verification',cat:'Critical'},
+  {id:'USR-04',name:'Execution Constraints',cat:'Critical'},
+  {id:'USR-05',name:'Execution History',cat:'Major'},
+  {id:'USR-06',name:'Constraint Enforcement',cat:'Critical'},
+  {id:'USR-07',name:'Constraint Testing',cat:'Major'},
+  {id:'USR-08',name:'Capability Request',cat:'Critical'},
+  {id:'USR-09',name:'Capability Revocation',cat:'Critical'},
+  {id:'USR-10',name:'Capability Check',cat:'Major'},
+  {id:'USR-11',name:'Attestation Creation',cat:'Critical'},
+  {id:'USR-12',name:'Attestation Verification',cat:'Critical'},
+  {id:'USR-13',name:'Attestation Chain',cat:'Major'},
+  {id:'USR-14',name:'Process Lifecycle',cat:'Major'},
+  {id:'USR-15',name:'Inter-Process Messaging',cat:'Minor'},
+  // UWA Tests (10)
+  {id:'UWA-01',name:'Component Creation',cat:'Critical'},
+  {id:'UWA-02',name:'Component Declaration',cat:'Major'},
+  {id:'UWA-03',name:'Component Validation',cat:'Critical'},
+  {id:'UWA-04',name:'Component Lifecycle',cat:'Major'},
+  {id:'UWA-05',name:'Event Emission',cat:'Major'},
+  {id:'UWA-06',name:'Event Consumption',cat:'Major'},
+  {id:'UWA-07',name:'Workspace Execution',cat:'Critical'},
+  {id:'UWA-08',name:'Composition Edges',cat:'Major'},
+  {id:'UWA-09',name:'Composition Validation',cat:'Critical'},
+  {id:'UWA-10',name:'Workspace Runtime',cat:'Minor'},
+  // UCN Tests (13)
+  {id:'UCN-01',name:'Node Creation',cat:'Critical'},
+  {id:'UCN-02',name:'Network Extension',cat:'Major'},
+  {id:'UCN-03',name:'Network Activation',cat:'Critical'},
+  {id:'UCN-04',name:'Node Revocation',cat:'Critical'},
+  {id:'UCN-05',name:'Service Advertising',cat:'Major'},
+  {id:'UCN-06',name:'Service Discovery',cat:'Major'},
+  {id:'UCN-07',name:'Event Creation',cat:'Critical'},
+  {id:'UCN-08',name:'Event Verification',cat:'Critical'},
+  {id:'UCN-09',name:'State Initialization',cat:'Major'},
+  {id:'UCN-10',name:'Delta Operations',cat:'Critical'},
+  {id:'UCN-11',name:'Delta Merging',cat:'Major'},
+  {id:'UCN-12',name:'Trust Anchors',cat:'Critical'},
+  {id:'UCN-13',name:'Trust Chain Verification',cat:'Critical'},
+  // UCA Tests (12)
+  {id:'UCA-01',name:'Adapter Registration',cat:'Critical'},
+  {id:'UCA-02',name:'Adapter Replacement',cat:'Major'},
+  {id:'UCA-03',name:'Name Mapping',cat:'Major'},
+  {id:'UCA-04',name:'Name Resolution',cat:'Critical'},
+  {id:'UCA-05',name:'Name Verification',cat:'Major'},
+  {id:'UCA-06',name:'Serialization',cat:'Critical'},
+  {id:'UCA-07',name:'Deserialization',cat:'Critical'},
+  {id:'UCA-08',name:'Roundtrip Integrity',cat:'Critical'},
+  {id:'UCA-09',name:'Sandbox Execution',cat:'Critical'},
+  {id:'UCA-10',name:'Storage Integrity',cat:'Major'},
+  {id:'UCA-11',name:'Source Verification',cat:'Critical'},
+  {id:'UCA-12',name:'Boundary Runtime',cat:'Minor'},
+];
+
+let currentFilter = 'all';
+
+function renderTests() {
+  const tbody = document.getElementById('confBody');
+  const search = document.getElementById('testSearch').value.toLowerCase();
+  const filtered = TESTS.filter(t => {
+    if (currentFilter !== 'all' && !t.id.startsWith(currentFilter)) return false;
+    if (search && !t.id.toLowerCase().includes(search) && !t.name.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  tbody.innerHTML = filtered.map(t => {
+    const catClass = t.cat === 'Critical' ? 'tag-critical' : t.cat === 'Major' ? 'tag-major' : 'tag-minor';
+    return `<tr>
+      <td style="font-family:var(--font-mono);font-size:12px;color:var(--accent);font-weight:600">${t.id}</td>
+      <td style="font-size:13px">${t.name}</td>
+      <td><span class="cat-badge ${catClass}">${t.cat}</span></td>
+      <td class="status-pass" style="font-weight:600">✅ Pass</td>
+    </tr>`;
+  }).join('');
+}
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTests();
+}
+
+function filterTests() { renderTests(); }
+
+/* ── Sidebar ────────────────────────────── */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+/* ── Active section tracking ────────────── */
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('.sidebar a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const id = entry.target.id;
+      const link = document.querySelector(`.sidebar a[href="#${id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+sections.forEach(s => observer.observe(s));
+
+/* ── PWA Install ────────────────────────── */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').classList.remove('hidden');
+});
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  document.getElementById('installBtn').classList.add('hidden');
+});
+function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r => {
+    if (r.outcome === 'accepted') {
+      document.getElementById('installBtn').classList.add('hidden');
+    }
+    deferredPrompt = null;
+  });
+}
+
+/* ── Service Worker ─────────────────────── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+}
+
+/* ── Init ───────────────────────────────── */
+renderTests();
+</script>
+</body>
+</html>

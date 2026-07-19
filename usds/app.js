@@ -1,5 +1,5 @@
-// USDS — Main App Controller v0.1.0
-// Screen navigation, IndexedDB init, event bus wiring, engine instantiation.
+// USDS — Main App Controller v0.2.0
+// Screen navigation, IndexedDB init, event bus wiring, PWA install, engine instantiation.
 
 window.USDS_App = (() => {
   'use strict';
@@ -10,16 +10,32 @@ window.USDS_App = (() => {
   const DistributionEngine = window.USDS_DistributionEngine;
   const VerificationEngine = window.USDS_VerificationEngine;
 
-  // Use platform EventBus if available, else minimal local one
-  const EventBus = (window.ICorePlatform && window.ICorePlatform.EventBus) || window.EventBus || (() => {
+  // ── EventBus Adapter ─────────────────────────────
+  // The platform EventBus uses subscribe/publish/off.
+  // Our UI modules expect on/emit/off. Create a compatible adapter.
+  function createEventBus() {
+    const platformBus = (window.ICorePlatform && window.ICorePlatform.EventBus) || window.EventBus;
+    if (platformBus && typeof platformBus.subscribe === 'function') {
+      // Adapter wrapping the platform EventBus
+      return {
+        on: (eventType, fn) => platformBus.subscribe(eventType, fn),
+        off: (eventType, id) => platformBus.off(eventType, id),
+        emit: (eventType, payload) => platformBus.publish(eventType, payload, 'usds-app'),
+        _raw: platformBus
+      };
+    }
+    // Fallback local EventBus
     const subs = {};
     return {
       on: (e, fn) => { (subs[e] = subs[e] || []).push(fn); },
       off: (e, fn) => { subs[e] = (subs[e] || []).filter(f => f !== fn); },
       emit: (e, d) => { (subs[e] || []).forEach(fn => fn(d)); }
     };
-  })();
+  }
 
+  const EventBus = createEventBus();
+
+  // ── UI Module References ─────────────────────────
   const UI = {
     dashboard: window.USDS_DashboardUI,
     packages: window.USDS_PackagesUI,
@@ -29,31 +45,114 @@ window.USDS_App = (() => {
     about: window.USDS_AboutUI
   };
 
-  let currentScreen = 'dashboard';
+  let currentScreen = 'deferredPrompt' in window ? 'dashboard' : 'dashboard';
   let initialized = false;
+  let deferredInstallPrompt = null;
 
-  // ── Service Worker ───────────────────────────────
+  // ── Service Worker Registration ──────────────────
   function registerSW() {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js').catch(() => {});
+    if (!('serviceWorker' in navigator)) {
+      updateSWStatus('Service Worker not supported');
+      return;
     }
+    navigator.serviceWorker.register('./service-worker.js', { scope: './' })
+      .then(reg => {
+        console.log('[USDS] Service Worker registered, scope:', reg.scope);
+        updateSWStatus('Offline Ready ✓');
+
+        // Check for updates periodically
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                updateSWStatus('Update Available — Reload');
+                updateSWStatusClick();
+              }
+            });
+          }
+        });
+      })
+      .catch(err => {
+        console.warn('[USDS] SW registration failed:', err);
+        updateSWStatus('SW Error');
+      });
+
+    // Listen for controlling SW change
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!refreshing) {
+        refreshing = true;
+        window.location.reload();
+      }
+    });
+  }
+
+  function updateSWStatus(text) {
+    const el = document.getElementById('swStatus');
+    if (el) el.textContent = text;
+  }
+
+  function updateSWStatusClick() {
+    const el = document.getElementById('swStatus');
+    if (el) {
+      el.style.cursor = 'pointer';
+      el.style.color = 'var(--accent)';
+      el.onclick = () => {
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+        }
+      };
+    }
+  }
+
+  // ── PWA Install Prompt ───────────────────────────
+  function setupInstallPrompt() {
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      if (installBtn) installBtn.style.display = 'inline-flex';
+    });
+
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        const { outcome } = await deferredInstallPrompt.userChoice;
+        console.log('[USDS] Install prompt outcome:', outcome);
+        deferredInstallPrompt = null;
+        installBtn.style.display = 'none';
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      console.log('[USDS] App installed successfully');
+      deferredInstallPrompt = null;
+      if (installBtn) installBtn.style.display = 'none';
+    });
   }
 
   // ── Navigation ───────────────────────────────────
   function navigate(screen) {
     if (!UI[screen]) return;
     currentScreen = screen;
+
     // Update nav buttons
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.screen === screen);
     });
+
     // Update screens
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const target = document.getElementById('screen-' + screen);
     if (target) target.classList.add('active');
+
     // Close mobile menu
     const nav = document.getElementById('mainNav');
     if (nav) nav.classList.remove('open');
+
     // Refresh content
     refreshScreen(screen);
   }
@@ -68,7 +167,7 @@ window.USDS_App = (() => {
         case 'dashboard': {
           const stats = await PackageEngine.getStats();
           const distStats = await DistributionEngine.getStats();
-          UI.dashboard.render(stats, distStats);
+          UI.dashboard.render(stats, distStats, packages);
           break;
         }
         case 'packages':
@@ -88,18 +187,20 @@ window.USDS_App = (() => {
           break;
       }
     } catch (err) {
-      console.error('USDS refreshScreen error:', err);
+      console.error('[USDS] refreshScreen error:', err);
     }
   }
 
   // ── Event Bus Wiring ─────────────────────────────
   function wireEvents() {
-    EventBus.on('usds:package-created', () => {
+    // Refresh dashboard on any relevant event
+    const refreshDashboard = () => {
       if (currentScreen === 'dashboard') refreshScreen('dashboard');
-    });
-    EventBus.on('usds:package-distributed', () => {
-      if (currentScreen === 'dashboard') refreshScreen('dashboard');
-    });
+    };
+    EventBus.on('usds:package-created', refreshDashboard);
+    EventBus.on('usds:package-signed', refreshDashboard);
+    EventBus.on('usds:package-distributed', refreshDashboard);
+    EventBus.on('usds:package-verified', refreshDashboard);
   }
 
   // ── Mobile Menu ──────────────────────────────────
@@ -108,6 +209,12 @@ window.USDS_App = (() => {
     const nav = document.getElementById('mainNav');
     if (menuBtn && nav) {
       menuBtn.onclick = () => nav.classList.toggle('open');
+      // Close on nav click
+      nav.addEventListener('click', e => {
+        if (e.target.classList.contains('nav-btn')) {
+          nav.classList.remove('open');
+        }
+      });
     }
   }
 
@@ -118,17 +225,44 @@ window.USDS_App = (() => {
     });
   }
 
+  // ── Hash-based Navigation ────────────────────────
+  function handleHashNav() {
+    const hash = window.location.hash.replace('#', '');
+    if (hash && UI[hash]) {
+      navigate(hash);
+    }
+  }
+
   // ── Initialize ───────────────────────────────────
   async function init() {
     if (initialized) return;
     initialized = true;
+
+    console.log('[USDS] Initializing USDS v0.1.0');
+
     registerSW();
-    await PackageEngine.init();
-    await DistributionEngine.init();
+    setupInstallPrompt();
+
+    try {
+      await PackageEngine.init();
+      await DistributionEngine.init();
+    } catch (err) {
+      console.error('[USDS] Engine init error:', err);
+    }
+
     setupNavigation();
     setupMobileMenu();
     wireEvents();
-    navigate('dashboard');
+
+    // Handle hash navigation or default to dashboard
+    handleHashNav();
+    if (!window.location.hash || !UI[window.location.hash.replace('#', '')]) {
+      navigate('dashboard');
+    }
+
+    window.addEventListener('hashchange', handleHashNav);
+
+    console.log('[USDS] Initialization complete');
   }
 
   // ── Auto-init on DOM ready ───────────────────────

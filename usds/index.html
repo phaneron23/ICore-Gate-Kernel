@@ -1,48 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#ff6d00">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>USDS — Universal Sovereign Distribution System</title>
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>USDS — Universal Sovereign Distribution System</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#ff6d00">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="USDS">
+  <meta name="description" content="Constitutional Distribution Management — Package, Sign, Distribute, and Verify Constitutional Software.">
+  <meta name="application-name" content="USDS">
+  <meta name="msapplication-TileColor" content="#ff6d00">
+  <meta name="msapplication-TileImage" content="icons/icon-192.png">
+
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div id="app">
+  <!-- ── Header ─────────────────────────────────────── -->
   <header class="app-header">
     <div class="header-brand">
-      <span class="brand-icon">📦</span>
+      <span class="brand-icon">⚖️</span>
       <h1 class="brand-title">USDS</h1>
       <span class="brand-sub">Universal Sovereign Distribution</span>
     </div>
+
     <nav class="header-nav" id="mainNav">
-      <button class="nav-btn active" data-screen="dashboard">Dashboard</button>
-      <button class="nav-btn" data-screen="packages">Packages</button>
-      <button class="nav-btn" data-screen="distribute">Distribute</button>
-      <button class="nav-btn" data-screen="verify">Verify</button>
-      <button class="nav-btn" data-screen="history">History</button>
-      <button class="nav-btn" data-screen="about">About</button>
+      <button class="nav-btn active" data-screen="dashboard">
+        <span class="nav-icon">📊</span> Dashboard
+      </button>
+      <button class="nav-btn" data-screen="packages">
+        <span class="nav-icon">📦</span> Packages
+      </button>
+      <button class="nav-btn" data-screen="verify">
+        <span class="nav-icon">🔍</span> Verify
+      </button>
+      <button class="nav-btn" data-screen="distribute">
+        <span class="nav-icon">📤</span> Distribute
+      </button>
+      <button class="nav-btn" data-screen="history">
+        <span class="nav-icon">⛓️</span> History
+      </button>
+      <button class="nav-btn" data-screen="about">
+        <span class="nav-icon">ℹ️</span> About
+      </button>
     </nav>
+
+    <button class="install-btn" id="installBtn" title="Install USDS App" style="display:none">
+      ⬇️ Install
+    </button>
+
     <button class="mobile-menu" id="mobileMenu">☰</button>
   </header>
 
+  <!-- ── Main Content ───────────────────────────────── -->
   <main class="app-main" id="appMain">
     <section class="screen active" id="screen-dashboard"></section>
     <section class="screen" id="screen-packages"></section>
-    <section class="screen" id="screen-distribute"></section>
     <section class="screen" id="screen-verify"></section>
+    <section class="screen" id="screen-distribute"></section>
     <section class="screen" id="screen-history"></section>
     <section class="screen" id="screen-about"></section>
   </main>
 
+  <!-- ── Footer ─────────────────────────────────────── -->
   <footer class="app-footer">
-    <span>USDS v0.1.0 — ICore Constitutional Framework</span>
+    <span>USDS v0.1.0 — ICore Constitutional Framework · Offline-First PWA</span>
+    <span class="footer-sep">·</span>
+    <span id="swStatus" class="text-muted">Loading…</span>
   </footer>
 </div>
 
-<!-- Platform Engines -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- Platform Engines (must load before USDS engines)       -->
+<!-- ════════════════════════════════════════════════════════ -->
 <script src="platform/corefab.js"></script>
 <script src="platform/uca.js"></script>
 <script src="platform/uscp.js"></script>
@@ -55,21 +95,28 @@
 <script src="platform/event-bus.js"></script>
 <script src="platform/index.js"></script>
 
-<!-- USDS Engines -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- USDS Engines                                            -->
+<!-- ════════════════════════════════════════════════════════ -->
 <script src="engine/package.js"></script>
 <script src="engine/signing.js"></script>
 <script src="engine/distribution.js"></script>
 <script src="engine/verification.js"></script>
 
-<!-- USDS App Controller -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- USDS App Controller                                    -->
+<!-- ════════════════════════════════════════════════════════ -->
 <script src="app.js"></script>
 
-<!-- USDS UI Modules -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- USDS UI Modules (render into screen sections)           -->
+<!-- ════════════════════════════════════════════════════════ -->
 <script src="ui/dashboard.js"></script>
 <script src="ui/packages.js"></script>
-<script src="ui/distribute.js"></script>
 <script src="ui/verify.js"></script>
+<script src="ui/distribute.js"></script>
 <script src="ui/history.js"></script>
 <script src="ui/about.js"></script>
+
 </body>
 </html>
