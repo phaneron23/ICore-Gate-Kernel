@@ -9,6 +9,7 @@ const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 const PRECACHE_URLS = [
   './',
   './index.html',
+  './nav-bar.js',
   './style.css',
   './app.js',
   './manifest.json',

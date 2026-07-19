@@ -8,6 +8,7 @@ const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/nav-bar.js',
   '/icon-192.png',
   '/icon-512.png',
   '/favicon.ico'

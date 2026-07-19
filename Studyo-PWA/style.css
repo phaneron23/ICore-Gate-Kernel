@@ -89,7 +89,7 @@ body {
 /* Header */
 .header {
   position: sticky;
-  top: 0;
+  top: 44px;
   z-index: 100;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border);

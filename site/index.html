@@ -207,5 +207,8 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v');}),{threshold:.1});
 document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
 </script>
+
+<!-- ICore Cross-PWA Navigation -->
+<script src="nav-bar.js"></script>
 </body>
 </html>

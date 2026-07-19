@@ -36,7 +36,7 @@ body{
 
 /* ── Header ────────────────────────────── */
 .header{
-  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  position:fixed;top:44px;left:0;right:0;height:var(--header-h);
   background:var(--bg);border-bottom:1px solid var(--border);
   display:flex;align-items:center;padding:0 20px;z-index:100;
   backdrop-filter:blur(12px);
@@ -68,7 +68,7 @@ body{
 
 /* ── Sidebar ───────────────────────────── */
 .sidebar{
-  position:fixed;top:var(--header-h);left:0;bottom:0;
+  position:fixed;top:calc(44px + var(--header-h));left:0;bottom:0;
   width:var(--sidebar-w);background:var(--bg-sidebar);
   border-right:1px solid var(--border);
   overflow-y:auto;z-index:90;padding:16px 0;transition:transform .3s;
@@ -1220,5 +1220,8 @@ if ('serviceWorker' in navigator) {
 /* ── Init ───────────────────────────────── */
 renderTests();
 </script>
+
+<!-- ICore Cross-PWA Navigation -->
+<script src="nav-bar.js"></script>
 </body>
 </html>

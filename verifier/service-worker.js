@@ -6,6 +6,7 @@ const CACHE_NAME = 'icore-verifier-v1.0.0';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
+  './nav-bar.js',
   './style.css',
   './app.js',
   './manifest.json',

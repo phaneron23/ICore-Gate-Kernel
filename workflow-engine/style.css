@@ -48,7 +48,7 @@ body {
 .header {
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
+  position: sticky; top: 44px; z-index: 100;
   padding: var(--space-sm) var(--space-md);
   backdrop-filter: blur(10px);
 }

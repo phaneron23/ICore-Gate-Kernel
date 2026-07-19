@@ -7,6 +7,7 @@ const CACHE_NAME = 'studyo-v1.3.0';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
+  '/nav-bar.js',
   '/style.css',
   '/app.js',
   '/manifest.json',

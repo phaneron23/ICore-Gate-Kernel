@@ -1,5 +1,5 @@
 const CACHE="ucr-v1";
-const PRECACHE=["./","./index.html","./manifest.json"];
+const PRECACHE=["./","./index.html","./nav-bar.js","./manifest.json"];
 
 self.addEventListener("install",function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(PRECACHE)}).then(function(){return self.skipWaiting()}));
