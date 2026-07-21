@@ -1,6 +1,6 @@
 # ICore Constitutional Freeze Declaration
 
-**Date:** July 14, 2026
+**Date:** July 14, 2026 | **Updated:** July 21, 2026
 **Authority:** Sir Collins — Creator and Concept Pioneer of ICore
 **Status:** FROZEN — Constitutional Foundation
 
@@ -14,27 +14,54 @@ This freeze establishes the immutable reference point from which all future cons
 
 ---
 
-## What Is Frozen
+## What Is Frozen (Constitutional Foundation)
 
-| Component | Version | Status |
-|-----------|---------|--------|
-| Constitutional Bootstrap Prompt | v1.0 | ✅ Frozen |
-| Minimal Constitutional Kernel (Parts I–V) | v1.0 | ✅ Frozen |
-| Constitutional Atlas | v1.0 | ✅ Frozen |
-| Verification Framework (10 tests) | v1.0 | ✅ Frozen |
-| Governance Framework (6-stage pipeline) | v1.0 | ✅ Frozen |
-| Derivation Rules (D1–D5) | v1.0 | ✅ Frozen |
-| Standards Alignment (W3C map) | v1.0 | ✅ Frozen |
+| Component | Version | Status | Notes |
+|-----------|---------|--------|-------|
+| Constitutional Bootstrap Prompt | v1.0 | ✅ Frozen | |
+| Minimal Constitutional Kernel (Parts I–V) | v1.0 | ✅ Frozen | **Part II reconciled July 21, 2026** |
+| Constitutional Atlas | v1.0 | ✅ Frozen | 5 atlases covering pre-constitutional through frameworks |
+| Verification Framework (10 tests) | v1.0 | ✅ Frozen | |
+| Governance Framework (6-stage pipeline) | v1.0 | ✅ Frozen | |
+| Derivation Rules (D1–D7) | v1.0 | ✅ Frozen | **D6–D7 added July 21, 2026** |
+| Standards Alignment (W3C map) | v1.0 | ✅ Frozen | |
+| Ecosystem Blueprint | v1.0 | ✅ Frozen | **Reconciled with Part II, July 21, 2026** |
 
 ---
 
-## What Is NOT Frozen
+## What Is Completed (Constitutional Specs)
 
-| Component | Status | Next Step |
-|-----------|--------|-----------|
-| Studyo v0.1.0 | Not yet started | Next milestone |
-| USR/CoreFab v0.1.0 | Not yet started | After Studyo |
-| Reference Derivatives | Not yet started | After USR |
+These specifications have been written, self-verified, and are now stable references. They are not frozen in the same way as the Kernel — they may be amended through governance — but they represent completed constitutional work.
+
+| Component | Layer | Version | Size | Lines | Status |
+|-----------|-------|---------|------|-------|--------|
+| **UCC** (Constitutional Calculus) | L2 | v0.1.0 | 16,363 chars | ~400 | ✅ Complete |
+| **UCA** (Adapter Boundary) | L4 | v0.1.0 | 33,693 chars | 536 | ✅ Complete |
+| **UCN** (Networking) | L4 | v0.1.0 | 34,029 chars | ~550 | ✅ Complete |
+| **USR/CoreFab** (Runtime) | L4 | v0.1.0 | 26,411 chars | ~450 | ✅ Complete |
+| **UAS** (Agent Model) | L4 | v0.1.0 | 32,644 chars | ~550 | ✅ Complete |
+| **USDS** (Design System) | L5 | v0.1.0 | 36,108 chars | ~600 | ✅ Complete |
+| **UCF** (Forge) | L5 | v0.1.0 | — | — | ✅ Spec complete |
+| Reference Systems | L3 | v0.1.0 | 52K chars | ~800 | ✅ Complete |
+| Conformance Suite | — | v0.2.0 | — | — | ✅ 20 tests |
+
+**Total constitutional specification:** ~230K chars across 9 formal specs.
+
+---
+
+## What Is NOT Yet Started
+
+| Component | Layer | Priority | Notes |
+|-----------|-------|----------|-------|
+| UCE (Epistemology) formal spec | L2 | High | Science exists, formal spec needed |
+| UCM (Mathematics) formal spec | L2 | High | Science exists, formal spec needed |
+| UCL (Language) formal spec | L2 | High | Science exists, formal spec needed |
+| UCRS (Reference) formal spec | L3 | Medium | |
+| UCModels (Canonical Models) formal spec | L3 | Medium | |
+| URS (Representation) formal spec | L3 | Medium | |
+| UVS (Visualization) formal spec | L3 | Medium | |
+| UWA (Components) formal spec | L4 | High | PWA exists, formal spec needed |
+| UCDS (Distribution System) | L5 | Medium | Strategic — derives from UCA when needed |
 
 ---
 
@@ -48,54 +75,33 @@ This freeze establishes the immutable reference point from which all future cons
 5. Transformation — How it changes or evolves
 6. Verification — How correctness is established
 
-### The Constitutional Hierarchy
+### The Constitutional Hierarchy (Canonical)
 ```
-Reality → Principles → USCP → USC → UCE → UCC → UCM → UCL → UCRS → UCModels → URS → UVS → USR → UCA → UCD → CodeLabs → Studyo
+Reality → Principles →
+  USCP → USC →
+    (UCE · UCC · UCM) → UCL →
+      UCRS → UCModels → URS → UVS →
+        UWA → UCN → UAS → USR → UCA →
+          UCD → (USDS · UCF · UAS Apps) →
+            Studyo → CodeLabs → Users
 ```
+
+### The Derivation Rules (D1–D7)
+| Rule | Meaning |
+|------|---------|
+| D1 | Downward only — no skipping layers |
+| D2 | No upward mutation — changes propagate through governance |
+| D3 | Merge requires justification — all parent layers cited |
+| D4 | Adaptation is the boundary — UCA is the last constitutional layer |
+| D5 | Derivatives are composed, not derived — UCD from UCA capabilities |
+| D6 | Platform layers are sequential — UWA → UCN → UAS → USR → UCA |
+| D7 | Applications are constitutionally derived — follow the rules |
 
 ### The Verification Record
 - **Self-Verification:** 20/20 components PASS all 6 verification questions (120/120 checks)
 - **Bitcoin Timestamp:** Anchored to blocks 958013–958014 (2/4 calendar servers confirmed)
 - **GPG Signature:** Signed commits with key 01C77A931AEE9054
 
-### The IP Protection Record
-- **License:** CC BY-NC-SA 4.0 (Sir Collins, access1@tutamail.com)
-- **Signed Commits:** GPG-signed throughout
-- **Bitcoin Timestamp:** OpenTimestamps proof file (kernel_hash.txt.ots)
-
 ---
 
-## Future Governance
-
-Any amendment to the frozen foundation requires:
-
-1. **Proposal** — state the change, classify it, declare derivation source
-2. **Review** — second party validates derivation and checks Part III tests
-3. **Verification** — independent replication of Part III audit
-4. **Ratification** — constitutional authority approves
-5. **Publication** — immutable record with timestamp, author, derivation chain
-6. **Derivation** — downstream layers update
-
-One failure = rejection. No exceptions.
-
----
-
-## Naming Convention
-
-- **ICore** = InitialCore (the abbreviated form for all initiatives)
-- **ICore.Gate** = the experimental constitutional frontier
-- **Studyo** = the unified constitutional workspace (not "Studio")
-
----
-
-## Provenance
-
-This Constitutional Freeze Declaration is a constitutional artifact. It establishes the boundary between the frozen foundation and the living implementation.
-
-**Originator:** Sir Collins — Creator and Concept Pioneer of ICore
-**Email:** access1@tutamail.com
-**Date:** July 14, 2026
-
----
-
-*The constitutional foundation has been established, verified, timestamped, and frozen. Everything that follows must now be constitutionally derived, verified, and continuously evolved — but never from within the frozen foundation itself.*
+*This freeze is updated to reflect the reconciled constitutional foundation (July 21, 2026). Part II is now the canonical source of truth for all layer positions and derivation order.*

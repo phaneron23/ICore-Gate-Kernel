@@ -1,8 +1,8 @@
 # ICore Complete Ecosystem Blueprint
 
-**Date:** July 14, 2026
+**Date:** July 14, 2026 | **Reconciled:** July 21, 2026
 **Authority:** Sir Collins — Creator and Concept Pioneer of ICore
-**Status:** Definitive — Constitutional dependency order established.
+**Status:** Canonical — reconciled with Part II Derivation Graph
 
 ---
 
@@ -19,51 +19,83 @@ Reality
     ↓
 Principles
     ↓
-1. ICore — The constitutional science
+═══════════════════════════════════
+  CONSTITUTIONAL BOUNDARY
+═══════════════════════════════════
     ↓
-2. USCP — The 6 irreducible primitives
+L0  USCP — The 6 irreducible primitives
     ↓
-3. USC — The Constitution
+L1  USC — The Constitution
     ↓
-4. UCE · UCC · UCM · UCL — Core sciences
+L2  UCE · UCC · UCM — Core sciences
     ↓
-5. Canonical Models · UCRS · URS · UVS — Reference systems
+    UCL — Language (converges from UCE+UCC+UCM)
     ↓
-6. UWA · UCN · USR (CoreFab) · UCA — Constitutional platforms
+L3  UCRS → UCModels → URS → UVS — Reference systems
     ↓
-7. UAS · USDS · UCD — Applications and derivatives
+═══════════════════════════════════
+  CONSTITUTIONAL PLATFORMS
+═══════════════════════════════════
     ↓
-8. CodeLabs · Studyo — Research and workspace
+L4  UWA — Components
     ↓
-8. initialcore.net + constitutional subdomains — Publication and access
+L4  UCN — Networking
+    ↓
+L4  UAS — Agent model
+    ↓
+L4  USR/CoreFab — Orchestration runtime
+    ↓
+L4  UCA — Adapter boundary (constitution ↔ external world)
+    ↓
+═══════════════════════════════════
+  DERIVATIVES & APPLICATIONS
+═══════════════════════════════════
+    ↓
+L5  UCD — Derivatives (composed from UCA)
+    ↓
+L5  USDS — Design system + distribution
+L5  UCF — Constitutional engineering environment
+L5  UAS Apps — Specific agent deployments
+    ↓
+═══════════════════════════════════
+  IMPLEMENTATION BOUNDARY
+═══════════════════════════════════
+    ↓
+L6  Studyo → CodeLabs → Users
 ```
+
+---
 
 ## Layer Definitions
 
-| # | Name | Type | Role |
-|---|------|------|------|
-| 1 | ICore | Science | The constitutional foundation |
-| 2 | USCP | Primitives | Six irreducible constitutional primitives |
-| 3 | USC | Constitution | The complete constitutional nucleus |
-| 4 | UCE | Epistemology | Constitutional science of knowledge |
-| 4 | UCC | Calculus | Constitutional science of reasoning |
-| 4 | UCM | Mathematics | Constitutional science of structure |
-| 4 | UCL | Language | Constitutional science of expression |
-| 5 | Canonical Models | Models | Canonical representation of constitutional entities |
-| 5 | UCRS | Reference | The Constitution's self-reference system |
-| 5 | URS | Representation | Maps meaning to representational forms |
-| 5 | UVS | Visualization | Renders knowledge into interactive visual forms |
-| 6 | UWA | Components | Constitutional component model and execution |
-| 6 | UCN | Networking | Constitutional discovery, communication, trust |
-| 6 | USR (CoreFab) | Orchestration | Constitutional runtime and orchestration engine |
-| 6 | UCA | Adapters | Adaptation boundary — constitution meets the external world |
-| 7 | UAS | Agents | Universal Agentic System — constitutional agents |
-| 7 | USDS | Distribution | Universal Sovereign Distribution System |
-| 7 | UCD | Derivatives | Constitutionally-derived building blocks |
-| 8 | CodeLabs | Research | Sandboxed experimentation environment |
-| 7 | Studyo | Workspace | The Unified Constitutional Workspace |
-| 8 | initialcore.net | Publication | Canonical Web2 access point |
-| 8 | subdomains | Access | Constitutional Web3 sovereignty layer |
+| Zone | Layer | Name | Type | Role | Status |
+|------|-------|------|------|------|--------|
+| **Pre-constitutional** | — | Reality | Pre-constitutional | What exists | Axiomatic |
+| | — | Principles | Pre-constitutional | Foundational truths | Axiomatic |
+| **Core** | L0 | USCP | Primitives | 6 irreducible atoms | ✅ Frozen |
+| | L1 | USC | Constitution | Complete sovereign authority | ✅ Frozen |
+| | L2 | UCE | Epistemology | Science of knowledge | ✅ Frozen |
+| | L2 | UCC | Calculus | Science of reasoning | ✅ Frozen |
+| | L2 | UCM | Mathematics | Science of structure | ✅ Frozen |
+| | L2 | UCL | Language | Science of expression | ✅ Frozen |
+| **Reference** | L3 | UCRS | Reference | Self-representation of USC | ✅ Frozen |
+| | L3 | UCModels | Models | Canonical entity models | ✅ Frozen |
+| | L3 | URS | Representation | Meaning to form mapping | ✅ Frozen |
+| | L3 | UVS | Visualization | Knowledge to visual form | ✅ Frozen |
+| **Platforms** | L4 | UWA | Components | Constitutional component model | ✅ v0.1.0 |
+| | L4 | UCN | Networking | Discovery, communication, trust | ✅ v0.1.0 |
+| | L4 | UAS | Agents | Autonomous agent model | ✅ v0.1.0 |
+| | L4 | USR/CoreFab | Runtime | Orchestration, execution | ✅ v0.1.0 |
+| | L4 | UCA | Adapter | Constitution ↔ external world | ✅ v0.1.0 |
+| **Applications** | L5 | UCD | Derivatives | Composed building blocks | ✅ v0.1.0 |
+| | L5 | USDS | Design/Dist | Design system + distribution | ✅ v0.1.0 |
+| | L5 | UCF | Forge | Constitutional engineering env | ✅ v0.1.0 |
+| | L5 | UAS Apps | Applications | Specific agent deployments | ✅ v0.1.0 |
+| **Implementation** | L6 | Studyo | Workspace | Development environment | ✅ v0.1.0 |
+| | L6 | CodeLabs | Research | Sandboxed experimentation | ✅ v0.1.0 |
+| | L6 | initialcore.net | Publication | Canonical access point | ✅ Live |
+
+---
 
 ## Enduring Principles
 
@@ -72,7 +104,9 @@ Principles
 3. **Technology independence** — Constitutional foundations separate from implementations.
 4. **Continuous evolution** — Constitutional core never compromised.
 5. **Derivation discipline** — Each layer derived from predecessors, never invented independently.
+6. **Sequential platforms** — UWA → UCN → UAS → USR → UCA. No parallelism.
+7. **Constitutional applications** — USDS, UCF, and agent apps follow the rules.
 
 ---
 
-*This is the complete ICore ecosystem blueprint. Development proceeds strictly in constitutional dependency order.*
+*This blueprint is reconciled with Part II — Constitutional Derivation Graph. Part II is the canonical source for derivation order and layer positions.*
